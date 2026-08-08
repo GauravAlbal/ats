@@ -95,20 +95,21 @@ manifest is the pin record:
 |---|---|---|---|
 | ATS-1 standard | `standard_versions_supported` | `new_authoring: 1.0.0-draft.2` / `legacy_interpretation: 1.0.0-draft.1` | normative edition(s) the skills resolve |
 | ATS implementation | `implementation_version` | `0.5.0` | the runtime/CLI the skills invoke |
-| ATS skill pack | `skill_pack_version` | `0.1.1` candidate | the public skill surface + packaging |
+| ATS skill pack | `skill_pack_version` | `0.1.2` candidate | the public skill surface + packaging |
 
 A fleet repo pins by vendoring `skill-pack-manifest.json` alongside the host
 form and recording, in its vendor note or commit message:
 
 ```text
-ATS skill pack 0.1.1 · implementation 0.5.0 · ATS-1 1.0.0-draft.2 (new) / 1.0.0-draft.1 (legacy)
+ATS skill pack 0.1.2 · implementation 0.5.0 · ATS-1 1.0.0-draft.2 (new) / 1.0.0-draft.1 (legacy)
 source_commit:       <canonical source commit used before generation>
 canonical_source_sha256: <generated from that source>
 ```
 
-Release `0.1.1` is published from the history-free public repository under the
-signed annotated tag `v0.1.1-skill-pack`. Vendoring instructions consume that
-release; they never create or move its tag.
+Release `0.1.1` remains published from the history-free public repository under
+the signed annotated tag `v0.1.1-skill-pack`. Candidate `0.1.2` repairs
+standalone recipe lookup and will receive a new tag only after its own gates
+pass; vendoring instructions never create or move release tags.
 
 `source_commit` and `canonical_source_sha256` are the reproducibility anchors:
 the same source commit regenerates the identical pack (deterministic packager,
@@ -199,7 +200,7 @@ in the ATS repository.
 ### 6.3 How the ATS version is pinned
 
 By vendoring the manifest and recording its identity fields — `skill_pack_version`
-(`0.1.1` candidate), `implementation_version` (`0.5.0`), `standard_versions_supported`
+(`0.1.2` candidate), `implementation_version` (`0.5.0`), `standard_versions_supported`
 (`1.0.0-draft.2` new authoring / `1.0.0-draft.1` legacy), plus
 `source_commit` and `canonical_source_sha256` (§3). `ats skills verify`
 enforces the version fields, so a stale or downgraded pack fails loudly.

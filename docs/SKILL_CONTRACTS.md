@@ -9,11 +9,12 @@ instructions must satisfy.
 
 Four public skills make up the surface an ordinary coding-agent user installs and invokes. They
 are the canonical source the generated host packages under `dist/skill-pack/` are derived from
-(skill pack release `0.1.1`, bound to the canonical source by tree hash in
+(skill-pack candidate `0.1.2`, bound to the canonical source by tree hash in
 `ats.skill_pack_manifest.v1`). Canonical source comes first: complete the
 public skills and recipes, then generate and verify the host forms; generated
-output is never hand-maintained. The public release tag is
-`v0.1.1-skill-pack`.
+output is never hand-maintained. Published release `0.1.1` remains under
+`v0.1.1-skill-pack`; candidate `0.1.2` receives a new tag only after its own
+gates pass.
 The internal compiler contracts below are repository-only implementation references; they stay
 out of the operator's way and are not callable dependencies of the public pack. Each public
 skill's own instructions in `skills/public/*/SKILL.md` are self-contained and satisfy the

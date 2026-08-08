@@ -6,6 +6,20 @@ All notable changes to this repository are recorded here. The format follows
 Downstream artifacts bind the exact ATS-1 draft version they were evaluated under. A change to
 the imported normative package is a separate, receipted import, never an edit in place.
 
+## [0.1.2-skill-pack] — 2026-08-08
+
+Portable standalone recipe lookup repair.
+
+- Public skills now distinguish canonical-source recipe paths from the
+  host-local `recipes/` and `references/` paths shipped in generated packs.
+- `ats skills verify` checks every manifest-declared recipe target inside every
+  generated host rather than accepting a repository-only path.
+- An isolated-pack capstone prevents repository files from masking broken
+  standalone references.
+- This patch changes only the skill-pack surface and packaging; ATS
+  implementation `0.5.0` and the draft.2-new/draft.1-legacy version law remain
+  unchanged.
+
 ## [0.1.1-skill-pack] — 2026-08-07
 
 Public release of the canonical skill surface defined by ADR-0023.

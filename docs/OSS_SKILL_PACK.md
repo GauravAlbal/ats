@@ -58,13 +58,14 @@ source, under `dist/skill-pack/`. It has four host forms:
 
 All four forms are **generated from the canonical source** (`skills/public/**`
 plus `docs/ARTIFACT_RECIPES.md`), never hand-maintained, so they carry the
-same content and the same laws. Pick the form matching your agent and copy
-the four skill folders (`ats`, `ats-spec`, `ats-assess`, `ats-review`) plus
-the recipes into the location where your agent loads skills; per-host
-placement details ship with the generated packages. (Exact copy and
-generation commands belong to the packaging slice; the conceptual surfaces
-are `tools/generate_skill_pack.py` for generation and `ats skills verify`
-for validation.)
+same content and the same laws. Pick the form matching your agent and preserve
+that host's relative layout: copy the four skill folders plus its `recipes/`
+or `references/` directory as described by the host README. From a source
+checkout, verify the generated pack before installation:
+
+```bash
+ats skills verify --pack dist/skill-pack
+```
 
 Then ask your agent, in plain words:
 
@@ -89,27 +90,29 @@ Three version strings stay distinct, on purpose:
 |---|---|---|
 | ATS-1 standard | `1.0.0-draft.2` (new authoring) / `1.0.0-draft.1` (legacy interpretation) | The normative edition your artifacts are judged against. New durable authoring uses draft.2; historical material stays draft.1 unless you explicitly migrate it. |
 | ATS implementation | `0.5.0` | The runtime behind the skills: validation, linting, receipts, policy resolution. |
-| ATS skill pack | `0.1.1` | The released surface you install — the skills, recipes, and packaging. |
+| ATS skill pack | `0.1.2` candidate | The skills, recipes, and packaging with portable host-local recipe lookup. |
 
 The pack declares which standard editions it supports; it is not the standard
 itself. If the standard moves, the pack follows by regeneration — it never
 pretends to be the new standard, and a pack update never pretends to be a
 standard change.
-Release `0.1.1` is published under the signed annotated tag
-`v0.1.1-skill-pack`. Canonical source comes first: generated forms are never
-hand-maintained, and the public manifest binds them to the source commit used
-for generation.
+Release `0.1.1` remains published under the signed annotated tag
+`v0.1.1-skill-pack`. Candidate `0.1.2` repairs standalone recipe lookup and
+receives a distinct tag only after its own publication gates pass. Canonical
+source comes first: generated forms are never hand-maintained, and the public
+manifest binds them to the source commit used for generation.
 
 ## Upgrading
 
 Upgrading is regenerate, verify, re-vendor:
 
-1. **Regenerate** the pack from canonical source (`tools/generate_skill_pack.py`).
-2. **Verify**: the validator checks the regenerated pack against its manifest —
-   required skills present, governing laws intact, host forms matching the
-   canonical source, no stale or drifted content (`ats skills verify`).
-3. **Re-vendor**: replace your previous copy with the regenerated one, in the
-   same host location.
+```bash
+python tools/generate_skill_pack.py
+ats skills verify --pack dist/skill-pack
+```
+
+Then replace the entire previous host form with the regenerated one. Do not
+hand-port individual files between versions.
 
 The manifest (`skill-pack-manifest.json`) records the pack version, the
 supported standard editions, per-file checksums, and provenance (source commit
@@ -117,7 +120,6 @@ and packager version), so drift between your installed copy and the canonical
 source is detectable rather than silent. Because every host form is generated
 from one source, upgrading never means hand-porting edits between forms.
 
-(Exact commands are owned by the packaging slice; this is the conceptual path.)
 
 ## The mini-constitution
 

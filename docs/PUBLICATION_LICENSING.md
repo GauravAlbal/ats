@@ -1,8 +1,8 @@
 # Publication licensing
 
-**Scope:** the public ATS repository and its `0.1.1` skill-pack release. This
-document records licensing boundaries and release evidence; it is not a
-separate license grant or legal opinion.
+**Scope:** the public ATS repository, published `0.1.1` skill-pack release, and
+`0.1.2` skill-pack candidate. This document records licensing boundaries and
+release evidence; it is not a separate license grant or legal opinion.
 
 ## Current status
 

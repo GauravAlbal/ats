@@ -85,9 +85,17 @@ host.
 | Identity | Layout | Notes |
 |---|---|---|
 | `generic` | `generic/<name>/SKILL.md`, `generic/recipes/`, `generic/README.md`, `generic/LICENSE` | Plain markdown, frontmatter preserved. Canonical form; the verifier's parity baseline. Works in any host that reads markdown skills. |
-| `claude` | `claude/<name>/SKILL.md`, `claude/references/`, `claude/README.md`, `claude/LICENSE` | Claude Code skills. Each skill directory carries `SKILL.md` whose YAML frontmatter provides `name` + `description` (the only host API assumed). Install into `~/.claude/skills/` or `.claude/skills/`; make `references/` available so the `docs/ARTIFACT_RECIPES.md` reference resolves. |
-| `codex` | `codex/<name>/SKILL.md`, `codex/recipes/`, `codex/README.md`, `codex/LICENSE` | Plain markdown with placement guidance for `AGENTS.md`. Honest boundary: no codex-specific per-skill manifest API is assumed; frontmatter is inert markdown here. |
-| `agent-plugins` | `agent-plugins/plugin.json`, `agent-plugins/skills/<name>/SKILL.md`, `agent-plugins/README.md`, `agent-plugins/LICENSE` | Portable Agent Plugins root (agent-plugins.org, schema 1.0.0). `plugin.json` declares identity and metadata; `skills/` holds the four Agent Skills. No symlinks; plugin-relative paths only. |
+| `claude` | `claude/<name>/SKILL.md`, `claude/references/`, `claude/README.md`, `claude/LICENSE` | Claude Code skills. Each skill directory carries `SKILL.md` whose YAML frontmatter provides `name` + `description` (the only host API assumed). Install into `~/.claude/skills/` or `.claude/skills/`; the host README identifies `references/` as the installed recipe directory. |
+| `codex` | `codex/<name>/SKILL.md`, `codex/recipes/`, `codex/README.md`, `codex/LICENSE` | Plain markdown with placement guidance for `AGENTS.md`. Honest boundary: no codex-specific per-skill manifest API is assumed; frontmatter is inert markdown here. The host README identifies `recipes/` as the installed recipe directory. |
+| `agent-plugins` | `agent-plugins/plugin.json`, `agent-plugins/skills/<name>/SKILL.md`, `agent-plugins/references/`, `agent-plugins/README.md`, `agent-plugins/LICENSE` | Portable Agent Plugins root (agent-plugins.org, schema 1.0.0). `plugin.json` declares identity and metadata; `skills/` holds the four Agent Skills; the host README identifies `references/` as the installed recipe directory. No symlinks; plugin-relative paths only. |
+
+Canonical skills preserve the source locations `docs/ARTIFACT_RECIPES.md` and
+`skills/public/recipes/` as provenance, but do not treat those paths as
+standalone install locations. They explicitly map installed generic/Codex
+hosts to `recipes/` and Claude/Agent Plugins hosts to `references/`. The
+verifier resolves every manifest-declared recipe basename inside each host
+root, and the isolated-pack capstone prevents repository files from satisfying
+that contract.
 
 Every host root includes `LICENSE`, copied byte-for-byte from
 `LICENSES/Apache-2.0.txt`, plus the separately copied `LICENSE.md` scope map,
@@ -116,7 +124,7 @@ provenance record. Schema: `schemas/ats_skill_pack_manifest_v1.schema.json`
 | Field | Meaning | Example |
 |---|---|---|
 | `schema_version` | manifest schema identity (const) | `ats.skill_pack_manifest.v1` |
-| `skill_pack_version` | the public skill surface + packaging (§38) | `0.1.1` |
+| `skill_pack_version` | the public skill surface + packaging (§38) | `0.1.2` |
 | `implementation_version` | the runtime/CLI the skills invoke | `0.5.0` |
 | `standard_versions_supported` | editions the skills resolve: `new_authoring` draft.2, `legacy_interpretation` draft.1 | `{"new_authoring": "1.0.0-draft.2", "legacy_interpretation": "1.0.0-draft.1"}` |
 | `canonical_source_sha256` | deterministic tree hash of the canonical source (§5) | `7a43f7e…` |
@@ -132,11 +140,12 @@ Three version strings, never collapsed (§38):
 - **ATS-1 standard**: `1.0.0-draft.2` (new authoring) / `1.0.0-draft.1`
   (legacy interpretation) — the two-default law (ADR-0020).
 - **ATS implementation**: `0.5.0` (`src/ats/__init__.py`).
-- **ATS skill pack**: `0.1.1` (`SKILL_PACK_VERSION` in `src/ats/__init__.py`),
+- **ATS skill pack**: `0.1.2` (`SKILL_PACK_VERSION` in `src/ats/__init__.py`),
   stamped in the manifest and in the agent-plugins `plugin.json`.
 
-Release `0.1.1` is published under the signed annotated tag
-`v0.1.1-skill-pack`. The manifest's `source_commit` identifies the canonical
+Release `0.1.1` remains published under `v0.1.1-skill-pack`. Candidate `0.1.2`
+repairs portable recipe lookup and receives a new signed annotated tag only
+after its own gates pass. The manifest's `source_commit` identifies the canonical
 source commit used before generation.
 
 ## 5. The canonical tree hash

@@ -83,7 +83,12 @@ STANDARD_VERSIONS_SUPPORTED: Final[dict[str, str]] = {
 
 REQUIRED_SKILLS: Final[tuple[str, ...]] = ("ats", "ats-spec", "ats-assess", "ats-review")
 HOST_IDENTITIES: Final[tuple[str, ...]] = ("generic", "claude", "codex", "agent-plugins")
-
+HOST_RECIPE_DIRECTORIES: Final[dict[str, str]] = {
+    "generic": "recipes",
+    "codex": "recipes",
+    "claude": "references",
+    "agent-plugins": "references",
+}
 # Every host is independently redistributable and therefore carries the full
 # split notice set. ``LICENSE`` is the conventional host entry point and is
 # the complete Apache-2.0 implementation text.
@@ -327,7 +332,7 @@ def _generate_recipes_copy(host_dir: Path, repo_root: Path, rel_subdir: str) -> 
 
 
 def _pack_readme() -> str:
-    return """# ATS-1 skill pack
+    return """# ATS-1 generic host form
 
 This pack contains the public ATS skills — the four skills that make up the
 public surface of ATS-1:
@@ -374,39 +379,35 @@ reproduces it in full; the canonical recipes reference
    verifies.
 10. Ask only when unresolved meaning blocks the requested action.
 
-## Installing a host form
+## Installing
 
-Each subdirectory is one host representation of the same canonical skills
-(identical skill identity, laws, recipes, version behavior, and invocation
-semantics):
+Keep the four skill directories and `recipes/` together under one host root;
+`recipes/` is the installed artifact-recipe directory. Configure any host that
+accepts Markdown skills to load `ats/`, `ats-spec/`, `ats-assess/`, and
+`ats-review/` from this root. Do not copy only the skill directories: each
+skill's recipe-guided path depends on the sibling `recipes/` tree.
 
-- `generic/` — plain markdown, frontmatter preserved. Use with any host that
-  accepts markdown skills directly.
-- `claude/` — Claude Code skills. Copy each skill directory into your Claude
-  skills directory (`~/.claude/skills/`, or `.claude/skills/` in a project);
-  `references/` holds the shared canonical recipes reference.
-- `codex/` — plain markdown skills with placement guidance. See
-  `codex/README.md` for the honest boundary: no codex-specific skill API is
-  assumed.
-- `agent-plugins/` — a portable Agent Plugins root (agent-plugins.org,
-  schema 1.0.0). Copy the directory into any client that supports Agent
-  Plugins; `plugin.json` declares the identity and `skills/` holds the four
-  skills.
+Before installation, verify the release archive against its published
+`SHA256SUMS`. Full canonical-parity verification requires the matching source
+checkout:
+
+```bash
+ats skills verify --repo /path/to/ats-public --pack /path/to/skill-pack
+```
 
 ## Licensing map
 
 The skill bodies (`SKILL.md`) and packaging machinery are Apache-2.0. The
-vendored `docs/ARTIFACT_RECIPES.md` and public recipe summaries are CC-BY-4.0.
-See each host's `LICENSE`, `LICENSES/`, `LICENSE.md`, and
+vendored canonical recipe document and summaries under `recipes/` are
+CC-BY-4.0. See `LICENSE`, `LICENSES/`, `LICENSE.md`, and
 `THIRD_PARTY_NOTICES.md` for the scoped notices and attribution.
 
 ## Deterministic provenance
 
-`skill-pack-manifest.json` at the pack root binds this pack to its canonical
-source: a tree hash over `skills/public/**` plus `docs/ARTIFACT_RECIPES.md`,
-the source commit, the implementation and skill-pack versions, and per-file
-SHA-256s for every host file. `ats skills verify --pack .` re-derives all of
-it and fails with typed findings on any drift.
+`skill-pack-manifest.json` at the parent pack root binds this host form to its
+canonical source: a tree hash over `skills/public/**` plus
+`docs/ARTIFACT_RECIPES.md`, the source commit, the implementation and
+skill-pack versions, and per-file SHA-256s for every host file.
 """
 
 
@@ -425,16 +426,21 @@ rewritten for this host.
 
 ## Installing
 
-Copy each skill directory (or the whole host directory) into your Claude
-skills directory:
+Copy the four skill directories and `references/` as siblings into the Claude
+skills directory. Preserve that relative layout; `references/` is the
+installed artifact-recipe directory.
 
-- User-level: `~/.claude/skills/<name>/SKILL.md`
-- Project-level: `.claude/skills/<name>/SKILL.md` in the repository
+```bash
+# user-level
+cp -R ats ats-spec ats-assess ats-review references "$HOME/.claude/skills/"
 
-The four skills reference `docs/ARTIFACT_RECIPES.md` (the canonical artifact
-recipes). The pack vendors that document at `references/ARTIFACT_RECIPES.md`;
-make it available alongside the skills (for example by copying
-`references/` next to your skills directory) so the recipe reference resolves.
+# project-level, run from this host root
+cp -R ats ats-spec ats-assess ats-review references /path/to/project/.claude/skills/
+```
+
+The resulting skill paths are `~/.claude/skills/<name>/SKILL.md` (or
+`.claude/skills/<name>/SKILL.md`) and the recipe index is the sibling
+`references/ARTIFACT_RECIPES.md`.
 
 ## What this host does not assume
 
@@ -478,9 +484,10 @@ skills with Codex:
 1. Copy the skill bodies into your `AGENTS.md` (or a file it references),
    under a heading naming the skill (`ats`, `ats-spec`, `ats-assess`,
    `ats-review`).
-2. Make the canonical recipes reference available: the skills reference
-   `docs/ARTIFACT_RECIPES.md`; vendor `recipes/ARTIFACT_RECIPES.md` from this
-   directory (or the canonical document) at a path the skill body can reach.
+2. Copy this host's complete `recipes/` directory into the repository and
+   identify that installed path in `AGENTS.md`. `recipes/` is the installed
+   artifact-recipe directory; the skill bodies' Codex recipe path resolves to
+   `recipes/ARTIFACT_RECIPES.md` plus the five recipe summaries.
 
 Verify placement against OpenAI's current guidance before relying on it; this
 directory intentionally does not encode an API that may not exist.
@@ -782,12 +789,46 @@ class Finding:
         return out
 
 
+def _uses_symlink(root: Path, relative: Path) -> bool:
+    """Whether any component below ``root`` is a symlink."""
+    current = root
+    for part in relative.parts:
+        current /= part
+        if current.is_symlink():
+            return True
+    return False
+
+
 def _distributed_files(pack_dir: Path, manifest: dict[str, Any]) -> list[Path]:
-    """Every host file the manifest enumerates, in manifest order."""
+    """Contained host files the manifest enumerates, in manifest order."""
     out: list[Path] = []
-    for host in manifest.get("hosts", []):
-        for entry in host.get("files", []):
-            out.append(pack_dir / entry["path"])
+    pack_root = pack_dir.resolve()
+    hosts = manifest.get("hosts")
+    if not isinstance(hosts, list):
+        return out
+    for host in hosts:
+        if not isinstance(host, dict):
+            continue
+        entries = host.get("files")
+        if not isinstance(entries, list):
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict):
+                continue
+            rel = entry.get("path")
+            if not isinstance(rel, str):
+                continue
+            rel_path = Path(rel)
+            if rel_path.is_absolute() or ".." in rel_path.parts:
+                continue
+            if _uses_symlink(pack_dir, rel_path):
+                continue
+            path = pack_dir / rel_path
+            try:
+                path.resolve().relative_to(pack_root)
+            except (OSError, RuntimeError, ValueError):
+                continue
+            out.append(path)
     return out
 
 
@@ -803,11 +844,13 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
     - SKILLS-* — the four required public skills exist (manifest, canonical
       source, and generic pack).
     - TREE-HASH — canonical source identity matches the manifest.
-    - RECIPES-LIST — manifest recipe list matches the canonical recipe paths.
+    - RECIPES-LIST / RECIPE-STANDALONE — manifest recipe provenance matches
+      canonical source; every host-local recipe target exists inside the pack.
     - LAWS-MISSING — all ten mini-constitution phrases in every skill.
-    - HOSTS-* — the four host identities exist; every enumerated file exists
-      with the manifest SHA-256; every host skill is byte-identical to the
-      canonical file.
+    - PACK-SYMLINK / HOSTS-* / HOST-SYMLINK / HOST-PATH-ESCAPE — the pack
+      contains no symlinks, the four host identities exist, every enumerated
+      file is regular, contained by the pack, present with the manifest
+      SHA-256, and every host skill is byte-identical to the canonical file.
     - HOST-REGEN-DRIFT — regenerating in a temp dir at the manifest's own
       timestamp/commit reproduces the pack byte-for-byte.
     - SOURCE-COMMIT — the recorded ``source_commit`` reproduces the manifest's
@@ -828,6 +871,14 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
         return [Finding("PACK-MISSING", f"pack directory not found: {pack_dir}")]
 
     manifest_path = pack_dir / "skill-pack-manifest.json"
+    if manifest_path.is_symlink():
+        return [
+            Finding(
+                "MANIFEST-SYMLINK",
+                "skill-pack-manifest.json must not be a symlink",
+                file="skill-pack-manifest.json",
+            )
+        ]
     if not manifest_path.is_file():
         return [Finding("MANIFEST-MISSING", f"manifest not found at {manifest_path}")]
     try:
@@ -838,6 +889,15 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
         return [Finding("MANIFEST-PARSE", "manifest root is not a JSON object")]
 
     # -- schema -----------------------------------------------------------------
+    for candidate in pack_dir.rglob("*"):
+        if candidate.is_symlink():
+            findings.append(
+                Finding(
+                    "PACK-SYMLINK",
+                    "generated pack files must not be symlinks",
+                    file=candidate.relative_to(pack_dir).as_posix(),
+                )
+            )
     for violation in validate_manifest_schema(manifest, repo_root):
         findings.append(
             Finding("MANIFEST-SCHEMA", f"manifest schema violation: {violation}", file="skill-pack-manifest.json")
@@ -924,6 +984,9 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
     # -- governing laws ------------------------------------------------------------
     for name in REQUIRED_SKILLS:
         skill_md = pack_dir / "generic" / name / "SKILL.md"
+        skill_rel = Path("generic") / name / "SKILL.md"
+        if _uses_symlink(pack_dir, skill_rel):
+            continue  # reported under HOST-SYMLINK
         if not skill_md.is_file():
             continue  # already reported under SKILLS-PACK
         text = _norm(skill_md.read_text(encoding="utf-8"))
@@ -944,25 +1007,143 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
         for host in manifest_hosts:
             if isinstance(host, dict):
                 host_by_identity[host.get("identity", "")] = host
+    # -- standalone recipe layout -------------------------------------------------
+    # Manifest recipe sources are canonical provenance paths; installed hosts
+    # must nevertheless carry each basename in their host-specific recipe dir.
+    manifest_recipes = manifest.get("recipes")
+    recipe_basenames = (
+        sorted({Path(rel).name for rel in manifest_recipes if isinstance(rel, str)})
+        if isinstance(manifest_recipes, list)
+        else []
+    )
+    pack_root = pack_dir.resolve()
+    for identity in host_by_identity:
+        recipe_dir = HOST_RECIPE_DIRECTORIES.get(identity)
+        if recipe_dir is None:
+            continue
+        readme_rel = Path(identity) / "README.md"
+        readme = pack_dir / readme_rel
+        layout_marker = f"`{recipe_dir}/`"
+        if _uses_symlink(pack_dir, readme_rel):
+            findings.append(
+                Finding(
+                    "RECIPE-STANDALONE",
+                    f"host {identity} README must not use symlinks",
+                    file=f"{identity}/README.md",
+                )
+            )
+        elif not readme.is_file() or layout_marker not in readme.read_text(encoding="utf-8"):
+            findings.append(
+                Finding(
+                    "RECIPE-STANDALONE",
+                    f"host {identity} README does not identify installed recipe directory {recipe_dir}/",
+                    file=f"{identity}/README.md",
+                )
+            )
+        for basename in recipe_basenames:
+            target = pack_dir / identity / recipe_dir / basename
+            target_rel = Path(identity) / recipe_dir / basename
+            if _uses_symlink(pack_dir, target_rel):
+                findings.append(
+                    Finding(
+                        "RECIPE-STANDALONE",
+                        f"host {identity} recipe target must not use symlinks: {recipe_dir}/{basename}",
+                        file=f"{identity}/{recipe_dir}/{basename}",
+                    )
+                )
+                continue
+            try:
+                target.resolve().relative_to(pack_root)
+            except (OSError, RuntimeError, ValueError):
+                findings.append(
+                    Finding(
+                        "RECIPE-STANDALONE",
+                        f"host {identity} recipe target escapes the installed pack: {recipe_dir}/{basename}",
+                        file=f"{identity}/{recipe_dir}/{basename}",
+                    )
+                )
+                continue
+            if not target.is_file():
+                findings.append(
+                    Finding(
+                        "RECIPE-STANDALONE",
+                        f"host {identity} missing installed recipe {recipe_dir}/{basename}",
+                        file=f"{identity}/{recipe_dir}/{basename}",
+                    )
+                )
+
     for identity in HOST_IDENTITIES:
         if identity not in host_by_identity:
             findings.append(Finding("HOSTS-REQUIRED", f"host identity {identity!r} missing from manifest.hosts"))
     for identity, host in host_by_identity.items():
         if identity not in HOST_IDENTITIES:
             findings.append(Finding("HOSTS-UNKNOWN", f"unexpected host identity {identity!r} in manifest.hosts"))
-        for entry in host.get("files", []):
+            continue
+        host_root = pack_dir / identity
+        if host_root.is_symlink():
+            findings.append(
+                Finding("HOST-SYMLINK", "host root must not be a symlink", file=identity)
+            )
+        elif host_root.is_dir():
+            for candidate in host_root.rglob("*"):
+                if candidate.is_symlink():
+                    findings.append(
+                        Finding(
+                            "HOST-SYMLINK",
+                            "generated host files must not be symlinks",
+                            file=candidate.relative_to(pack_dir).as_posix(),
+                        )
+                    )
+        entries = host.get("files")
+        if not isinstance(entries, list):
+            findings.append(
+                Finding("HOSTS-MALFORMED", f"host {identity}: files must be an array")
+            )
+            continue
+        for entry in entries:
+            if not isinstance(entry, dict):
+                findings.append(
+                    Finding("HOSTS-MALFORMED", f"host {identity}: file entry must be an object")
+                )
+                continue
             rel = entry.get("path")
             if not isinstance(rel, str):
                 findings.append(Finding("HOSTS-MALFORMED", f"host {identity}: file entry without a path"))
                 continue
-            path = pack_dir / rel
+            rel_path = Path(rel)
+            if rel_path.is_absolute() or ".." in rel_path.parts:
+                findings.append(
+                    Finding(
+                        "HOST-PATH-ESCAPE",
+                        f"enumerated host file path must be pack-relative: {rel}",
+                        file=rel,
+                    )
+                )
+                continue
+            path = pack_dir / rel_path
+            if _uses_symlink(pack_dir, rel_path):
+                continue
+            try:
+                path.resolve().relative_to(pack_root)
+            except (OSError, RuntimeError, ValueError):
+                findings.append(
+                    Finding(
+                        "HOST-PATH-ESCAPE",
+                        f"enumerated host file cannot resolve inside the installed pack: {rel}",
+                        file=rel,
+                    )
+                )
+                continue
             if not path.is_file():
                 findings.append(Finding("HOST-FILE-MISSING", f"enumerated file not found: {rel}", file=rel))
                 continue
             if file_sha256(path) != entry.get("sha256"):
                 findings.append(Finding("HOST-FILE-HASH", f"sha256 mismatch for {rel}", file=rel))
         for destination, source in HOST_NOTICE_SOURCES:
-            notice = pack_dir / identity / destination
+            notice_rel = Path(identity) / destination
+            if _uses_symlink(pack_dir, notice_rel):
+                continue
+            notice = pack_dir / notice_rel
             canonical_notice = repo_root / source
             if not notice.is_file():
                 findings.append(
@@ -982,7 +1163,10 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
                 )
         if identity in ("generic", "claude", "codex"):
             for name in REQUIRED_SKILLS:
-                path = pack_dir / identity / name / "SKILL.md"
+                skill_rel = Path(identity) / name / "SKILL.md"
+                if _uses_symlink(pack_dir, skill_rel):
+                    continue
+                path = pack_dir / skill_rel
                 canonical = repo_root / "skills" / "public" / name / "SKILL.md"
                 if path.is_file() and canonical.is_file() and path.read_bytes() != canonical.read_bytes():
                     findings.append(
@@ -1073,7 +1257,18 @@ def _diff_trees(left: Path, right: Path) -> list[tuple[str, str]]:
     """Relative paths whose bytes differ, plus files present on only one side."""
 
     def index(root: Path) -> dict[str, bytes]:
-        return {p.relative_to(root).as_posix(): p.read_bytes() for p in root.rglob("*") if p.is_file()}
+        root_resolved = root.resolve()
+        files: dict[str, bytes] = {}
+        for path in root.rglob("*"):
+            if path.is_symlink():
+                continue
+            try:
+                path.resolve().relative_to(root_resolved)
+            except (OSError, RuntimeError, ValueError):
+                continue
+            if path.is_file():
+                files[path.relative_to(root).as_posix()] = path.read_bytes()
+        return files
 
     left_files = index(left)
     right_files = index(right)
@@ -1205,6 +1400,14 @@ def _verify_agent_plugins(plugin_root: Path, repo_root: Path) -> list[Finding]:
     recipe parity (review F2) — the vendored skills reference the recipes, so
     the plugin must ship them."""
     findings: list[Finding] = []
+    if plugin_root.is_symlink():
+        return [
+            Finding(
+                "AGENT-PLUGINS-SYMLINK",
+                "agent-plugins root must not be a symlink",
+                file="agent-plugins",
+            )
+        ]
 
     if plugin_root.is_dir():
         for path in plugin_root.rglob("*"):
@@ -1227,6 +1430,9 @@ def _verify_agent_plugins(plugin_root: Path, repo_root: Path) -> list[Finding]:
     }
     for rel, sha in sorted(canonical_recipes.items()):
         vendored = recipes_dir / Path(rel).name
+        vendored_rel = Path("references") / Path(rel).name
+        if _uses_symlink(plugin_root, vendored_rel):
+            continue
         if not vendored.is_file():
             findings.append(
                 Finding(
@@ -1245,6 +1451,8 @@ def _verify_agent_plugins(plugin_root: Path, repo_root: Path) -> list[Finding]:
             )
 
     manifest_path = plugin_root / "plugin.json"
+    if _uses_symlink(plugin_root, Path("plugin.json")):
+        return findings
     if not manifest_path.is_file():
         return findings + [Finding("AGENT-PLUGINS-MANIFEST", "plugin.json missing at the agent-plugins root")]
     try:
@@ -1306,6 +1514,8 @@ def _verify_agent_plugins(plugin_root: Path, repo_root: Path) -> list[Finding]:
         )
 
     skills_dir = plugin_root / "skills"
+    if _uses_symlink(plugin_root, Path("skills")):
+        return findings
     if not skills_dir.is_dir():
         return findings + [Finding("AGENT-PLUGINS-SKILLS", "skills/ missing at the plugin root")]
     children = {p.name for p in skills_dir.iterdir()}
@@ -1318,6 +1528,9 @@ def _verify_agent_plugins(plugin_root: Path, repo_root: Path) -> list[Finding]:
         )
     for name in REQUIRED_SKILLS:
         skill_md = skills_dir / name / "SKILL.md"
+        skill_rel = Path("skills") / name / "SKILL.md"
+        if _uses_symlink(plugin_root, skill_rel):
+            continue
         canonical = repo_root / "skills" / "public" / name / "SKILL.md"
         if not skill_md.is_file():
             findings.append(

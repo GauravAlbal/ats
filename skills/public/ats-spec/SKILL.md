@@ -44,8 +44,12 @@ the CLI, schemas, and checks named below are the complete execution surface.
 
 ## The mini-constitution
 
-This skill is governed by the ATS mini-constitution (compact form; the full layer lives in
-`docs/ARTIFACT_RECIPES.md` (vendored into the pack as the recipes reference):
+This skill is governed by the ATS mini-constitution (compact form). Recipe
+lookup is surface-specific: canonical source uses
+`docs/ARTIFACT_RECIPES.md`; generated generic/Codex packs use
+`recipes/ARTIFACT_RECIPES.md`; generated Claude/Agent Plugins packs use
+`references/ARTIFACT_RECIPES.md`. The containing host README identifies the
+installed layout:
 
 1. Preserve meaning before improving surface form.
 2. Do not invent authority.

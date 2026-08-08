@@ -10,8 +10,8 @@ The selected licensing split is recorded in
 implementation, public skills, repository-local schemas and machine-readable
 assets, tools, tests, and generated assets; CC-BY-4.0 covers ATS-1 normative
 text/package material and repository-authored documentation. Skill-pack version
-`0.1.1` is published under the SSH-signed annotated tag
-`v0.1.1-skill-pack`.
+`0.1.2` is the current release candidate; published release `0.1.1` remains
+under the SSH-signed annotated tag `v0.1.1-skill-pack`.
 
 ## Current release facts
 
@@ -19,7 +19,7 @@ These facts are recorded from the repository and hosting provider:
 
 - The default branch is `master`.
 - The Python implementation version is `0.5.0` (`pyproject.toml`).
-- The public skill-pack version is `0.1.1`; its generated manifest records the
+- The public skill-pack candidate is `0.1.2`; its generated manifest must record
   canonical source commit and tree hash.
 - Canonical source is committed before generated `dist/skill-pack/` output.
 - New durable authoring uses ATS-1 `1.0.0-draft.2`; historical unlabeled material remains ATS-1 `1.0.0-draft.1` unless explicitly migrated.
@@ -99,7 +99,8 @@ identities:
 - ATS-1 standard: `1.0.0-draft.2` for new authoring and
   `1.0.0-draft.1` for legacy interpretation;
 - implementation: `0.5.0`; and
-- skill pack: `0.1.1`, released as `v0.1.1-skill-pack`.
+- skill pack: `0.1.2` candidate; current release `0.1.1` is
+  `v0.1.1-skill-pack`.
 
 The release tag targets the generated-pack commit. The release carries a source
 archive, a standalone `dist/skill-pack/` archive, and `SHA256SUMS`. The pack
@@ -125,7 +126,22 @@ The configured topics are:
 Topics are discoverability metadata, not compatibility claims. They do not
 imply a hosted service, private integration, or support guarantee.
 
-## Publication completion record
+## `0.1.2` candidate gate
+
+The `v0.1.2-skill-pack` tag MUST NOT be created or published until:
+
+- canonical source carrying the portable host-recipe mapping and
+  `RECIPE-STANDALONE` verifier is committed;
+- regenerated `dist/skill-pack/` output binds that source commit and is the only
+  content added by the generation commit;
+- every host's recipe target resolves from an isolated extracted pack rather
+  than falling back to repository-only paths;
+- the exact generated candidate passes hosted `public-gate`;
+- a fresh clone passes the full local publication gate; and
+- only then is a new signed annotated tag created with new source, standalone,
+  and checksum assets. The `v0.1.1-skill-pack` tag is not moved.
+
+## Previous publication completion record (`0.1.1`)
 
 The corrected `v0.1.1-skill-pack` cutover completed in this order:
 
@@ -156,11 +172,14 @@ That command reports a good ED25519 signature for
 registered with the account as a signing key; the release does not claim a
 provider-verified badge.
 
-The release tag is immutable. This post-release documentation commit does not
-move it. Branch protection requires the observed `public-gate` context, linear
-history, and resolved conversations; force pushes and branch deletion are
-disabled. Private vulnerability reporting, secret scanning, push protection,
-Dependabot security updates, and GitHub CodeQL default scanning for Python and
-Actions are enabled. The initial CodeQL run
+Project policy and GitHub ruleset `Immutable release tags` (ID `20590138`)
+protect `refs/tags/v*` from updates and deletion. The ruleset does not restrict
+initial tag creation. Post-release hosting controls or documentation changes do
+not move release tags. Branch protection requires the observed `public-gate`
+context,
+linear history, and resolved conversations; force pushes and branch deletion
+are disabled. Private vulnerability reporting, secret scanning, push
+protection, Dependabot security updates, and GitHub CodeQL default scanning for
+Python and Actions are enabled. The initial CodeQL run
 [`31271232453`](https://github.com/GauravAlbal/ats/actions/runs/31271232453)
 completed successfully.

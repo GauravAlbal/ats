@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 from ats.canonical import content_hash
@@ -189,6 +190,31 @@ def test_pack_is_installable_and_self_contained() -> None:
     manifest = json.loads((PACK / "skill-pack-manifest.json").read_text())
     assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"
     assert manifest["standard_versions_supported"]["legacy_interpretation"] == "1.0.0-draft.1"
+
+def test_fresh_install_recipe_targets_resolve_inside_isolated_pack(tmp_path: Path) -> None:
+    """Recipe resolution must not depend on canonical files in this checkout."""
+    isolated = tmp_path / "skill-pack"
+    shutil.copytree(PACK, isolated)
+    manifest = json.loads((isolated / "skill-pack-manifest.json").read_text(encoding="utf-8"))
+    recipe_sources = manifest["recipes"]
+    assert all(
+        source == "docs/ARTIFACT_RECIPES.md" or source.startswith("skills/public/recipes/")
+        for source in recipe_sources
+    )
+    basenames = {Path(source).name for source in recipe_sources}
+    recipe_dirs = {
+        "generic": "recipes",
+        "codex": "recipes",
+        "claude": "references",
+        "agent-plugins": "references",
+    }
+    for host in manifest["hosts"]:
+        identity = host["identity"]
+        target_dir = isolated / identity / recipe_dirs[identity]
+        for basename in basenames:
+            target = target_dir / basename
+            assert target.is_file(), f"{identity}: installed recipe target missing: {target}"
+            assert isolated in target.parents
 
 
 def test_fresh_install_resolves_draft2_without_override() -> None:

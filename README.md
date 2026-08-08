@@ -118,7 +118,7 @@ Three identities are intentionally separate:
 |---|---|---|
 | ATS-1 standard | `1.0.0-draft.2` for new durable authoring | Normative edition governing the artifact |
 | ATS implementation | `0.5.0` | Local runtime that validates, lints, and creates receipts |
-| ATS skill pack | `0.1.1` | Released `ats`, `ats-spec`, `ats-assess`, and `ats-review` surface |
+| ATS skill pack | `0.1.2` candidate | Portable recipe lookup repair for the released skill surface |
 
 Historical, corpus, and other unlabeled material remains interpreted as
 `ATS-1 1.0.0-draft.1` unless explicitly migrated. New durable authoring
@@ -126,11 +126,14 @@ defaults to draft.2. Draft.1 is immutable; neither edition is silently
 reinterpreted, downgraded, or upgraded. See
 [`docs/STABILITY.md`](docs/STABILITY.md) and the
 [`draft.1 → draft.2 migration record`](docs/ATS_1_DRAFT_2_MIGRATION.md).
-The public skill-pack release is `0.1.1` (`SKILL_PACK_VERSION`), tagged
-`v0.1.1-skill-pack`. Canonical source comes first: update `skills/public/**`
+The public skill-pack candidate is `0.1.2` (`SKILL_PACK_VERSION`). Release
+`0.1.1` remains available under `v0.1.1-skill-pack` while the candidate passes
+its publication gates. Canonical source comes first: update `skills/public/**`
 and the canonical recipes, then generate and verify `dist/skill-pack/`;
 generated host forms are never hand-maintained. The canonical repository is
 [`gauravalbal/ats`](https://github.com/gauravalbal/ats).
+The portable-reference defect and correction are documented in the
+[`0.1.2` release notes](docs/RELEASE_NOTES_V0.1.2_SKILL_PACK.md).
 
 ## Deterministic checks
 

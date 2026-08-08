@@ -27,6 +27,7 @@ from ats.schemas import SCHEMA_FOR_VERSION
 from ats.skill_pack import (
     CANONICAL_RECIPES_PATH,
     HOST_IDENTITIES,
+    HOST_RECIPE_DIRECTORIES,
     HOST_NOTICE_SOURCES,
     MANIFEST_SCHEMA_ID,
     MANIFEST_SCHEMA_VERSION,
@@ -66,6 +67,22 @@ def _copy_pack(tmp_path: Path) -> Path:
     out = tmp_path / "skill-pack"
     generate_pack(REPO_ROOT, out, now=FIXED_NOW, source_commit=FIXED_COMMIT)
     return out
+
+
+def _forbid_symlink_content_reads(monkeypatch: pytest.MonkeyPatch) -> None:
+    original_read_bytes = Path.read_bytes
+    original_read_text = Path.read_text
+
+    def read_bytes(path: Path) -> bytes:
+        assert not path.is_symlink(), f"verifier dereferenced symlink bytes: {path}"
+        return original_read_bytes(path)
+
+    def read_text(path: Path, *args, **kwargs) -> str:
+        assert not path.is_symlink(), f"verifier dereferenced symlink text: {path}"
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", read_bytes)
+    monkeypatch.setattr(Path, "read_text", read_text)
 
 
 def _diff(left: Path, right: Path) -> tuple[list[str], list[str]]:
@@ -176,7 +193,7 @@ def test_manifest_is_schema_valid_and_registered(tmp_path: Path) -> None:
 def test_manifest_identity_fields() -> None:
     manifest = _manifest()
     assert manifest["schema_version"] == MANIFEST_SCHEMA_VERSION
-    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.1"
+    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.2"
     assert manifest["implementation_version"] == __version__
     assert manifest["standard_versions_supported"] == STANDARD_VERSIONS_SUPPORTED
     assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"
@@ -377,6 +394,137 @@ def test_validator_fails_on_a_missing_or_tampered_host_notice(
         else {"HOST-NOTICE-PARITY", "HOST-FILE-HASH"}
     )
     assert codes & expected, findings
+
+@pytest.mark.parametrize("host,recipe_dir", tuple(HOST_RECIPE_DIRECTORIES.items()))
+def test_validator_fails_on_a_missing_host_recipe(
+    tmp_path: Path, host: str, recipe_dir: str
+) -> None:
+    pack = _copy_pack(tmp_path)
+    manifest = json.loads((pack / "skill-pack-manifest.json").read_text(encoding="utf-8"))
+    recipe = Path(manifest["recipes"][0]).name
+    (pack / host / recipe_dir / recipe).unlink()
+    findings = verify_pack(pack, REPO_ROOT)
+    assert any(finding.code == "RECIPE-STANDALONE" for finding in findings), findings
+
+
+@pytest.mark.parametrize("host,recipe_dir", tuple(HOST_RECIPE_DIRECTORIES.items()))
+def test_validator_fails_when_host_readme_omits_recipe_layout(
+    tmp_path: Path, host: str, recipe_dir: str
+) -> None:
+    pack = _copy_pack(tmp_path)
+    readme = pack / host / "README.md"
+    original = readme.read_text(encoding="utf-8")
+    marker = f"`{recipe_dir}/`"
+    assert marker in original
+    readme.write_text(
+        original.replace(marker, "`missing-layout/`"),
+        encoding="utf-8",
+    )
+    findings = verify_pack(pack, REPO_ROOT)
+    assert any(finding.code == "RECIPE-STANDALONE" for finding in findings), findings
+
+
+def test_validator_rejects_recipe_symlink_that_escapes_pack(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pack = _copy_pack(tmp_path)
+    recipe = pack / "generic" / "recipes" / "ARTIFACT_RECIPES.md"
+    outside = tmp_path / "outside-recipe.md"
+    outside.write_bytes(recipe.read_bytes())
+    recipe.unlink()
+    recipe.symlink_to(outside)
+    _forbid_symlink_content_reads(monkeypatch)
+
+    findings = verify_pack(pack, REPO_ROOT)
+    codes = {finding.code for finding in findings}
+    assert {"RECIPE-STANDALONE", "HOST-SYMLINK"} <= codes, findings
+
+
+def test_validator_rejects_ordinary_host_file_symlink_that_escapes_pack(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pack = _copy_pack(tmp_path)
+    skill = pack / "generic" / "ats" / "SKILL.md"
+    outside = tmp_path / "outside-skill.md"
+    outside.write_bytes(skill.read_bytes())
+    skill.unlink()
+    skill.symlink_to(outside)
+    _forbid_symlink_content_reads(monkeypatch)
+
+    findings = verify_pack(pack, REPO_ROOT)
+    codes = {finding.code for finding in findings}
+    assert "HOST-SYMLINK" in codes, findings
+
+
+@pytest.mark.parametrize("absolute", (False, True), ids=("parent-traversal", "absolute"))
+def test_validator_returns_finding_for_out_of_pack_manifest_path(
+    tmp_path: Path, absolute: bool
+) -> None:
+    pack = _copy_pack(tmp_path)
+    outside = tmp_path / "outside-host-file.md"
+    outside.write_text("outside\n", encoding="utf-8")
+    manifest_path = pack / "skill-pack-manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["hosts"][0]["files"][0]["path"] = (
+        str(outside) if absolute else "../outside-host-file.md"
+    )
+    manifest_path.write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+    findings = verify_pack(pack, REPO_ROOT)
+    assert any(finding.code == "HOST-PATH-ESCAPE" for finding in findings), findings
+
+
+
+def test_validator_rejects_symlinked_manifest_without_reading_target(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pack = _copy_pack(tmp_path)
+    manifest = pack / "skill-pack-manifest.json"
+    outside = tmp_path / "outside-manifest.json"
+    outside.write_bytes(manifest.read_bytes())
+    manifest.unlink()
+    manifest.symlink_to(outside)
+    _forbid_symlink_content_reads(monkeypatch)
+
+    findings = verify_pack(pack, REPO_ROOT)
+    assert [finding.code for finding in findings] == ["MANIFEST-SYMLINK"], findings
+
+
+def test_validator_rejects_unmanifested_top_level_symlink(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pack = _copy_pack(tmp_path)
+    outside = tmp_path / "outside-directory"
+    outside.mkdir()
+    (outside / "payload.md").write_text("outside\n", encoding="utf-8")
+    (pack / "unmanifested").symlink_to(outside, target_is_directory=True)
+    _forbid_symlink_content_reads(monkeypatch)
+
+    findings = verify_pack(pack, REPO_ROOT)
+    assert any(finding.code == "PACK-SYMLINK" for finding in findings), findings
+
+@pytest.mark.parametrize(
+    "relative",
+    ("generic/recipes/ARTIFACT_RECIPES.md", "generic/ats/SKILL.md"),
+    ids=("recipe", "ordinary-host-file"),
+)
+def test_validator_returns_findings_for_cyclic_host_symlink(
+    tmp_path: Path, relative: str, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    pack = _copy_pack(tmp_path)
+    path = pack / relative
+    path.unlink()
+    path.symlink_to(path.name)
+    _forbid_symlink_content_reads(monkeypatch)
+
+    findings = verify_pack(pack, REPO_ROOT)
+    codes = {finding.code for finding in findings}
+    assert "HOST-SYMLINK" in codes, findings
+    if relative.endswith("ARTIFACT_RECIPES.md"):
+        assert "RECIPE-STANDALONE" in codes, findings
 
 
 def test_validator_fails_on_a_flipped_law_phrase(tmp_path: Path) -> None:
