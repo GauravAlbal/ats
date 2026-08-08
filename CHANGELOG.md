@@ -8,8 +8,10 @@ the imported normative package is a separate, receipted import, never an edit in
 
 ## [Unreleased]
 
-- Bumped the canonical and generated skill-pack candidate to `0.1.3`; the
-  published release remains `0.1.2` until a separately gated release.
+## [0.1.3-skill-pack] — 2026-08-08
+
+Public naming and README release.
+
 ### Changed
 
 - The current public expansion of ATS is **Applied Technical Semantics**.
@@ -17,8 +19,9 @@ the imported normative package is a separate, receipted import, never an edit in
   implementation `0.5.0`, and the draft.2-new/draft.1-legacy version law are
   unchanged.
 - The sealed draft.1 and draft.2 packages preserve their historical expansion
-  and bytes. Existing skill-pack releases and tags remain immutable; a generated
-  pack that carries the current name requires a distinct future release.
+  and bytes. Existing skill-pack releases and tags remain immutable; the
+  regenerated `0.1.3` pack carries the current name under the distinct signed
+  tag `v0.1.3-skill-pack`.
 
 ## [0.1.2-skill-pack] — 2026-08-08
 
