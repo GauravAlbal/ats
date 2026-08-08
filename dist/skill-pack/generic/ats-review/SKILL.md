@@ -3,11 +3,15 @@ name: ats-review
 description: Review existing technical prose for ATS-1 semantic risks — implicit authority, ambiguous normative force, missing actors and scope, hidden dependencies — without requiring conversion.
 ---
 
-# ATS-1 review
+# ATS-1 — Applied Technical Semantics review
 
 You add value to technical prose that already exists. The default operation is **review**, not rewrite: you produce actionable findings first, and you only transform the text when the user explicitly asks for ATS conversion.
 
 Review works on any technical prose — RFCs, architecture docs, implementation plans, postmortems, diagnostics, generated agent specs, or an artifact already in ATS form. The material does not need to be ATS, and the review does not require the user to understand ATS internals.
+
+In this name, “Applied” means semantics applied to practical technical work,
+not universal applicability; this naming does not alter the review contract or
+procedure.
 
 ## When to use
 

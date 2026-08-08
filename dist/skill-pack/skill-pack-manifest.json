@@ -1,6 +1,6 @@
 {
-  "canonical_source_sha256": "32e91bf969f8a401fcdb18679e542e7a79de842850374a81c173f33f91d65d47",
-  "generated_at": "2026-08-08T19:44:12Z",
+  "canonical_source_sha256": "61e89e1af1a45264e2a6475211f5077f9768a66261e41c0beeb566e6612a7854",
+  "generated_at": "2026-08-08T14:08:23-07:00",
   "hosts": [
     {
       "files": [
@@ -30,19 +30,19 @@
         },
         {
           "path": "generic/ats-assess/SKILL.md",
-          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
+          "sha256": "74c984735ee749cc4d9b1a8421f510357fbdaa29a56e118af9ef12b22c32f9af"
         },
         {
           "path": "generic/ats-review/SKILL.md",
-          "sha256": "cacc4c9e5ea7e217cc60a5c6d73ca397814197e846536693292ea16e76435a72"
+          "sha256": "f4c1acf84bed40c19ff3918bf4c4721f11ebd0b3ae27499e477d481c1880509d"
         },
         {
           "path": "generic/ats-spec/SKILL.md",
-          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
+          "sha256": "e68375b3925fe64486ac6f3d459ae3084ebff41fc5a1edc5f7af444b0a06ee1f"
         },
         {
           "path": "generic/ats/SKILL.md",
-          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
+          "sha256": "10b640b0f74194e872282d5e458bb496e09362fc01e48466a20cd58b7e615f2e"
         },
         {
           "path": "generic/recipes/ARTIFACT_RECIPES.md",
@@ -99,19 +99,19 @@
         },
         {
           "path": "claude/ats-assess/SKILL.md",
-          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
+          "sha256": "74c984735ee749cc4d9b1a8421f510357fbdaa29a56e118af9ef12b22c32f9af"
         },
         {
           "path": "claude/ats-review/SKILL.md",
-          "sha256": "cacc4c9e5ea7e217cc60a5c6d73ca397814197e846536693292ea16e76435a72"
+          "sha256": "f4c1acf84bed40c19ff3918bf4c4721f11ebd0b3ae27499e477d481c1880509d"
         },
         {
           "path": "claude/ats-spec/SKILL.md",
-          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
+          "sha256": "e68375b3925fe64486ac6f3d459ae3084ebff41fc5a1edc5f7af444b0a06ee1f"
         },
         {
           "path": "claude/ats/SKILL.md",
-          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
+          "sha256": "10b640b0f74194e872282d5e458bb496e09362fc01e48466a20cd58b7e615f2e"
         },
         {
           "path": "claude/references/ARTIFACT_RECIPES.md",
@@ -168,19 +168,19 @@
         },
         {
           "path": "codex/ats-assess/SKILL.md",
-          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
+          "sha256": "74c984735ee749cc4d9b1a8421f510357fbdaa29a56e118af9ef12b22c32f9af"
         },
         {
           "path": "codex/ats-review/SKILL.md",
-          "sha256": "cacc4c9e5ea7e217cc60a5c6d73ca397814197e846536693292ea16e76435a72"
+          "sha256": "f4c1acf84bed40c19ff3918bf4c4721f11ebd0b3ae27499e477d481c1880509d"
         },
         {
           "path": "codex/ats-spec/SKILL.md",
-          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
+          "sha256": "e68375b3925fe64486ac6f3d459ae3084ebff41fc5a1edc5f7af444b0a06ee1f"
         },
         {
           "path": "codex/ats/SKILL.md",
-          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
+          "sha256": "10b640b0f74194e872282d5e458bb496e09362fc01e48466a20cd58b7e615f2e"
         },
         {
           "path": "codex/recipes/ARTIFACT_RECIPES.md",
@@ -237,7 +237,7 @@
         },
         {
           "path": "agent-plugins/plugin.json",
-          "sha256": "3dad30757fa7988b5ab9c1f61f9c70e689f7d509054ddd8fe01e6e289ae5abfd"
+          "sha256": "5883173a0756f9f8ce7170746090ae6b9b5ac790166d184d63fbe7bcfad19e0c"
         },
         {
           "path": "agent-plugins/references/ARTIFACT_RECIPES.md",
@@ -265,19 +265,19 @@
         },
         {
           "path": "agent-plugins/skills/ats-assess/SKILL.md",
-          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
+          "sha256": "74c984735ee749cc4d9b1a8421f510357fbdaa29a56e118af9ef12b22c32f9af"
         },
         {
           "path": "agent-plugins/skills/ats-review/SKILL.md",
-          "sha256": "cacc4c9e5ea7e217cc60a5c6d73ca397814197e846536693292ea16e76435a72"
+          "sha256": "f4c1acf84bed40c19ff3918bf4c4721f11ebd0b3ae27499e477d481c1880509d"
         },
         {
           "path": "agent-plugins/skills/ats-spec/SKILL.md",
-          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
+          "sha256": "e68375b3925fe64486ac6f3d459ae3084ebff41fc5a1edc5f7af444b0a06ee1f"
         },
         {
           "path": "agent-plugins/skills/ats/SKILL.md",
-          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
+          "sha256": "10b640b0f74194e872282d5e458bb496e09362fc01e48466a20cd58b7e615f2e"
         }
       ],
       "identity": "agent-plugins"
@@ -294,30 +294,30 @@
     "skills/public/recipes/rfc_technical_proposal.md"
   ],
   "schema_version": "ats.skill_pack_manifest.v1",
-  "skill_pack_version": "0.1.2",
+  "skill_pack_version": "0.1.3",
   "skills": [
     {
       "name": "ats",
       "path": "skills/public/ats/SKILL.md",
-      "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
+      "sha256": "10b640b0f74194e872282d5e458bb496e09362fc01e48466a20cd58b7e615f2e"
     },
     {
       "name": "ats-assess",
       "path": "skills/public/ats-assess/SKILL.md",
-      "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
+      "sha256": "74c984735ee749cc4d9b1a8421f510357fbdaa29a56e118af9ef12b22c32f9af"
     },
     {
       "name": "ats-review",
       "path": "skills/public/ats-review/SKILL.md",
-      "sha256": "cacc4c9e5ea7e217cc60a5c6d73ca397814197e846536693292ea16e76435a72"
+      "sha256": "f4c1acf84bed40c19ff3918bf4c4721f11ebd0b3ae27499e477d481c1880509d"
     },
     {
       "name": "ats-spec",
       "path": "skills/public/ats-spec/SKILL.md",
-      "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
+      "sha256": "e68375b3925fe64486ac6f3d459ae3084ebff41fc5a1edc5f7af444b0a06ee1f"
     }
   ],
-  "source_commit": "b22d168013b5d287eaced9fb502f84ab6bce6b61",
+  "source_commit": "6449b60c75e65eadd8e7c58a1160bf81549373f0",
   "standard_versions_supported": {
     "legacy_interpretation": "1.0.0-draft.1",
     "new_authoring": "1.0.0-draft.2"

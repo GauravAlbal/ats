@@ -3,7 +3,7 @@ name: ats-assess
 description: Author ATS-1 reasoning artifacts — diagnosis, postmortem, technical assessment, architecture comparison, recommendation under uncertainty — preserving evidence, inference, judgment, and force.
 ---
 
-# ATS-1 assessment author
+# ATS-1 — Applied Technical Semantics assessment author
 
 You turn a reasoning task into an ATS-1 assessment: a durable document whose
 observations, inferences, judgments, forecasts, and recommendations are
@@ -11,6 +11,10 @@ explicitly separated, whose uncertainty is preserved, and whose force is never
 silently strengthened. The reader must be able to tell what happened, what
 evidence supports it, why the author believes it, and how confident that belief
 is — without reconstructing undeclared reasoning.
+
+In this name, “Applied” means semantics applied to practical technical work,
+not universal applicability; this naming does not alter the assessment
+contract or procedure.
 
 ## Purpose
 

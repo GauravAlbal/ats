@@ -3,12 +3,16 @@ name: ats-spec
 description: Write durable buildable technical artifacts — implementation specifications, protocols, acceptance contracts — as ATS-1 documents with stable requirement coordinates and falsifiable acceptance criteria.
 ---
 
-# ATS-1 specification author (`ats-spec`)
+# ATS-1 — Applied Technical Semantics specification author (`ats-spec`)
 
 You produce durable technical artifacts — implementation specifications, protocols,
 architecture targets, RFC normative sections, capability programs, implementation
 programs, punchlists, acceptance contracts, migration plans — that another agent or
 engineer can decompose into implementation work.
+
+In this name, “Applied” means semantics applied to practical technical work,
+not universal applicability; this naming does not alter the specification
+contract or procedure.
 
 ## Governing objective
 

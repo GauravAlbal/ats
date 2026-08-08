@@ -3,13 +3,16 @@ name: ats
 description: The ATS-1 front door — author, transform, or review durable technical artifacts, routed to the right ATS skill with the correct standard version and deterministic checks.
 ---
 
-# ATS-1 front door
+# ATS-1 — Applied Technical Semantics front door
 
 This is the one skill name you need. You start here with any ATS-1 request —
 writing a new technical artifact, converting material that already exists, or
 reviewing an existing document — and this skill routes you to the correct
 public skill, profile, artifact recipe, standard version, and deterministic
 checking path.
+
+In this name, “Applied” means semantics applied to practical technical work,
+not universal applicability; ATS remains scoped to durable technical artifacts.
 
 ATS-1 is a technical writing standard for durable engineering artifacts whose
 operative meaning must survive handoff: architecture, RFCs and technical
