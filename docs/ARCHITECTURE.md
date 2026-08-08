@@ -4,6 +4,9 @@ This document describes what exists in `src/ats/` today, how the modules depend 
 another, which pipeline stages actually run, and what the determinism and error contracts
 are. Every claim here is checkable against the named file.
 
+ATS-1 — Applied Technical Semantics (ATS) is the technical-state preservation
+standard implemented by this repository.
+
 ## Top-level separation
 
 The repository keeps five categories of artifact apart, because a code convenience must not

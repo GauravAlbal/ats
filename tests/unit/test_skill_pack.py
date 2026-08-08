@@ -193,7 +193,7 @@ def test_manifest_is_schema_valid_and_registered(tmp_path: Path) -> None:
 def test_manifest_identity_fields() -> None:
     manifest = _manifest()
     assert manifest["schema_version"] == MANIFEST_SCHEMA_VERSION
-    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.2"
+    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.3"
     assert manifest["implementation_version"] == __version__
     assert manifest["standard_versions_supported"] == STANDARD_VERSIONS_SUPPORTED
     assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"

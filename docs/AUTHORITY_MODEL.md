@@ -11,6 +11,14 @@ result entitled to establish, and who may accept it?** §12.3 states the separat
 of this document elaborates — rule state declares what the artifact must satisfy; detector
 authority declares what a particular result can establish. They are orthogonal.
 
+## Naming and identity authority
+
+The current public identity is **ATS-1 — Applied Technical Semantics**, and the
+current public expansion is **Applied Technical Semantics**. Released draft.1
+and draft.2 package bytes preserve the historical expansion; **ATS-1** and all
+machine identifiers remain unchanged. This rename has no normative semantic
+effect. On conflict, normative packages outrank current descriptive prose.
+
 ---
 
 ## Operational classes: what blocks, what reviews, what advises

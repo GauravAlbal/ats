@@ -1,7 +1,7 @@
 [project]
 name = "ats"
 version = "0.5.0"
-description = "Deterministic v0 implementation of ATS-1: Arq Text Standard"
+description = "ATS-1 Applied Technical Semantics reference implementation"
 requires-python = ">=3.12"
 license = { file = "LICENSE.md" }
 dependencies = [

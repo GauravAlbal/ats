@@ -667,7 +667,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser = argparse.ArgumentParser(
         prog="ats",
-        description="ATS-1 (Arq Text Standard) reference implementation, deterministic v0.",
+        description="ATS-1 (Applied Technical Semantics) reference implementation.",
     )
     parser.add_argument("--version", action="version", version=f"ats {__version__}")
     parser.add_argument(

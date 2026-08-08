@@ -6,6 +6,20 @@ All notable changes to this repository are recorded here. The format follows
 Downstream artifacts bind the exact ATS-1 draft version they were evaluated under. A change to
 the imported normative package is a separate, receipted import, never an edit in place.
 
+## [Unreleased]
+
+- Bumped the canonical and generated skill-pack candidate to `0.1.3`; the
+  published release remains `0.1.2` until a separately gated release.
+### Changed
+
+- The current public expansion of ATS is **Applied Technical Semantics**.
+- This is a naming-only migration: ATS-1 normative meaning, machine identifiers,
+  implementation `0.5.0`, and the draft.2-new/draft.1-legacy version law are
+  unchanged.
+- The sealed draft.1 and draft.2 packages preserve their historical expansion
+  and bytes. Existing skill-pack releases and tags remain immutable; a generated
+  pack that carries the current name requires a distinct future release.
+
 ## [0.1.2-skill-pack] — 2026-08-08
 
 Portable standalone recipe lookup repair.

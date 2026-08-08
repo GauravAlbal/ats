@@ -5,6 +5,10 @@ what has only been observed in a case study. It is informative and does not
 change the ATS-1 normative package. When this document conflicts with the
 standard, the [normative package](../spec/ATS-1/) wins.
 
+The current public identity is **ATS-1 — Applied Technical Semantics**. The
+rename establishes no new effectiveness evidence and does not change the
+boundaries or status of the claims below.
+
 ## Mechanically established claims
 
 The implementation and its repository checks establish the following bounded

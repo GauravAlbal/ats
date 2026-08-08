@@ -1,4 +1,8 @@
-# ATS North Star
+# ATS-1 — Applied Technical Semantics: North Star
+
+ATS-1 — Applied Technical Semantics (ATS) is a **technical-state preservation
+category and standard** for durable technical handoffs between people, agents,
+and tools.
 
 ## What ATS exists to do
 

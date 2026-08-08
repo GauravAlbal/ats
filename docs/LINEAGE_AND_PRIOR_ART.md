@@ -1,4 +1,4 @@
-# ATS-1 Lineage and Prior Art
+# ATS-1 — Applied Technical Semantics: Lineage and Prior Art
 
 **Status: informative, not normative.** This document explains where ATS-1's
 design ideas come from. It does not define, extend, or modify ATS-1. The
@@ -22,6 +22,14 @@ AI-authored
 → human-inspectable
 technical artifacts
 ```
+
+## Naming migration
+
+The current public expansion is **Applied Technical Semantics**. Earlier
+sealed editions preserve **Arq Text Standard** as their historical expansion;
+this record retains that name as history rather than current public identity.
+The migration changes naming only and does not alter ATS-1 normative meaning,
+version identities, or released package bytes.
 
 ---
 

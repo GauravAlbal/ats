@@ -5,6 +5,10 @@ it emits, what it must refuse, what it is and is not entitled to decide, and whe
 The skills' own instructions live in `skills/*/SKILL.md`; this document is the interface those
 instructions must satisfy.
 
+The current public identity is **ATS-1 — Applied Technical Semantics**.
+“Applied” means semantics applied to practical technical work, not universal
+applicability; this naming does not alter any skill contract.
+
 ## Public layer — the operator skill surface
 
 Four public skills make up the surface an ordinary coding-agent user installs and invokes. They
