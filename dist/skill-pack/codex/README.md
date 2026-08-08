@@ -23,9 +23,10 @@ skills with Codex:
 1. Copy the skill bodies into your `AGENTS.md` (or a file it references),
    under a heading naming the skill (`ats`, `ats-spec`, `ats-assess`,
    `ats-review`).
-2. Make the canonical recipes reference available: the skills reference
-   `docs/ARTIFACT_RECIPES.md`; vendor `recipes/ARTIFACT_RECIPES.md` from this
-   directory (or the canonical document) at a path the skill body can reach.
+2. Copy this host's complete `recipes/` directory into the repository and
+   identify that installed path in `AGENTS.md`. `recipes/` is the installed
+   artifact-recipe directory; the skill bodies' Codex recipe path resolves to
+   `recipes/ARTIFACT_RECIPES.md` plus the five recipe summaries.
 
 Verify placement against OpenAI's current guidance before relying on it; this
 directory intentionally does not encode an API that may not exist.

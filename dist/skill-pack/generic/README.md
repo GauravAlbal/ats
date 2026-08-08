@@ -1,4 +1,4 @@
-# ATS-1 skill pack
+# ATS-1 generic host form
 
 This pack contains the public ATS skills — the four skills that make up the
 public surface of ATS-1:
@@ -45,36 +45,32 @@ reproduces it in full; the canonical recipes reference
    verifies.
 10. Ask only when unresolved meaning blocks the requested action.
 
-## Installing a host form
+## Installing
 
-Each subdirectory is one host representation of the same canonical skills
-(identical skill identity, laws, recipes, version behavior, and invocation
-semantics):
+Keep the four skill directories and `recipes/` together under one host root;
+`recipes/` is the installed artifact-recipe directory. Configure any host that
+accepts Markdown skills to load `ats/`, `ats-spec/`, `ats-assess/`, and
+`ats-review/` from this root. Do not copy only the skill directories: each
+skill's recipe-guided path depends on the sibling `recipes/` tree.
 
-- `generic/` — plain markdown, frontmatter preserved. Use with any host that
-  accepts markdown skills directly.
-- `claude/` — Claude Code skills. Copy each skill directory into your Claude
-  skills directory (`~/.claude/skills/`, or `.claude/skills/` in a project);
-  `references/` holds the shared canonical recipes reference.
-- `codex/` — plain markdown skills with placement guidance. See
-  `codex/README.md` for the honest boundary: no codex-specific skill API is
-  assumed.
-- `agent-plugins/` — a portable Agent Plugins root (agent-plugins.org,
-  schema 1.0.0). Copy the directory into any client that supports Agent
-  Plugins; `plugin.json` declares the identity and `skills/` holds the four
-  skills.
+Before installation, verify the release archive against its published
+`SHA256SUMS`. Full canonical-parity verification requires the matching source
+checkout:
+
+```bash
+ats skills verify --repo /path/to/ats-public --pack /path/to/skill-pack
+```
 
 ## Licensing map
 
 The skill bodies (`SKILL.md`) and packaging machinery are Apache-2.0. The
-vendored `docs/ARTIFACT_RECIPES.md` and public recipe summaries are CC-BY-4.0.
-See each host's `LICENSE`, `LICENSES/`, `LICENSE.md`, and
+vendored canonical recipe document and summaries under `recipes/` are
+CC-BY-4.0. See `LICENSE`, `LICENSES/`, `LICENSE.md`, and
 `THIRD_PARTY_NOTICES.md` for the scoped notices and attribution.
 
 ## Deterministic provenance
 
-`skill-pack-manifest.json` at the pack root binds this pack to its canonical
-source: a tree hash over `skills/public/**` plus `docs/ARTIFACT_RECIPES.md`,
-the source commit, the implementation and skill-pack versions, and per-file
-SHA-256s for every host file. `ats skills verify --pack .` re-derives all of
-it and fails with typed findings on any drift.
+`skill-pack-manifest.json` at the parent pack root binds this host form to its
+canonical source: a tree hash over `skills/public/**` plus
+`docs/ARTIFACT_RECIPES.md`, the source commit, the implementation and
+skill-pack versions, and per-file SHA-256s for every host file.

@@ -1,6 +1,8 @@
 # Diagnostic recipe (summary)
 
-Full recipe: `docs/ARTIFACT_RECIPES.md` (canonical).
+Full recipe: canonical source `docs/ARTIFACT_RECIPES.md`; generated
+generic/Codex `recipes/ARTIFACT_RECIPES.md`; generated Claude/Agent Plugins
+`references/ARTIFACT_RECIPES.md`.
 
 `ASSESS` only.
 

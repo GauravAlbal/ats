@@ -1,6 +1,6 @@
 {
-  "canonical_source_sha256": "eafb79e32131321f8e23d6b54ffdbb3d9e05d9a708f91d361c4ba957cb4a2524",
-  "generated_at": "2026-08-08T17:54:42Z",
+  "canonical_source_sha256": "32e91bf969f8a401fcdb18679e542e7a79de842850374a81c173f33f91d65d47",
+  "generated_at": "2026-08-08T19:44:12Z",
   "hosts": [
     {
       "files": [
@@ -22,7 +22,7 @@
         },
         {
           "path": "generic/README.md",
-          "sha256": "dcb3fce686211834dbee84db42cf74d9be7cfd7e491c10c4e9d1af9220c08d15"
+          "sha256": "9200a56df049e865c3214b8e65c9bfd5ac6117b1e97fd67d2c2f023476f67e3f"
         },
         {
           "path": "generic/THIRD_PARTY_NOTICES.md",
@@ -30,7 +30,7 @@
         },
         {
           "path": "generic/ats-assess/SKILL.md",
-          "sha256": "f7ee63f7cbef8b70407457ed9f9b07b123d45e9cfe0e23cfa08a8e373814012c"
+          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
         },
         {
           "path": "generic/ats-review/SKILL.md",
@@ -38,11 +38,11 @@
         },
         {
           "path": "generic/ats-spec/SKILL.md",
-          "sha256": "3fab6b730f4235ebbae34c08bb5699f578fcf01a4a35a294d1e0735feae454e9"
+          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
         },
         {
           "path": "generic/ats/SKILL.md",
-          "sha256": "f0e72a9bd07b7bcfa6a96d9c98c6b3beff588900d42bda9997df4ea767f0cd40"
+          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
         },
         {
           "path": "generic/recipes/ARTIFACT_RECIPES.md",
@@ -50,23 +50,23 @@
         },
         {
           "path": "generic/recipes/architecture.md",
-          "sha256": "df7208d03f37b385da2b855af4efaf5094a3fc036d9ab11ed2d354b79a4cab4c"
+          "sha256": "1b0293e581011a098e0b2fe52e387beec93ec52519f8498933073557ff80f8c1"
         },
         {
           "path": "generic/recipes/diagnostic.md",
-          "sha256": "eeb26d7868b3232b5aa2020f7ffa378cffef7f494e61a05a69bb4096d2b1077b"
+          "sha256": "6abfb88f267d9a759afb3eab4830ce73767678b1b42f49d074882345920502bf"
         },
         {
           "path": "generic/recipes/implementation_program.md",
-          "sha256": "1d9dc76241e94a2cea156f0e5b79994839eb71415d03d2691e133f66bd52ebed"
+          "sha256": "30faad174f91fa1021351e365b62061042d67b400428257d85d1efd2d58aad00"
         },
         {
           "path": "generic/recipes/postmortem.md",
-          "sha256": "653d59dfc67e48274851efa2082eb48fa1ebe0b7f7d81b86146301d1d1021805"
+          "sha256": "5145cc1cffb3c6c47a633dc0e943672f1d723554f53856ab67858cbf14aaefde"
         },
         {
           "path": "generic/recipes/rfc_technical_proposal.md",
-          "sha256": "cf00dd6797c237359f5226647353792aee36a5daad3014ef1f11321cf2e05bef"
+          "sha256": "5cb414147417fd05e1f36bd39a4a3c0d9baf04886a900b66ff46697ff6cb09fd"
         }
       ],
       "identity": "generic"
@@ -91,7 +91,7 @@
         },
         {
           "path": "claude/README.md",
-          "sha256": "b509af7fe0e7c55d50267d0acc96759779ccdea66fed41a004e32855f03aa3c9"
+          "sha256": "cfe3193482efa528b1b0a8527ad4b102014d8b87524b9aefd516d640c57a47da"
         },
         {
           "path": "claude/THIRD_PARTY_NOTICES.md",
@@ -99,7 +99,7 @@
         },
         {
           "path": "claude/ats-assess/SKILL.md",
-          "sha256": "f7ee63f7cbef8b70407457ed9f9b07b123d45e9cfe0e23cfa08a8e373814012c"
+          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
         },
         {
           "path": "claude/ats-review/SKILL.md",
@@ -107,11 +107,11 @@
         },
         {
           "path": "claude/ats-spec/SKILL.md",
-          "sha256": "3fab6b730f4235ebbae34c08bb5699f578fcf01a4a35a294d1e0735feae454e9"
+          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
         },
         {
           "path": "claude/ats/SKILL.md",
-          "sha256": "f0e72a9bd07b7bcfa6a96d9c98c6b3beff588900d42bda9997df4ea767f0cd40"
+          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
         },
         {
           "path": "claude/references/ARTIFACT_RECIPES.md",
@@ -119,23 +119,23 @@
         },
         {
           "path": "claude/references/architecture.md",
-          "sha256": "df7208d03f37b385da2b855af4efaf5094a3fc036d9ab11ed2d354b79a4cab4c"
+          "sha256": "1b0293e581011a098e0b2fe52e387beec93ec52519f8498933073557ff80f8c1"
         },
         {
           "path": "claude/references/diagnostic.md",
-          "sha256": "eeb26d7868b3232b5aa2020f7ffa378cffef7f494e61a05a69bb4096d2b1077b"
+          "sha256": "6abfb88f267d9a759afb3eab4830ce73767678b1b42f49d074882345920502bf"
         },
         {
           "path": "claude/references/implementation_program.md",
-          "sha256": "1d9dc76241e94a2cea156f0e5b79994839eb71415d03d2691e133f66bd52ebed"
+          "sha256": "30faad174f91fa1021351e365b62061042d67b400428257d85d1efd2d58aad00"
         },
         {
           "path": "claude/references/postmortem.md",
-          "sha256": "653d59dfc67e48274851efa2082eb48fa1ebe0b7f7d81b86146301d1d1021805"
+          "sha256": "5145cc1cffb3c6c47a633dc0e943672f1d723554f53856ab67858cbf14aaefde"
         },
         {
           "path": "claude/references/rfc_technical_proposal.md",
-          "sha256": "cf00dd6797c237359f5226647353792aee36a5daad3014ef1f11321cf2e05bef"
+          "sha256": "5cb414147417fd05e1f36bd39a4a3c0d9baf04886a900b66ff46697ff6cb09fd"
         }
       ],
       "identity": "claude"
@@ -160,7 +160,7 @@
         },
         {
           "path": "codex/README.md",
-          "sha256": "df26d05ffaf5b5a742bb211d79cc8b5618c87cb6ee116e1f85a1a1980f6febc9"
+          "sha256": "8c1910ee33f2b15c9ab2592703796081daa9cae52d81e4816d6b6e13d27893b6"
         },
         {
           "path": "codex/THIRD_PARTY_NOTICES.md",
@@ -168,7 +168,7 @@
         },
         {
           "path": "codex/ats-assess/SKILL.md",
-          "sha256": "f7ee63f7cbef8b70407457ed9f9b07b123d45e9cfe0e23cfa08a8e373814012c"
+          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
         },
         {
           "path": "codex/ats-review/SKILL.md",
@@ -176,11 +176,11 @@
         },
         {
           "path": "codex/ats-spec/SKILL.md",
-          "sha256": "3fab6b730f4235ebbae34c08bb5699f578fcf01a4a35a294d1e0735feae454e9"
+          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
         },
         {
           "path": "codex/ats/SKILL.md",
-          "sha256": "f0e72a9bd07b7bcfa6a96d9c98c6b3beff588900d42bda9997df4ea767f0cd40"
+          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
         },
         {
           "path": "codex/recipes/ARTIFACT_RECIPES.md",
@@ -188,23 +188,23 @@
         },
         {
           "path": "codex/recipes/architecture.md",
-          "sha256": "df7208d03f37b385da2b855af4efaf5094a3fc036d9ab11ed2d354b79a4cab4c"
+          "sha256": "1b0293e581011a098e0b2fe52e387beec93ec52519f8498933073557ff80f8c1"
         },
         {
           "path": "codex/recipes/diagnostic.md",
-          "sha256": "eeb26d7868b3232b5aa2020f7ffa378cffef7f494e61a05a69bb4096d2b1077b"
+          "sha256": "6abfb88f267d9a759afb3eab4830ce73767678b1b42f49d074882345920502bf"
         },
         {
           "path": "codex/recipes/implementation_program.md",
-          "sha256": "1d9dc76241e94a2cea156f0e5b79994839eb71415d03d2691e133f66bd52ebed"
+          "sha256": "30faad174f91fa1021351e365b62061042d67b400428257d85d1efd2d58aad00"
         },
         {
           "path": "codex/recipes/postmortem.md",
-          "sha256": "653d59dfc67e48274851efa2082eb48fa1ebe0b7f7d81b86146301d1d1021805"
+          "sha256": "5145cc1cffb3c6c47a633dc0e943672f1d723554f53856ab67858cbf14aaefde"
         },
         {
           "path": "codex/recipes/rfc_technical_proposal.md",
-          "sha256": "cf00dd6797c237359f5226647353792aee36a5daad3014ef1f11321cf2e05bef"
+          "sha256": "5cb414147417fd05e1f36bd39a4a3c0d9baf04886a900b66ff46697ff6cb09fd"
         }
       ],
       "identity": "codex"
@@ -237,7 +237,7 @@
         },
         {
           "path": "agent-plugins/plugin.json",
-          "sha256": "0846ca759333178e764e7bc3d12ee39c6aa4b4a99f30a60d6f707a581f045819"
+          "sha256": "3dad30757fa7988b5ab9c1f61f9c70e689f7d509054ddd8fe01e6e289ae5abfd"
         },
         {
           "path": "agent-plugins/references/ARTIFACT_RECIPES.md",
@@ -245,27 +245,27 @@
         },
         {
           "path": "agent-plugins/references/architecture.md",
-          "sha256": "df7208d03f37b385da2b855af4efaf5094a3fc036d9ab11ed2d354b79a4cab4c"
+          "sha256": "1b0293e581011a098e0b2fe52e387beec93ec52519f8498933073557ff80f8c1"
         },
         {
           "path": "agent-plugins/references/diagnostic.md",
-          "sha256": "eeb26d7868b3232b5aa2020f7ffa378cffef7f494e61a05a69bb4096d2b1077b"
+          "sha256": "6abfb88f267d9a759afb3eab4830ce73767678b1b42f49d074882345920502bf"
         },
         {
           "path": "agent-plugins/references/implementation_program.md",
-          "sha256": "1d9dc76241e94a2cea156f0e5b79994839eb71415d03d2691e133f66bd52ebed"
+          "sha256": "30faad174f91fa1021351e365b62061042d67b400428257d85d1efd2d58aad00"
         },
         {
           "path": "agent-plugins/references/postmortem.md",
-          "sha256": "653d59dfc67e48274851efa2082eb48fa1ebe0b7f7d81b86146301d1d1021805"
+          "sha256": "5145cc1cffb3c6c47a633dc0e943672f1d723554f53856ab67858cbf14aaefde"
         },
         {
           "path": "agent-plugins/references/rfc_technical_proposal.md",
-          "sha256": "cf00dd6797c237359f5226647353792aee36a5daad3014ef1f11321cf2e05bef"
+          "sha256": "5cb414147417fd05e1f36bd39a4a3c0d9baf04886a900b66ff46697ff6cb09fd"
         },
         {
           "path": "agent-plugins/skills/ats-assess/SKILL.md",
-          "sha256": "f7ee63f7cbef8b70407457ed9f9b07b123d45e9cfe0e23cfa08a8e373814012c"
+          "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
         },
         {
           "path": "agent-plugins/skills/ats-review/SKILL.md",
@@ -273,11 +273,11 @@
         },
         {
           "path": "agent-plugins/skills/ats-spec/SKILL.md",
-          "sha256": "3fab6b730f4235ebbae34c08bb5699f578fcf01a4a35a294d1e0735feae454e9"
+          "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
         },
         {
           "path": "agent-plugins/skills/ats/SKILL.md",
-          "sha256": "f0e72a9bd07b7bcfa6a96d9c98c6b3beff588900d42bda9997df4ea767f0cd40"
+          "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
         }
       ],
       "identity": "agent-plugins"
@@ -294,17 +294,17 @@
     "skills/public/recipes/rfc_technical_proposal.md"
   ],
   "schema_version": "ats.skill_pack_manifest.v1",
-  "skill_pack_version": "0.1.1",
+  "skill_pack_version": "0.1.2",
   "skills": [
     {
       "name": "ats",
       "path": "skills/public/ats/SKILL.md",
-      "sha256": "f0e72a9bd07b7bcfa6a96d9c98c6b3beff588900d42bda9997df4ea767f0cd40"
+      "sha256": "12472e9f24701f136935e0b61dd73a5ec36275ed700b6cad73ac983b7c35b291"
     },
     {
       "name": "ats-assess",
       "path": "skills/public/ats-assess/SKILL.md",
-      "sha256": "f7ee63f7cbef8b70407457ed9f9b07b123d45e9cfe0e23cfa08a8e373814012c"
+      "sha256": "2c7878b8ae2b9578fafdb7692274b7803f3fc006c83c24d02f1d42dfcf8c531c"
     },
     {
       "name": "ats-review",
@@ -314,10 +314,10 @@
     {
       "name": "ats-spec",
       "path": "skills/public/ats-spec/SKILL.md",
-      "sha256": "3fab6b730f4235ebbae34c08bb5699f578fcf01a4a35a294d1e0735feae454e9"
+      "sha256": "22eae3d9fcf2b7f29f87e1c72975d7074e26607f069ec1917fea8ca2372c952e"
     }
   ],
-  "source_commit": "a6bea8d2fe2f0d686821142f030596e99024476a",
+  "source_commit": "b22d168013b5d287eaced9fb502f84ab6bce6b61",
   "standard_versions_supported": {
     "legacy_interpretation": "1.0.0-draft.1",
     "new_authoring": "1.0.0-draft.2"

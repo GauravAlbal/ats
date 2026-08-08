@@ -144,8 +144,12 @@ Two defaults, never collapsed into one:
 
 `ats-spec` and `ats-assess` are the two authoring surfaces; `ats-review` is the
 review surface. The front door never authors directly — it routes. Recipes are
-authoring guidance (not normative profiles) in `docs/ARTIFACT_RECIPES.md`
-(canonical) and `skills/public/recipes/`.
+authoring guidance, not normative profiles. In the canonical source, use
+`docs/ARTIFACT_RECIPES.md` and `skills/public/recipes/`; in generated
+generic/Codex packs, use `recipes/ARTIFACT_RECIPES.md` and `recipes/`; in
+generated Claude/Agent Plugins packs, use
+`references/ARTIFACT_RECIPES.md` and `references/`. The containing host README
+identifies the installed layout.
 
 ## Required routing examples
 

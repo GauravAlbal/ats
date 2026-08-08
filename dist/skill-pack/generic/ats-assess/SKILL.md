@@ -194,8 +194,12 @@ typed unknown → continuation → human only if the action requires resolution.
 ### Recipe guidance
 
 Artifact shapes for diagnostic, postmortem, architecture comparison, RFC, and
-risk analysis live in `docs/ARTIFACT_RECIPES.md` (canonical) and
-`skills/public/recipes/`. Recipes are authoring guidance, not normative
+risk analysis are distributed from one canonical source. In the source tree,
+use `docs/ARTIFACT_RECIPES.md` and `skills/public/recipes/`; in generated
+generic/Codex packs, use `recipes/ARTIFACT_RECIPES.md` and `recipes/`; in
+generated Claude/Agent Plugins packs, use
+`references/ARTIFACT_RECIPES.md` and `references/`. The containing host README
+identifies the installed layout. Recipes are authoring guidance, not normative
 profiles; exact section names may vary, semantic roles must remain recoverable.
 
 ## Examples

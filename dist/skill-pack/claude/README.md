@@ -12,16 +12,21 @@ rewritten for this host.
 
 ## Installing
 
-Copy each skill directory (or the whole host directory) into your Claude
-skills directory:
+Copy the four skill directories and `references/` as siblings into the Claude
+skills directory. Preserve that relative layout; `references/` is the
+installed artifact-recipe directory.
 
-- User-level: `~/.claude/skills/<name>/SKILL.md`
-- Project-level: `.claude/skills/<name>/SKILL.md` in the repository
+```bash
+# user-level
+cp -R ats ats-spec ats-assess ats-review references "$HOME/.claude/skills/"
 
-The four skills reference `docs/ARTIFACT_RECIPES.md` (the canonical artifact
-recipes). The pack vendors that document at `references/ARTIFACT_RECIPES.md`;
-make it available alongside the skills (for example by copying
-`references/` next to your skills directory) so the recipe reference resolves.
+# project-level, run from this host root
+cp -R ats ats-spec ats-assess ats-review references /path/to/project/.claude/skills/
+```
+
+The resulting skill paths are `~/.claude/skills/<name>/SKILL.md` (or
+`.claude/skills/<name>/SKILL.md`) and the recipe index is the sibling
+`references/ARTIFACT_RECIPES.md`.
 
 ## What this host does not assume
 
