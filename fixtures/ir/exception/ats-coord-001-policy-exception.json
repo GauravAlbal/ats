@@ -1,0 +1,89 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-001-policy-exception",
+  "source": {
+    "content_sha256": "f2dc6f4b56496877930ca3f1a5a682969cd92815c7eed62699fa13eebba42a70",
+    "normalized_sha256": "f2dc6f4b56496877930ca3f1a5a682969cd92815c7eed62699fa13eebba42a70",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-001-policy-exception.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-001-policy-exception",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C001-3",
+          "role": "requirement",
+          "proposition": "The verifier MUST record every accepted transition in the ledger.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C001-3",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "every accepted transition",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        },
+        {
+          "claim_id": "REQ-C001-4",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement. REQ-C001-4 is used here but its coordinate declaration is covered by the policy exception EX-DRAFT2-001.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C001-4",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C001-3",
+      "source_pointer": "#/sections/0/claims/0"
+    }
+  ],
+  "extensions": {
+    "policy_exceptions": [
+      {
+        "schema_version": "ats.policy_exception.v1",
+        "exception_id": "EX-DRAFT2-001",
+        "sha256": "ddf71f5fa0fd8a6bcb391f12f73c4c554db1deaf76a8e34ce52b155e09585bd4",
+        "rule_id": "ATS-COORD-001",
+        "from_state": "required",
+        "to_state": "required",
+        "scope": {
+          "artifact_id": "fixture-coord-001-policy-exception"
+        },
+        "rationale": "The archive requirement is introduced by a new-authoring change; its coordinate set is intentionally partial and declared for explicit review. ATS-COORD-001 is unwaivable (spec 6.4), so the rule state is unchanged.",
+        "authorized_by": "draft2-fixture-authority",
+        "created_at": "2026-08-07T00:00:00Z"
+      }
+    ]
+  }
+}

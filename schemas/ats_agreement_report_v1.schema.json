@@ -1,0 +1,662 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_agreement_report_v1.schema.json",
+  "title": "ATS Corpus Agreement Report V1",
+  "description": "Inter-pass agreement between two independent annotation rounds over the same units, reported as a VECTOR of named metrics rather than one number. A single statistic over a corpus whose modal outcome is 'the rule does not apply' can sit near 1.0 while the rare, load-bearing classes disagree completely, so this report has no field for an overall agreement score and instead requires each of its seven axes to carry its own N, class prevalence, chance-corrected statistic, and -- where it could not be computed -- an explicit unavailability (spec Sections 17.9, 18.5; ADR-0002). `measurement.kind` states what the numbers are evidence ABOUT: agreement between two model passes is instrument reproducibility, not human inter-rater reliability, and the two MUST NOT be read as the same quantity.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_sha256",
+    "generated_at",
+    "spec_version",
+    "implementation",
+    "measurement",
+    "annotator_registry",
+    "annotators",
+    "rounds",
+    "pairing",
+    "declined_to_judge",
+    "vocabularies",
+    "metrics",
+    "per_rule",
+    "rules_without_paired_units",
+    "findings",
+    "assessment"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.agreement_report.v1" },
+    "report_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256",
+      "description": "Content address over this document with this field removed."
+    },
+    "generated_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "spec_version": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "implementation": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "measurement": {
+      "type": "object",
+      "description": "What the agreement numbers in this document are evidence about. Derived from the declared `kind` of each annotator, never assumed.",
+      "required": ["kind", "statement", "annotator_kinds", "independence"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "instrument_reproducibility",
+            "human_inter_rater_reliability",
+            "human_model_concordance",
+            "unknown"
+          ],
+          "description": "`instrument_reproducibility` when every annotator is kind `llm`: two model passes agreeing measures how repeatable the instrument is, NOT how well humans agree. `unknown` when any annotator kind is undeclared; an undeclared kind is never resolved to `human`."
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The reading instruction, in prose, for a person who sees only this document."
+        },
+        "annotator_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "enum": ["llm", "human", "unknown"] }
+        },
+        "independence": {
+          "type": "string",
+          "minLength": 1,
+          "description": "How the two passes were kept independent, and what that does and does not establish."
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotator_registry": {
+      "type": "object",
+      "description": "Where the annotator identities were read from. An absent registry makes `measurement.kind` unknown; it never makes the annotators human.",
+      "required": ["path", "available", "unavailable_reason", "declared_annotators"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "available": { "type": "boolean" },
+        "file_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "unavailable_reason": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/unavailability" }]
+        },
+        "declared_annotators": { "type": "integer", "minimum": 0 },
+        "cross_check": {
+          "type": "object",
+          "description": "The registry file against the annotator list each round embeds. A disagreement is reported, never reconciled.",
+          "required": ["performed", "agrees", "detail"],
+          "properties": {
+            "performed": { "type": "boolean" },
+            "agrees": { "type": "boolean" },
+            "detail": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/annotator" }
+    },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/round" }
+    },
+    "pairing": {
+      "type": "object",
+      "required": [
+        "unit_of_analysis",
+        "paired_units",
+        "applicability_paired_units",
+        "role_a_only",
+        "role_b_only",
+        "dropped_units",
+        "notes"
+      ],
+      "properties": {
+        "unit_of_analysis": { "type": "string", "minLength": 1 },
+        "paired_units": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Units both passes left an ats.judgment.v1 for."
+        },
+        "applicability_paired_units": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Units both passes answered an applicability question about, by judging OR by declining to judge. This is the universe the applicability metric is computed over, and it is larger than `paired_units` whenever a pass declined: AG-19 step 2 leaves no judgment behind for an inapplicable rule, so scoring only judged units drops precisely the units where the passes disagree about scope."
+        },
+        "role_a_only": { "type": "integer", "minimum": 0 },
+        "role_b_only": { "type": "integer", "minimum": 0 },
+        "dropped_units": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["example_id", "rule_id", "reason", "detail"],
+            "properties": {
+              "example_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+              "rule_id": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 },
+              "detail": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "notes": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "declined_to_judge": {
+      "type": "object",
+      "description": "Units a pass refused to label because it found the rule inapplicable (AG-19 step 2). Reported as its own line because it is invisible to every metric that compares judgments: a unit exactly one pass declined is a disagreement about what the rule governs, and no label statistic measures it.",
+      "required": [
+        "unit_of_analysis",
+        "role_a_declined",
+        "role_b_declined",
+        "declined_by_exactly_one_pass",
+        "declined_by_both_passes",
+        "universe_complete",
+        "detail"
+      ],
+      "properties": {
+        "unit_of_analysis": { "type": "string", "minLength": 1 },
+        "role_a_declined": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Decline records attributed to round a. Records in an unreadable sidecar are NOT attributed, so this never launders an unusable file into a count."
+        },
+        "role_b_declined": { "type": "integer", "minimum": 0 },
+        "declined_by_exactly_one_pass": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Paired units one pass declined and the other answered. The scope disagreement no label statistic measures."
+        },
+        "declined_by_both_passes": { "type": "integer", "minimum": 0 },
+        "universe_complete": {
+          "type": "boolean",
+          "description": "True only when both sidecars were readable. False means the decline counts are a floor, not a total, and the applicability universe is incomplete."
+        },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "vocabularies": {
+      "type": "object",
+      "description": "Every closed vocabulary this report scores against, written into the document so a reader never has to guess which enumeration a count ranges over.",
+      "required": [
+        "labels",
+        "applicability",
+        "context_sufficiency",
+        "protected_impact",
+        "ambiguity_categories",
+        "applicability_fallback",
+        "unavailability_codes"
+      ],
+      "properties": {
+        "labels": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "applicability": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "context_sufficiency": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "protected_impact": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "ambiguity_categories": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "applicability_fallback": {
+          "type": "array",
+          "description": "The label-to-applicability mapping used only for a judgment that did not state its applicability. Published because a derived value is weaker evidence than a stated one.",
+          "items": {
+            "type": "object",
+            "required": ["label", "applicability"],
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "applicability": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "unavailability_codes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["code", "meaning"],
+            "properties": {
+              "code": { "type": "string", "minLength": 1 },
+              "meaning": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 7,
+      "description": "The metric vector. Every axis appears on every run, computed or explicitly unavailable; an axis that vanished when it could not be computed would read as an axis nobody needed.",
+      "items": { "$ref": "#/$defs/metric" }
+    },
+    "per_rule": {
+      "type": "array",
+      "description": "One confusion matrix over the label vocabulary per rule that has at least one paired unit. A rule with three units gets a matrix and a small-N flag; it is never suppressed, because suppressing thin rules hides exactly the rules whose evidence is thinnest.",
+      "items": { "$ref": "#/$defs/rule_row" }
+    },
+    "rules_without_paired_units": {
+      "type": "array",
+      "description": "Rules the two rounds never both judged. Named rather than given a matrix of zeros, which would read as measured agreement on nothing.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "assessment": {
+      "type": "object",
+      "required": ["status", "reasons", "single_number_refusal"],
+      "properties": {
+        "status": {
+          "enum": [
+            "insufficient_evidence",
+            "blocking_concerns",
+            "concerns_present",
+            "no_concerns_detected"
+          ]
+        },
+        "reasons": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "single_number_refusal": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this document reports no overall agreement score. Required so that adding one later is a visible schema change rather than a convenience."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "unavailability": {
+      "type": "object",
+      "description": "Why a quantity could not be computed. A code from the closed vocabulary plus the specific detail; never a substitute number.",
+      "required": ["code", "detail"],
+      "properties": {
+        "code": {
+          "enum": [
+            "round_unavailable",
+            "no_paired_units",
+            "no_unit_satisfied_condition",
+            "value_not_stated",
+            "chance_baseline_undefined",
+            "expected_agreement_is_one",
+            "no_spans_cited",
+            "class_unused_by_both",
+            "registry_missing",
+            "registry_malformed",
+            "sidecar_missing",
+            "sidecar_annotator_mismatch"
+          ]
+        },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "annotator": {
+      "type": "object",
+      "required": [
+        "role",
+        "annotator_id",
+        "identity_source",
+        "kind",
+        "model",
+        "prompt_id",
+        "judgments"
+      ],
+      "properties": {
+        "role": { "enum": ["a", "b"] },
+        "annotator_id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["llm", "human", "unknown"],
+          "description": "`unknown` means the registry did not declare a kind. It is a distinct state from `human` and MUST NOT be rendered as one."
+        },
+        "model": {
+          "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1 }],
+          "description": "Null when undeclared. An undeclared model is not an unnamed human."
+        },
+        "prompt_id": { "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1 }] },
+        "prompt_sha256": {
+          "oneOf": [{ "type": "null" }, { "$ref": "ats_common_v1.schema.json#/$defs/sha256" }]
+        },
+        "identity_source": {
+          "enum": ["observed_in_round", "expected_from_caller", "undeclared"],
+          "description": "Where this annotator identity came from. `observed_in_round` means the round file's judgments carry it; `expected_from_caller` means the round is unavailable and the identity is the one the caller says should have produced it, so the kind describes an instrument that did not run; `undeclared` means neither, and nothing about this annotator is established."
+        },
+        "judgments": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "round": {
+      "type": "object",
+      "required": [
+        "role",
+        "path",
+        "available",
+        "unavailable_reason",
+        "judgments",
+        "annotator_ids",
+        "sidecar"
+      ],
+      "properties": {
+        "role": { "enum": ["a", "b"] },
+        "path": { "type": "string", "minLength": 1 },
+        "available": { "type": "boolean" },
+        "unavailable_reason": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/unavailability" }]
+        },
+        "file_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "judgments": { "type": "integer", "minimum": 0 },
+        "annotator_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "embedded_annotators": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many annotator entries the round record embedded, for the registry cross-check."
+        },
+        "sidecar": {
+          "type": "object",
+          "description": "The round's applicability sidecar: the units this pass declined to judge (AG-19 step 2 leaves no judgment behind for a rule the annotator found inapplicable). A present-but-empty sidecar is a positive statement that the pass declined nothing; an ABSENT sidecar is not, and is reported unavailable rather than read as zero.",
+          "required": ["path", "available", "unavailable_reason", "records", "annotator_ids"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "available": { "type": "boolean" },
+            "unavailable_reason": {
+              "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/unavailability" }]
+            },
+            "file_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+            "records": { "type": "integer", "minimum": 0 },
+            "annotator_ids": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "available": { "const": false } }, "required": ["available"] },
+          "then": { "properties": { "unavailable_reason": { "$ref": "#/$defs/unavailability" } } }
+        }
+      ]
+    },
+    "statistic": {
+      "type": "object",
+      "required": ["statistic", "available", "value", "unavailable_reason"],
+      "properties": {
+        "statistic": {
+          "enum": [
+            "cohen_kappa",
+            "pabak",
+            "positive_specific_agreement",
+            "micro_token_f1",
+            "macro_token_f1",
+            "none_defined"
+          ]
+        },
+        "available": { "type": "boolean" },
+        "value": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": -1, "maximum": 1 }]
+        },
+        "expected_agreement": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0, "maximum": 1 }]
+        },
+        "unavailable_reason": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/unavailability" }]
+        },
+        "interpretation": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "available": { "const": false } }, "required": ["available"] },
+          "then": {
+            "properties": {
+              "value": { "type": "null" },
+              "unavailable_reason": { "$ref": "#/$defs/unavailability" }
+            },
+            "description": "An uncomputed statistic carries no number. 0.0 and 1.0 are both real results and neither may stand in for 'not measured'."
+          }
+        },
+        {
+          "if": { "properties": { "available": { "const": true } }, "required": ["available"] },
+          "then": {
+            "properties": { "value": { "type": "number" }, "unavailable_reason": { "type": "null" } }
+          }
+        }
+      ]
+    },
+    "class_prevalence": {
+      "type": "object",
+      "required": ["class", "role_a_count", "role_b_count", "role_a_rate", "role_b_rate"],
+      "properties": {
+        "class": { "type": "string", "minLength": 1 },
+        "role_a_count": { "type": "integer", "minimum": 0 },
+        "role_b_count": { "type": "integer", "minimum": 0 },
+        "role_a_rate": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0, "maximum": 1 }]
+        },
+        "role_b_rate": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0, "maximum": 1 }]
+        },
+        "both_count": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "exclusion": {
+      "type": "object",
+      "required": ["reason", "count", "detail"],
+      "properties": {
+        "reason": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "derived_rate": {
+      "type": "object",
+      "required": ["name", "numerator", "denominator", "value"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "numerator": { "type": "integer", "minimum": 0 },
+        "denominator": { "type": "integer", "minimum": 0 },
+        "value": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0, "maximum": 1 }]
+        }
+      },
+      "additionalProperties": false
+    },
+    "metric": {
+      "type": "object",
+      "required": [
+        "metric",
+        "question",
+        "unit_of_analysis",
+        "available",
+        "unavailable_reason",
+        "n",
+        "n_excluded",
+        "exclusions",
+        "raw_agreement",
+        "chance_corrected",
+        "class_prevalence",
+        "small_n",
+        "notes"
+      ],
+      "properties": {
+        "metric": { "type": "string", "minLength": 1 },
+        "question": { "type": "string", "minLength": 1 },
+        "unit_of_analysis": { "type": "string", "minLength": 1 },
+        "available": { "type": "boolean" },
+        "unavailable_reason": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/unavailability" }]
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Units the metric was computed over. A count of the evidence, so it is reported even when the metric is unavailable."
+        },
+        "n_excluded": { "type": "integer", "minimum": 0 },
+        "exclusions": { "type": "array", "items": { "$ref": "#/$defs/exclusion" } },
+        "raw_agreement": {
+          "oneOf": [{ "type": "null" }, { "type": "number", "minimum": 0, "maximum": 1 }]
+        },
+        "chance_corrected": { "$ref": "#/$defs/statistic" },
+        "additional_statistics": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/statistic" }
+        },
+        "class_prevalence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/class_prevalence" }
+        },
+        "confusion": {
+          "type": "object",
+          "required": ["class_order", "matrix"],
+          "properties": {
+            "class_order": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "matrix": {
+              "type": "array",
+              "items": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+            }
+          },
+          "additionalProperties": false
+        },
+        "derived_rates": { "type": "array", "items": { "$ref": "#/$defs/derived_rate" } },
+        "components": {
+          "type": "array",
+          "description": "Sub-metrics of the same shape, for an axis that is a set rather than one value (protected impact).",
+          "items": { "$ref": "#/$defs/metric" }
+        },
+        "value_sources": {
+          "type": "array",
+          "description": "Whether each compared value was stated by the annotator or derived by this tool from the label. A derived value is weaker evidence and is counted separately rather than blended in.",
+          "items": {
+            "type": "object",
+            "required": ["source", "count"],
+            "properties": {
+              "source": { "enum": ["stated", "derived_from_label", "unavailable"] },
+              "count": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "small_n": { "type": "boolean" },
+        "notes": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "available": { "const": false } }, "required": ["available"] },
+          "then": {
+            "properties": {
+              "raw_agreement": { "type": "null" },
+              "unavailable_reason": { "$ref": "#/$defs/unavailability" }
+            },
+            "description": "An unavailable metric MUST NOT carry a number: reporting 0.0 for 'no pair satisfied the condition' invents total disagreement, and 1.0 invents perfect agreement (ADR-0002)."
+          }
+        },
+        {
+          "if": { "properties": { "available": { "const": true } }, "required": ["available"] },
+          "then": {
+            "properties": {
+              "raw_agreement": { "type": "number" },
+              "unavailable_reason": { "type": "null" }
+            }
+          }
+        }
+      ]
+    },
+    "label_row": {
+      "type": "object",
+      "required": [
+        "label",
+        "role_a_count",
+        "role_b_count",
+        "both_count",
+        "pooled_prevalence",
+        "rare",
+        "total_disagreement",
+        "positive_specific_agreement",
+        "one_vs_rest_kappa"
+      ],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "role_a_count": { "type": "integer", "minimum": 0 },
+        "role_b_count": { "type": "integer", "minimum": 0 },
+        "both_count": { "type": "integer", "minimum": 0 },
+        "pooled_prevalence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rare": {
+          "type": "boolean",
+          "description": "Pooled prevalence at or below the published rare-label threshold, and used at least once."
+        },
+        "total_disagreement": {
+          "type": "boolean",
+          "description": "The label was used by at least one annotator and there is no unit where both chose it."
+        },
+        "positive_specific_agreement": { "$ref": "#/$defs/statistic" },
+        "one_vs_rest_kappa": { "$ref": "#/$defs/statistic" }
+      },
+      "additionalProperties": false
+    },
+    "rule_row": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "n",
+        "small_n",
+        "small_n_threshold",
+        "confusion",
+        "raw_agreement",
+        "chance_corrected",
+        "labels"
+      ],
+      "properties": {
+        "rule_id": { "type": "string", "minLength": 1 },
+        "n": { "type": "integer", "minimum": 1 },
+        "small_n": { "type": "boolean" },
+        "small_n_threshold": { "type": "integer", "minimum": 1 },
+        "confusion": {
+          "type": "object",
+          "required": ["class_order", "matrix"],
+          "properties": {
+            "class_order": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "matrix": {
+              "type": "array",
+              "items": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+            }
+          },
+          "additionalProperties": false
+        },
+        "raw_agreement": { "type": "number", "minimum": 0, "maximum": 1 },
+        "chance_corrected": { "$ref": "#/$defs/statistic" },
+        "labels": { "type": "array", "items": { "$ref": "#/$defs/label_row" } }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["code", "severity", "subject", "detail"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["blocking", "concern", "note"] },
+        "subject": { "type": "string", "minLength": 1 },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}

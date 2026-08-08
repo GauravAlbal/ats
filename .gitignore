@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/*
+!dist/skill-pack/
+!dist/skill-pack/**
+build/
+.DS_Store
+corpus/raw/
+corpus/private/
+corpus/withheld/
+
+.pearls/

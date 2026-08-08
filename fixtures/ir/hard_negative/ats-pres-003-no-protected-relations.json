@@ -1,0 +1,82 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-pres-003-no-protected-relations",
+  "source": {
+    "content_sha256": "e529e0c50ddc6ed5f7735ba14cea2f2ee28c4461411a29e17fddadb12e35d9d4",
+    "normalized_sha256": "e529e0c50ddc6ed5f7735ba14cea2f2ee28c4461411a29e17fddadb12e35d9d4",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-pres-003-no-protected-relations.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-pres-003-no-protected-relations",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-P3-6",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-6",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "extensions": {
+    "output_trace": {
+      "schema_version": "ats.output_trace.v1",
+      "artifact_id": "fixture-pres-003-no-protected-relations",
+      "ir_sha256": "329dfd4a7297ac68d7bac72b27b9e50ad817f457bf504a8c808f5a93648b5a60",
+      "output_sha256": "54897ef732bf0d1779ed1468129902948fa3977ea73b2930a14731a0616ec823",
+      "policy_snapshot_id": "policy-fixture-draft2",
+      "policy_sha256": "d19949912c13d0dcd296767d09ab084cfacfef7c5175a1947e7384dbec3dfc57",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "marker_scheme": {
+        "kind": "html_comment",
+        "pattern": "<!-- ats:block {block_id} -->"
+      },
+      "blocks": [
+        {
+          "block_id": "b1",
+          "marker": "<!-- ats:block b1 -->",
+          "ordinal": 0,
+          "text_sha256": "7dc96f776c8423e57a2785489a3f9c43fb6e756876d6ad9a9cac4aa4e72ec193",
+          "material": true,
+          "display_role": "requirement",
+          "section_id": "s1",
+          "claim_ids": [
+            "C-P3-6"
+          ],
+          "evidence_ids": [],
+          "relation_ids": [],
+          "requirement_ids": [],
+          "forecast_ids": []
+        }
+      ]
+    }
+  }
+}

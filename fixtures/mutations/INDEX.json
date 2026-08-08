@@ -1,0 +1,307 @@
+[
+  {
+    "mutant_example_id": "ats-example-sha256:5643a48d1471061d4dc0d33b40024a56a803382c365709e1066657423a837fe2",
+    "operator_id": "ATS-MUT-ASSUMPTION-TO-OBSERVATION",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-ASSUMPTION-TO-OBSERVATION.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:5528c87de25a76a3f9a78dcfa82ccf23289bacbabfe754f6ba65b10d4053773d",
+    "operator_id": "ATS-MUT-CAUSAL-UPGRADE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-CAUSAL-UPGRADE.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:7cddfc6b5d91c3907da1d6c34ee0e23cb22b916f01363394e4fa9047710add79",
+    "operator_id": "ATS-MUT-CONTRARY-EVIDENCE-DELETE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-CONTRARY-EVIDENCE-DELETE.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:81dd6c4621ae094720b7e348418a7c56e8027671cfb1056e665b6d13919d4a7c",
+    "operator_id": "ATS-MUT-EVIDENTIAL-STRENGTHEN",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-EVIDENTIAL-STRENGTHEN.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:c3a5aafdc7389020a1bee58ee7df1693d6f09487accb047a8c9c6f29eff2d427",
+    "operator_id": "ATS-MUT-JUDGMENT-BURY",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-JUDGMENT-BURY.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:41008e7a76d7ac88b431891adfb29024f8203e74c92cbaf90a65adbec1d4b436",
+    "operator_id": "ATS-MUT-LIKELIHOOD-CONFIDENCE-SWAP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-LIKELIHOOD-CONFIDENCE-SWAP.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:5ae02f25ea33fb4f2da235b9eb6de71113cfdc90800c883514464f695eef4bd7",
+    "operator_id": "ATS-MUT-NEGATION-FLIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-NEGATION-FLIP.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:7ca06c4b5d702189541605a99a6b97528c6af159d150a09d25f33d0e8ceebec2",
+    "operator_id": "ATS-MUT-QUAL-DELETE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-QUAL-DELETE.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:275e511a99271a63f91eb4ab012831b9efb9975346e74cfbd86afe7fdb0adbeb",
+    "operator_id": "ATS-MUT-QUANTIFIER-WIDEN",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-QUANTIFIER-WIDEN.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:a23738ebb70a628e4dc91d88ccc897523d67f058b9a493b9f3cb08ab36f9ac03",
+    "operator_id": "ATS-MUT-RELATION-REVERSE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-RELATION-REVERSE.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:d8b7480198b5f2738d99ba59b742b16f62e9bed08df9da0f2d63b5219fd7c533",
+    "operator_id": "ATS-MUT-RESTATEMENT-INSERT",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-RESTATEMENT-INSERT.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:ac1920c5079522532831e09d9d2cbca3068f52ee0cdcfc79c7cbd0045fbddc44",
+    "operator_id": "ATS-MUT-SOURCE-ATTRIBUTION-STRIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-SOURCE-ATTRIBUTION-STRIP.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:60c6dc57a9f2345f23107eebfec7b4a5ab6bca4130169c1fbba670744263bb8d",
+    "operator_id": "ATS-MUT-UNIT-STRIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-UNIT-STRIP.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:18d93ccba9478fbf5231a5e73b891779347f4c6e85cdacbce54278cbd3ffd1d4",
+    "operator_id": "ATS-MUT-UPDATE-INDICATOR-DELETE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-UPDATE-INDICATOR-DELETE.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:0892dd2833c94ee064cc6f6fafa4afdbec7e4d78f73451e77a71fd7542bc8872",
+    "operator_id": "ATS-MUT-WEP-BAND-SHIFT",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-WEP-BAND-SHIFT.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:8b72016d4587b389e18165db99b3b9ca8a23a70eb80dbea14b73b2730249dd76",
+    "operator_id": "ATS-MUT-WEP-RANGE-STRIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-WEP-RANGE-STRIP.json",
+    "source": "assess",
+    "source_example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "split_group": "mutation-source-assess"
+  },
+  {
+    "refused": [
+      {
+        "detail": "ATS-MUT-ACTOR-REMOVE cannot be applied: no material requirement names an explicit actor. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-ACTOR-REMOVE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "Inventing a second plausible antecedent requires generating a noun phrase that is grammatically compatible with the pronoun, semantically plausible in the domain, and different from the real antecedent. No deterministic procedure over a TextIR document produces that, and a model completion would change an unknown number of semantic features at once, which Section 17.5 forbids for a one-feature mutation. The operator is declared here so the gap is visible and countable; ats.corpus.mutate.apply_operator raises UnsupportedCapabilityError rather than degrading to generation.",
+        "operator_id": "ATS-MUT-ANTECEDENT-AMBIGUATE",
+        "reason": "unsupported"
+      },
+      {
+        "detail": "ATS-MUT-DEONTIC-EXCHANGE cannot be applied: no material claim carries an exchangeable deontic force. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-DEONTIC-EXCHANGE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-EXCEPTION-DELETE cannot be applied: no SHOULD or SHOULD NOT requirement enumerates an exception. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-EXCEPTION-DELETE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-OBLIGATION-MERGE cannot be applied: no section holds two material requirement claims. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-OBLIGATION-MERGE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-THRESHOLD-BOUNDARY-SHIFT cannot be applied: no material requirement declares boundary constraints on a threshold quantifier. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-THRESHOLD-BOUNDARY-SHIFT",
+        "reason": "precondition_unmet"
+      }
+    ],
+    "source": "assess"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:661b6e9b1e93fc85c2825a16328fc03fdcf938a72cfd499985ae6379ca9f3370",
+    "operator_id": "ATS-MUT-ACTOR-REMOVE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-ACTOR-REMOVE.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:9301b7f31bb9de8031c00d2a28fbccf91265c128c936d0b8fe925720e1fa89ab",
+    "operator_id": "ATS-MUT-DEONTIC-EXCHANGE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-DEONTIC-EXCHANGE.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:e4cdbfdbb2094d086241593003d8e9b398588d34dfdbdf2f2db28a01c912b9f5",
+    "operator_id": "ATS-MUT-EXCEPTION-DELETE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-EXCEPTION-DELETE.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:e0842ac366598413c6484e250a4cb87174bdf72d01ae7c26aa6f25a007773cdd",
+    "operator_id": "ATS-MUT-JUDGMENT-BURY",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-JUDGMENT-BURY.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:842739ce4881a5185938367f06bef9bb9d646d6629366984079cd5b017ce510a",
+    "operator_id": "ATS-MUT-NEGATION-FLIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-NEGATION-FLIP.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:2654b610bb3a9b573a0fd337c799daa37e78cef76043d74a9de1ae060c4c5e71",
+    "operator_id": "ATS-MUT-OBLIGATION-MERGE",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-OBLIGATION-MERGE.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:5ebbf63a456ac4c2aac45d03a6661c935e0c505e7dc6f80c9cdce4636f348106",
+    "operator_id": "ATS-MUT-RESTATEMENT-INSERT",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-RESTATEMENT-INSERT.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:26760a361f5130b24f66125e7fc9ad88cf8d501c3f3340684ab17c6d1d90980f",
+    "operator_id": "ATS-MUT-THRESHOLD-BOUNDARY-SHIFT",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-THRESHOLD-BOUNDARY-SHIFT.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "mutant_example_id": "ats-example-sha256:4852418876eee0d6539315d88f72f385d813ef9014d7d0c54722b31d4ac72d1b",
+    "operator_id": "ATS-MUT-UNIT-STRIP",
+    "pair_file": "fixtures/mutations/pairs/ATS-MUT-UNIT-STRIP.json",
+    "source": "specify",
+    "source_example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "split_group": "mutation-source-specify"
+  },
+  {
+    "refused": [
+      {
+        "detail": "Inventing a second plausible antecedent requires generating a noun phrase that is grammatically compatible with the pronoun, semantically plausible in the domain, and different from the real antecedent. No deterministic procedure over a TextIR document produces that, and a model completion would change an unknown number of semantic features at once, which Section 17.5 forbids for a one-feature mutation. The operator is declared here so the gap is visible and countable; ats.corpus.mutate.apply_operator raises UnsupportedCapabilityError rather than degrading to generation.",
+        "operator_id": "ATS-MUT-ANTECEDENT-AMBIGUATE",
+        "reason": "unsupported"
+      },
+      {
+        "detail": "ATS-MUT-ASSUMPTION-TO-OBSERVATION cannot be applied: no material assumption carries an assessment confidence. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-ASSUMPTION-TO-OBSERVATION",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-CAUSAL-UPGRADE cannot be applied: no material association is declared. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-CAUSAL-UPGRADE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-CONTRARY-EVIDENCE-DELETE cannot be applied: no material contrary or alternative relation targets a judgment or forecast. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-CONTRARY-EVIDENCE-DELETE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-EVIDENTIAL-STRENGTHEN cannot be applied: no claim carries an evidential force below the strongest lexicon term. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-EVIDENTIAL-STRENGTHEN",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-LIKELIHOOD-CONFIDENCE-SWAP cannot be applied: no claim carries both a likelihood and an assessment confidence. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-LIKELIHOOD-CONFIDENCE-SWAP",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-QUAL-DELETE cannot be applied: no material claim declares a scope condition. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-QUAL-DELETE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-QUANTIFIER-WIDEN cannot be applied: no material claim carries a quantifier of kind some. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-QUANTIFIER-WIDEN",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-RELATION-REVERSE cannot be applied: no material directional relation exists. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-RELATION-REVERSE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-SOURCE-ATTRIBUTION-STRIP cannot be applied: no evidence object declares a present source with a locator. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-SOURCE-ATTRIBUTION-STRIP",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-UPDATE-INDICATOR-DELETE cannot be applied: no update indicator targets a material judgment or forecast. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-UPDATE-INDICATOR-DELETE",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-WEP-BAND-SHIFT cannot be applied: no material claim carries a canonical WEP likelihood. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-WEP-BAND-SHIFT",
+        "reason": "precondition_unmet"
+      },
+      {
+        "detail": "ATS-MUT-WEP-RANGE-STRIP cannot be applied: no claim shows a WEP range inline. A mutation whose precondition is unmet is refused rather than approximated (spec 17.5).",
+        "operator_id": "ATS-MUT-WEP-RANGE-STRIP",
+        "reason": "precondition_unmet"
+      }
+    ],
+    "source": "specify"
+  }
+]

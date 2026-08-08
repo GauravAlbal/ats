@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_mutation_operator_v1.schema.json",
+  "title": "ATS Mutation Operator Registry V1",
+  "description": "Machine-readable registry of corpus mutation operators. An operator that cannot be performed safely and deterministically is specified with supported=false rather than implemented through uncontrolled generation (spec Section 17.5).",
+  "type": "object",
+  "required": ["schema_version", "registry_version", "ats_version", "operators"],
+  "properties": {
+    "schema_version": { "const": "ats.mutation_operator.v1" },
+    "registry_version": { "type": "string", "minLength": 1 },
+    "ats_version": { "type": "string", "minLength": 1 },
+    "operators": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/operator" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "operator": {
+      "type": "object",
+      "required": [
+        "operator_id",
+        "operator_version",
+        "title",
+        "applicable_profiles",
+        "target_rule_ids",
+        "preconditions",
+        "transformation",
+        "expected_label",
+        "expected_protected_impact",
+        "deterministic",
+        "invertible",
+        "required_context",
+        "exclusions",
+        "hard_negative_pair_required",
+        "split_group_policy",
+        "supported"
+      ],
+      "properties": {
+        "operator_id": { "type": "string", "pattern": "^ATS-MUT-[A-Z0-9-]+$" },
+        "operator_version": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "applicable_profiles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/profile" }
+        },
+        "target_rule_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^ATS-[A-Z]+-[0-9]{3}$" }
+        },
+        "preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "transformation": {
+          "type": "object",
+          "required": ["kind", "description"],
+          "properties": {
+            "kind": {
+              "enum": [
+                "ir_field_delete",
+                "ir_field_replace",
+                "ir_field_swap",
+                "ir_relation_reverse",
+                "ir_relation_delete",
+                "ir_claim_role_change",
+                "ir_claim_merge",
+                "ir_claim_reorder",
+                "ir_claim_insert",
+                "text_span_delete",
+                "text_span_replace"
+              ]
+            },
+            "description": { "type": "string", "minLength": 1 },
+            "target_pointer": {
+              "type": "string",
+              "description": "JSON Pointer template into the TextIR object the operator edits."
+            },
+            "replacement_source": {
+              "enum": ["force_lexicon", "literal", "adjacent_band", "sibling_field", "none"],
+              "description": "Where a replacement value comes from. Never a free-form model completion."
+            },
+            "literal": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "expected_label": {
+          "enum": [
+            "conforming",
+            "violation",
+            "near_miss",
+            "hard_negative",
+            "exception",
+            "ambiguous",
+            "insufficient_context"
+          ]
+        },
+        "expected_protected_impact": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["P0", "P1", "P2"] }
+        },
+        "expected_delta_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "preserved", "omitted", "added", "weakened", "strengthened", "contradicted",
+              "scope_changed", "polarity_changed", "quantifier_changed", "likelihood_changed",
+              "confidence_changed", "evidential_force_changed", "causal_force_changed",
+              "deontic_force_changed", "source_attribution_changed", "authority_changed",
+              "condition_changed", "exception_changed", "relation_changed",
+              "ambiguous_after_transform", "authorized_change"
+            ]
+          }
+        },
+        "deterministic": { "type": "boolean" },
+        "invertible": { "type": "boolean" },
+        "required_context": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "hard_negative_pair_required": { "type": "boolean" },
+        "hard_negative_classes": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "split_group_policy": {
+          "enum": ["inherit_source", "inherit_source_and_operator"],
+          "description": "A mutation MUST stay in the same split group as its source (spec Section 17.7)."
+        },
+        "supported": { "type": "boolean" },
+        "unsupported_reason": { "type": "string", "minLength": 1 },
+        "spec_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "supported": { "const": false } }, "required": ["supported"] },
+          "then": { "required": ["unsupported_reason"] }
+        },
+        {
+          "if": { "properties": { "supported": { "const": true } }, "required": ["supported"] },
+          "then": { "properties": { "deterministic": { "const": true } } }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

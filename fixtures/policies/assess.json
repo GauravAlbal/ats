@@ -1,0 +1,30 @@
+{
+  "schema_version": "ats.policy_snapshot.v1",
+  "snapshot_id": "policy-example-assess",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "created_at": "2026-08-03T00:00:00Z",
+  "profiles": [
+    "ASSESS"
+  ],
+  "audience": {
+    "expertise": "expert",
+    "audience_id": "arq-engineering",
+    "locale": "en-US"
+  },
+  "glossary_refs": [
+    "arq-core-v1"
+  ],
+  "lexicon_refs": [
+    "ats_force_lexicon_v1"
+  ],
+  "rule_overrides": {},
+  "exceptions": [],
+  "finding_budget": {
+    "guardrail": "all_critical",
+    "coach": 5
+  },
+  "model_artifacts": [],
+  "fallback_policy": "fail_closed",
+  "snapshot_sha256": "7d2503c20bd94a1f76770575575f35d757b1ecce42adb5d37c87677cc3d6128c"
+}

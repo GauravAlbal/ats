@@ -1,0 +1,228 @@
+schema_version: ats.force_lexicon.v1
+standard: ATS-1
+spec_version: 1.0.0-draft.1
+likelihood:
+  canonical_set: ats-wep-v1
+  first_material_use_must_show_range: true
+  machine_boundary_convention: lower-inclusive, upper-exclusive; final interval includes 0.99
+  terms:
+  - id: almost_no_chance
+    phrase: almost no chance
+    display_range: 1–5%
+    lower: 0.01
+    upper: 0.05
+    upper_inclusive: false
+    input_aliases:
+    - remote
+    - highly improbable
+  - id: very_unlikely
+    phrase: very unlikely
+    display_range: 5–20%
+    lower: 0.05
+    upper: 0.2
+    upper_inclusive: false
+    input_aliases: []
+  - id: unlikely
+    phrase: unlikely
+    display_range: 20–45%
+    lower: 0.2
+    upper: 0.45
+    upper_inclusive: false
+    input_aliases:
+    - improbable
+  - id: roughly_even_chance
+    phrase: roughly even chance
+    display_range: 45–55%
+    lower: 0.45
+    upper: 0.55
+    upper_inclusive: false
+    input_aliases:
+    - roughly even odds
+  - id: likely
+    phrase: likely
+    display_range: 55–80%
+    lower: 0.55
+    upper: 0.8
+    upper_inclusive: false
+    input_aliases:
+    - probable
+  - id: very_likely
+    phrase: very likely
+    display_range: 80–95%
+    lower: 0.8
+    upper: 0.95
+    upper_inclusive: false
+    input_aliases:
+    - highly probable
+  - id: almost_certain
+    phrase: almost certain
+    display_range: 95–99%
+    lower: 0.95
+    upper: 0.99
+    upper_inclusive: true
+    input_aliases:
+    - nearly certain
+  out_of_band:
+    below_1_percent: state numerically
+    above_99_percent: state numerically
+    zero_and_one: reserved for logical, definitional, or exhaustive certainty
+  non_probability_terms:
+  - possible
+  - plausible
+  - might
+  - could
+assessment_confidence:
+  terms:
+  - id: low
+    definition: Materially fragile to plausible evidence, assumption, interpretation, or environmental
+      changes.
+  - id: moderate
+    definition: Useful and generally coherent, but at least one material gap, assumption, limitation,
+      or instability remains.
+  - id: high
+    definition: Robust to plausible updates because the basis is strong and major assumptions and contrary
+      evidence are resolved or formally bounded.
+  basis_dimensions:
+    basis_type:
+    - empirical
+    - formal
+    - direct_observation
+    - expert_judgment
+    - mixed
+    evidence_quality:
+    - weak
+    - mixed
+    - strong
+    - unknown
+    evidence_coverage:
+    - narrow
+    - partial
+    - broad
+    - unknown
+    source_independence:
+    - single
+    - partially_independent
+    - independent
+    - not_applicable
+    - unknown
+    directness:
+    - indirect
+    - mixed
+    - direct
+    - unknown
+    consistency:
+    - conflicting
+    - mixed
+    - convergent
+    - unknown
+    assumption_sensitivity:
+    - high
+    - moderate
+    - low
+    - unknown
+    environmental_stability:
+    - volatile
+    - mixed
+    - stable
+    - not_applicable
+    - unknown
+    contrary_evidence:
+    - unaddressed
+    - addressed
+    - none_found
+    - not_searched
+    - not_applicable
+    - unknown
+evidential_force:
+  terms:
+  - id: consistent_with
+    phrase: consistent with
+    definition: Does not contradict but does not materially discriminate for the claim.
+  - id: suggests
+    phrase: suggests
+    definition: Weakly favors the claim with substantial alternatives, gaps, or noise.
+  - id: supports
+    phrase: supports
+    definition: Materially favors the claim over at least one live alternative.
+  - id: strongly_supports
+    phrase: strongly supports
+    definition: Multiple independent or highly discriminating lines favor the claim and important alternatives
+      are substantially weaker.
+  - id: establishes
+    phrase: establishes
+    definition: Entails the claim under explicit assumptions, directly observes the complete condition,
+      or supplies a valid formal demonstration.
+causal_force:
+  terms:
+  - id: associated_with
+    phrase: associated with
+    definition: Covaries or co-occurs without a causal claim.
+  - id: predicts
+    phrase: predicts
+    definition: Improves prediction in a declared setting without asserting causation.
+  - id: contributes_to
+    phrase: contributes to
+    definition: Has a causal role but is not independently sufficient.
+  - id: causes
+    phrase: causes
+    definition: An intervention changes the outcome under stated scope and assumptions.
+  - id: necessary_for
+    phrase: necessary for
+    definition: The outcome cannot occur under scope without the factor.
+  - id: sufficient_for
+    phrase: sufficient for
+    definition: The factor is enough to produce the outcome under scope.
+  untyped_candidates:
+  - drives
+  - leads to
+  - explains
+  - powers
+  - results in
+deontic_force:
+  terms:
+  - id: MUST
+    definition: Absolute obligation within authority and scope.
+  - id: MUST_NOT
+    surface: MUST NOT
+    definition: Absolute prohibition within authority and scope.
+  - id: SHOULD
+    definition: Defeasible recommendation requiring an explicit material reason to override.
+  - id: SHOULD_NOT
+    surface: SHOULD NOT
+    definition: Defeasible discouragement requiring an explicit material reason to override.
+  - id: MAY
+    definition: Permission.
+  - id: CAN
+    definition: Capability, not permission or probability.
+  - id: CANNOT
+    definition: Lack of capability or logical impossibility, not prohibition.
+  - id: REQUIRED_BY
+    surface: IS REQUIRED BY <source>
+    definition: Obligation attributed to an identified external authority.
+  noncanonical:
+  - SHALL
+  - SHALL NOT
+collision_rules:
+- id: force-collision-may
+  surface: may
+  disallowed_ambiguities:
+  - permission
+  - probability
+  - capability
+- id: force-collision-should
+  surface: should
+  disallowed_ambiguities:
+  - recommendation
+  - forecast
+  - uncertainty
+- id: force-collision-will
+  surface: will
+  disallowed_ambiguities:
+  - forecast
+  - design_description
+  - obligation
+- id: force-collision-confidence
+  surface: confidence
+  disallowed_ambiguities:
+  - assessment_confidence
+  - detector_confidence

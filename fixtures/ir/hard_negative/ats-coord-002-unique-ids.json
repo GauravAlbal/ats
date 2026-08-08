@@ -1,0 +1,76 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-002-unique-ids",
+  "source": {
+    "content_sha256": "d5c77802118b245bbbafedeafa0f0c825427daa471d85197be73158b910f46a5",
+    "normalized_sha256": "d5c77802118b245bbbafedeafa0f0c825427daa471d85197be73158b910f46a5",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-002-unique-ids.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-002-unique-ids",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C002-5",
+          "role": "requirement",
+          "proposition": "The verifier MUST record every accepted transition in the ledger.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-5",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "every accepted transition",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        },
+        {
+          "claim_id": "REQ-C002-6",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-6",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-5",
+      "source_pointer": "#/sections/0/claims/0"
+    },
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-6",
+      "source_pointer": "#/sections/0/claims/1"
+    }
+  ]
+}

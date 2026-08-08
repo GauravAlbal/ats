@@ -1,0 +1,6 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_policy_exception_v1.schema.json",
+  "title": "ATS TextPolicyExceptionV1",
+  "$ref": "ats_common_v1.schema.json#/$defs/policy_exception"
+}

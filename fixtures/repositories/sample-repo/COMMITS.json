@@ -1,0 +1,28 @@
+[
+  {
+    "date": "2026-01-05T09:00:00+00:00",
+    "files": {
+      ".ats/corpus.json": "{\n  \"domain\": \"acceptance-kernel\",\n  \"handling_policy\": \"public\",\n  \"repository_group\": \"ats-sample\",\n  \"use_authority\": \"external_training_permitted\"\n}\n",
+      "docs/assessment.md": "# Rust kernel assessment\n\n<!-- ats:profile ASSESS -->\n\n## ASSESS: acceptance-kernel language\n\nA Rust migration is likely (55-80%) to reduce invalid-state defects in the\nacceptance kernel after the transition model stabilizes. Confidence is moderate\nbecause the evidence is mixed and partially indirect.\n\n## Evidence\n\nCurrent acceptance failures cluster around illegal intermediate states. It is\npossible that a smaller typed Python kernel would close the same gap.\n\n## Boundaries\n\nThe assessment does not apply to the policy-fluid orchestration plane.\n",
+      "docs/requirements.md": "# Acceptance policy requirements\n\n<!-- ats:profile SPECIFY -->\n\n## SPECIFY: stale-policy rejection\n\nREQ-POLICY-017: When the executor presents an acceptance receipt whose\npolicy_sha256 differs from the current resolved policy snapshot, the verifier\nMUST reject the receipt before the acceptance transition.\n\n## SPECIFY: retention\n\nThe verifier SHOULD retain both policy hashes. An operator MAY export them.\nThe exporter SHALL NOT redact the source revision.\n\n## Acceptance criteria\n\nA stale-policy fixture returns refused_stale_policy and records both hashes.\n",
+      "src/main.py": "def main() -> None:\n    print('not an inspected media type')\n"
+    },
+    "message": "Add the acceptance-kernel assessment and policy requirements\n"
+  },
+  {
+    "date": "2026-01-06T09:00:00+00:00",
+    "files": {
+      "docs/assessment.md": "# Rust kernel assessment\n\n<!-- ats:profile ASSESS -->\n\n## ASSESS: acceptance-kernel language\n\nA Rust migration is likely (55-80%) to reduce invalid-state defects in the\nacceptance kernel after the transition model stabilizes. Confidence is moderate\nbecause the evidence is mixed and partially indirect.\n\n## Evidence\n\nCurrent acceptance failures cluster around illegal intermediate states. It is\npossible that a smaller typed Python kernel would close the same gap.\n\n## Boundaries\n\nThe assessment does not apply to the policy-fluid orchestration plane.\n\n## Update indicators\n\nIf two consecutive releases show no invalid-state defects, the judgment is\ncurrently expected to weaken. This is clearly a significant change in the\nevidence base.\n",
+      "docs/notes.txt": "Operator notes\n\nThe migration decision is not settled. Recently the team recorded that the\nkernel is robust under the current load, which is a very large claim without a\nthreshold.\n"
+    },
+    "message": "Record update indicators for the kernel assessment\n\nATS-Model: fixture-writer@1.0.0\n"
+  },
+  {
+    "date": "2026-01-07T09:00:00+00:00",
+    "files": {
+      "docs/requirements-copy.md": "# Retention policy requirements\n\n<!-- ats:profile SPECIFY -->\n\n## SPECIFY: stale-policy rejection\n\nREQ-RETAIN-004: When the executor presents an acceptance receipt whose\npolicy_sha256 differs from the current resolved policy snapshot, the verifier\nMUST reject the receipt before the acceptance transition.\n\n## SPECIFY: retention\n\nThe verifier SHOULD retain both policy hashes. An operator MAY export them.\nThe exporter SHALL NOT redact the source revision.\n\n## Acceptance criteria\n\nA stale-policy fixture returns refused_stale_policy and records both hashes.\n"
+    },
+    "message": "Copy the requirement template for the retention policy\n\nATS-Review-State: accepted\nReviewed-by: Reviewer One <one@ats.invalid>\nATS-Review-Comment: The copied template keeps the stale-policy obligation intact.\n",
+    "note": "ATS-Review-State: accepted\nReviewed-by: Reviewer Two <two@ats.invalid>\nATS-Review-Comment: Second reviewer confirmed the obligation text.\n"
+  }
+]

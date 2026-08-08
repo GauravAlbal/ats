@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_planning_projection_v1.schema.json",
+  "title": "ATS Planning Projection V1",
+  "description": "A deterministic projection of an accepted ATS TextIR artifact into the planning-input surface Arq consumes. It preserves source lineage: every requirement, decision, acceptance criterion, and dependency carries its IR source pointer and the projection binds artifact and policy hashes. A downstream planner may map one requirement to several tasks, several coupled requirements to one task, or one requirement to one task — the projection does not prescribe the mapping, and no derived task is source-backed without a source coordinate or an explicit planner-created rationale.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "projection_id",
+    "artifact_id",
+    "artifact_sha256",
+    "ir_sha256",
+    "policy_snapshot_id",
+    "policy_snapshot_sha256",
+    "spec_version",
+    "profile",
+    "stable_coordinates",
+    "requirements",
+    "decisions",
+    "acceptance_criteria",
+    "proof_obligations",
+    "dependencies",
+    "non_goals",
+    "boundaries",
+    "exceptions",
+    "update_indicators",
+    "authority"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.planning_projection.v1"
+    },
+    "projection_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ir_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "policy_snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_snapshot_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "spec_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stable_coordinates": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "id"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "requirement_id",
+              "decision_id",
+              "acceptance_criterion_id",
+              "work_item_id",
+              "protocol_id",
+              "protocol_version",
+              "dependency_target",
+              "authority_reference"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "requirement_id",
+          "actor",
+          "deontic",
+          "action",
+          "object",
+          "source_pointer"
+        ],
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actor": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deontic": {
+            "enum": [
+              "MUST",
+              "MUST_NOT",
+              "SHOULD",
+              "SHOULD_NOT",
+              "MAY"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "object": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "type": "string"
+          },
+          "trigger": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "acceptance_criterion_id": {
+            "type": "string"
+          },
+          "source_pointer": {
+            "type": "string"
+          },
+          "authority": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "decision_id",
+          "proposition",
+          "source_pointer"
+        ],
+        "properties": {
+          "decision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "proposition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string"
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "acceptance_criterion_id",
+          "criterion"
+        ],
+        "properties": {
+          "acceptance_criterion_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "criterion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requirement_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "proof_obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "obligation_id",
+          "claim_id"
+        ],
+        "properties": {
+          "obligation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requirement_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from_requirement_id",
+          "to_requirement_id"
+        ],
+        "properties": {
+          "from_requirement_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to_requirement_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "non_goals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "boundaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "statement"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "update_indicators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "indicator_id",
+          "claim_id",
+          "kind"
+        ],
+        "properties": {
+          "indicator_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "source_pointer": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "authority": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authority": {
+            "type": "string"
+          },
+          "precedence": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

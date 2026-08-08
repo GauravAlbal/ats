@@ -1,0 +1,567 @@
+{
+  "expected_impact": {
+    "expected_delta_classes": [
+      "omitted"
+    ],
+    "expected_label": "violation",
+    "expected_protected_impact": [
+      "P2"
+    ],
+    "rules": [
+      {
+        "normative_statement": "The first material WEP use in a section MUST include its numeric display range inline.",
+        "rule_id": "ATS-EPI-002",
+        "rule_version": "1.0.0-draft.1",
+        "severity": "major"
+      }
+    ],
+    "synthetic_evidence_note": "A synthetic mutation demonstrates that the rule can be violated in this way. It is not evidence that the violation occurs in real repositories (spec 17.5).",
+    "target_rule_ids": [
+      "ATS-EPI-002"
+    ]
+  },
+  "mutant": {
+    "domain": "acceptance-kernel",
+    "example_id": "ats-example-sha256:8b72016d4587b389e18165db99b3b9ca8a23a70eb80dbea14b73b2730249dd76",
+    "extensions": {
+      "x-ats-repo-mutation-family": "ATS-MUT-WEP-RANGE-STRIP",
+      "x-ats-repo-record-sha256": "8b72016d4587b389e18165db99b3b9ca8a23a70eb80dbea14b73b2730249dd76",
+      "x-ats-repo-source-example-id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+      "x-ats-repo-text-ir": {
+        "artifact_id": "fixture-mutation-source-assess",
+        "audience": {
+          "audience_id": "arq-engineering",
+          "expertise": "expert"
+        },
+        "extraction_status": "complete",
+        "glossary": [
+          {
+            "audience": "expert",
+            "canonical_term": "acceptance kernel",
+            "concept_id": "acceptance-kernel",
+            "definition": "The closed state-transition component that authorizes an accepted change.",
+            "deprecated_aliases": [
+              "gate engine"
+            ],
+            "scope": "Arq"
+          }
+        ],
+        "language": "en",
+        "policy_snapshot_id": "policy-example-assess",
+        "schema_version": "ats.text_ir.v1",
+        "sections": [
+          {
+            "claims": [
+              {
+                "claim_id": "c1",
+                "force": {
+                  "assessment_confidence": {
+                    "basis": {
+                      "assumption_sensitivity": "moderate",
+                      "basis_type": "mixed",
+                      "consistency": "mixed",
+                      "contrary_evidence": "addressed",
+                      "directness": "indirect",
+                      "environmental_stability": "mixed",
+                      "evidence_coverage": "partial",
+                      "evidence_quality": "mixed",
+                      "rationale": "Two partially independent lines of evidence with a stability assumption.",
+                      "source_independence": "partially_independent"
+                    },
+                    "level": "moderate"
+                  },
+                  "likelihood": {
+                    "kind": "wep",
+                    "lower": 0.55,
+                    "range_shown_inline": false,
+                    "term": "likely",
+                    "upper": 0.8
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "A Rust migration is likely (55-80%) to reduce invalid-state defects in the acceptance kernel.",
+                "role": "judgment",
+                "scope": {
+                  "condition": "after the transition model is stable",
+                  "system": "Arq acceptance kernel",
+                  "time_horizon": "post-stabilization"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "c2",
+                "force": {
+                  "likelihood": {
+                    "display": "unlikely (20-45%)",
+                    "kind": "wep",
+                    "lower": 0.2,
+                    "range_shown_inline": true,
+                    "term": "unlikely",
+                    "upper": 0.45
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The migration is unlikely (20-45%) to change acceptance latency.",
+                "role": "judgment",
+                "scope": {
+                  "system": "Arq acceptance kernel",
+                  "time_horizon": "post-stabilization"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "a1",
+                "force": {
+                  "assessment_confidence": {
+                    "basis": {
+                      "assumption_sensitivity": "moderate",
+                      "basis_type": "mixed",
+                      "consistency": "mixed",
+                      "contrary_evidence": "addressed",
+                      "directness": "indirect",
+                      "environmental_stability": "mixed",
+                      "evidence_coverage": "partial",
+                      "evidence_quality": "mixed",
+                      "rationale": "Two partially independent lines of evidence with a stability assumption.",
+                      "source_independence": "partially_independent"
+                    },
+                    "level": "moderate"
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The transition model remains substantially stable during the migration.",
+                "role": "assumption",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "q1",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Thirty percent of acceptance runs recorded an illegal intermediate state.",
+                "quantifier": {
+                  "denominator": 120,
+                  "kind": "proportion",
+                  "unit": "acceptance runs",
+                  "value": 0.3
+                },
+                "role": "observation",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "q2",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Some transition families already reject illegal intermediate states.",
+                "quantifier": {
+                  "kind": "some"
+                },
+                "role": "observation",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "i1",
+                "force": {
+                  "evidential": "suggests"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The clustering of acceptance failures suggests a typed transition layer would close the gap.",
+                "role": "inference",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "alt1",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Whether a smaller typed Python kernel closes the same gap remains open.",
+                "role": "open_question",
+                "status": "unresolved"
+              }
+            ],
+            "evidence": [
+              {
+                "availability": "present",
+                "evidence_id": "e1",
+                "proposition": "Acceptance failures cluster around illegal intermediate states.",
+                "source": {
+                  "availability": "present",
+                  "locator": "audits/acceptance-failures.md",
+                  "observed_at": "2026-01-05T09:00:00Z",
+                  "source_id": "repo-audit",
+                  "source_type": "repository_artifact"
+                }
+              },
+              {
+                "availability": "present",
+                "evidence_id": "e2",
+                "proposition": "Existing Rust components prevent construction of several invalid states.",
+                "source": {
+                  "availability": "present",
+                  "locator": "components/rust/README.md",
+                  "source_id": "rust-components",
+                  "source_type": "repository_artifact"
+                }
+              }
+            ],
+            "heading": "Acceptance-kernel language assessment",
+            "profiles": [
+              "ASSESS"
+            ],
+            "relations": [
+              {
+                "material": true,
+                "relation_id": "rel1",
+                "source_id": "e1",
+                "target_id": "c1",
+                "type": "associated_with"
+              },
+              {
+                "basis_refs": [
+                  "e2"
+                ],
+                "material": true,
+                "relation_id": "rel2",
+                "source_id": "e2",
+                "target_id": "c1",
+                "type": "supports"
+              },
+              {
+                "material": true,
+                "relation_id": "rel3",
+                "source_id": "alt1",
+                "target_id": "c2",
+                "type": "alternative_to"
+              },
+              {
+                "material": true,
+                "relation_id": "rel4",
+                "source_id": "a1",
+                "target_id": "c1",
+                "type": "condition_for"
+              }
+            ],
+            "section_id": "assessment",
+            "update_indicators": [
+              {
+                "effect": "decrease_likelihood",
+                "indicator_id": "u1",
+                "target_claim_refs": [
+                  "c1"
+                ],
+                "text": "Two consecutive releases without invalid-state defects weaken the judgment."
+              },
+              {
+                "effect": "reevaluate",
+                "indicator_id": "u2",
+                "target_claim_refs": [
+                  "c2"
+                ],
+                "text": "A measured latency regression reverses the latency judgment."
+              }
+            ]
+          }
+        ],
+        "source": {
+          "content_sha256": "ccbbacc8f1b54b98ad5b02025a2a7fde4fb34e53986ed0ca08ac96f2a87566ec",
+          "locator": "fixtures/mutations/sources/assess_mutation_source.json",
+          "media_type": "text/plain"
+        }
+      }
+    },
+    "label": "violation",
+    "mutation_operator": "ATS-MUT-WEP-RANGE-STRIP",
+    "profile": "ASSESS",
+    "protected_impact": [
+      "P2"
+    ],
+    "provenance": "synthetic_mutation",
+    "rationale": "Remove the inline range from a first-use likelihood phrase: the inline display 'likely (55-80%)' was removed while the band was preserved. Synthetic mutation under ATS-MUT-WEP-RANGE-STRIP; it is tagged synthetic and MUST NOT be counted as independent real-world evidence of rule prevalence or user value (spec 17.5).",
+    "repository_group": "ats-seed",
+    "rule_id": "ATS-EPI-002",
+    "schema_version": "ats.text_example.v1",
+    "split_group": "mutation-source-assess",
+    "synthetic": true,
+    "text": "A Rust migration is likely (55-80%) to reduce invalid-state defects in the acceptance kernel.",
+    "use_authority": "ATS repository fixture"
+  },
+  "operator_id": "ATS-MUT-WEP-RANGE-STRIP",
+  "source_example": {
+    "domain": "acceptance-kernel",
+    "example_id": "ats-example-sha256:e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+    "extensions": {
+      "x-ats-repo-record-sha256": "e0b1c2374d3d1b257a14502dc9933ce876403fee406d860eca56b3edbdcf1087",
+      "x-ats-repo-text-ir": {
+        "artifact_id": "fixture-mutation-source-assess",
+        "audience": {
+          "audience_id": "arq-engineering",
+          "expertise": "expert"
+        },
+        "extraction_status": "complete",
+        "glossary": [
+          {
+            "audience": "expert",
+            "canonical_term": "acceptance kernel",
+            "concept_id": "acceptance-kernel",
+            "definition": "The closed state-transition component that authorizes an accepted change.",
+            "deprecated_aliases": [
+              "gate engine"
+            ],
+            "scope": "Arq"
+          }
+        ],
+        "language": "en",
+        "policy_snapshot_id": "policy-example-assess",
+        "schema_version": "ats.text_ir.v1",
+        "sections": [
+          {
+            "claims": [
+              {
+                "claim_id": "c1",
+                "force": {
+                  "assessment_confidence": {
+                    "basis": {
+                      "assumption_sensitivity": "moderate",
+                      "basis_type": "mixed",
+                      "consistency": "mixed",
+                      "contrary_evidence": "addressed",
+                      "directness": "indirect",
+                      "environmental_stability": "mixed",
+                      "evidence_coverage": "partial",
+                      "evidence_quality": "mixed",
+                      "rationale": "Two partially independent lines of evidence with a stability assumption.",
+                      "source_independence": "partially_independent"
+                    },
+                    "level": "moderate"
+                  },
+                  "likelihood": {
+                    "display": "likely (55-80%)",
+                    "kind": "wep",
+                    "lower": 0.55,
+                    "range_shown_inline": true,
+                    "term": "likely",
+                    "upper": 0.8
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "A Rust migration is likely (55-80%) to reduce invalid-state defects in the acceptance kernel.",
+                "role": "judgment",
+                "scope": {
+                  "condition": "after the transition model is stable",
+                  "system": "Arq acceptance kernel",
+                  "time_horizon": "post-stabilization"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "c2",
+                "force": {
+                  "likelihood": {
+                    "display": "unlikely (20-45%)",
+                    "kind": "wep",
+                    "lower": 0.2,
+                    "range_shown_inline": true,
+                    "term": "unlikely",
+                    "upper": 0.45
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The migration is unlikely (20-45%) to change acceptance latency.",
+                "role": "judgment",
+                "scope": {
+                  "system": "Arq acceptance kernel",
+                  "time_horizon": "post-stabilization"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "a1",
+                "force": {
+                  "assessment_confidence": {
+                    "basis": {
+                      "assumption_sensitivity": "moderate",
+                      "basis_type": "mixed",
+                      "consistency": "mixed",
+                      "contrary_evidence": "addressed",
+                      "directness": "indirect",
+                      "environmental_stability": "mixed",
+                      "evidence_coverage": "partial",
+                      "evidence_quality": "mixed",
+                      "rationale": "Two partially independent lines of evidence with a stability assumption.",
+                      "source_independence": "partially_independent"
+                    },
+                    "level": "moderate"
+                  }
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The transition model remains substantially stable during the migration.",
+                "role": "assumption",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "q1",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Thirty percent of acceptance runs recorded an illegal intermediate state.",
+                "quantifier": {
+                  "denominator": 120,
+                  "kind": "proportion",
+                  "unit": "acceptance runs",
+                  "value": 0.3
+                },
+                "role": "observation",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "q2",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Some transition families already reject illegal intermediate states.",
+                "quantifier": {
+                  "kind": "some"
+                },
+                "role": "observation",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "i1",
+                "force": {
+                  "evidential": "suggests"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The clustering of acceptance failures suggests a typed transition layer would close the gap.",
+                "role": "inference",
+                "status": "asserted"
+              },
+              {
+                "claim_id": "alt1",
+                "material": true,
+                "polarity": "positive",
+                "proposition": "Whether a smaller typed Python kernel closes the same gap remains open.",
+                "role": "open_question",
+                "status": "unresolved"
+              }
+            ],
+            "evidence": [
+              {
+                "availability": "present",
+                "evidence_id": "e1",
+                "proposition": "Acceptance failures cluster around illegal intermediate states.",
+                "source": {
+                  "availability": "present",
+                  "locator": "audits/acceptance-failures.md",
+                  "observed_at": "2026-01-05T09:00:00Z",
+                  "source_id": "repo-audit",
+                  "source_type": "repository_artifact"
+                }
+              },
+              {
+                "availability": "present",
+                "evidence_id": "e2",
+                "proposition": "Existing Rust components prevent construction of several invalid states.",
+                "source": {
+                  "availability": "present",
+                  "locator": "components/rust/README.md",
+                  "source_id": "rust-components",
+                  "source_type": "repository_artifact"
+                }
+              }
+            ],
+            "heading": "Acceptance-kernel language assessment",
+            "profiles": [
+              "ASSESS"
+            ],
+            "relations": [
+              {
+                "material": true,
+                "relation_id": "rel1",
+                "source_id": "e1",
+                "target_id": "c1",
+                "type": "associated_with"
+              },
+              {
+                "basis_refs": [
+                  "e2"
+                ],
+                "material": true,
+                "relation_id": "rel2",
+                "source_id": "e2",
+                "target_id": "c1",
+                "type": "supports"
+              },
+              {
+                "material": true,
+                "relation_id": "rel3",
+                "source_id": "alt1",
+                "target_id": "c2",
+                "type": "alternative_to"
+              },
+              {
+                "material": true,
+                "relation_id": "rel4",
+                "source_id": "a1",
+                "target_id": "c1",
+                "type": "condition_for"
+              }
+            ],
+            "section_id": "assessment",
+            "update_indicators": [
+              {
+                "effect": "decrease_likelihood",
+                "indicator_id": "u1",
+                "target_claim_refs": [
+                  "c1"
+                ],
+                "text": "Two consecutive releases without invalid-state defects weaken the judgment."
+              },
+              {
+                "effect": "reevaluate",
+                "indicator_id": "u2",
+                "target_claim_refs": [
+                  "c2"
+                ],
+                "text": "A measured latency regression reverses the latency judgment."
+              }
+            ]
+          }
+        ],
+        "source": {
+          "content_sha256": "ccbbacc8f1b54b98ad5b02025a2a7fde4fb34e53986ed0ca08ac96f2a87566ec",
+          "locator": "fixtures/mutations/sources/assess_mutation_source.json",
+          "media_type": "text/plain"
+        }
+      }
+    },
+    "label": "conforming",
+    "profile": "ASSESS",
+    "protected_impact": [
+      "P0"
+    ],
+    "provenance": "human_authored_fixture",
+    "rationale": "Hand-authored mutation source carrying every slot the operators need.",
+    "repository_group": "ats-seed",
+    "rule_id": "ATS-EPI-001",
+    "schema_version": "ats.text_example.v1",
+    "split_group": "mutation-source-assess",
+    "synthetic": false,
+    "text": "A Rust migration is likely (55-80%) to reduce invalid-state defects in the acceptance kernel.",
+    "use_authority": "ATS repository fixture"
+  },
+  "split_group": "mutation-source-assess",
+  "transformation": {
+    "description": "Set likelihood.range_shown_inline to false and delete likelihood.display. The band itself is preserved; only its first-use rendering is removed.",
+    "detail": "the inline display 'likely (55-80%)' was removed while the band was preserved",
+    "kind": "ir_field_replace",
+    "new_value": false,
+    "old_value": true,
+    "output_sha256": "bfeb804155c98f609c81f37f5431e24b37ef588a6ea66971ab9c68e428920798",
+    "source_sha256": "b33fe65b29f3689911e3c9a769146fddca176d45427e432318faef0af0b85269",
+    "target_pointer": "/sections/0/claims/0/force/likelihood/range_shown_inline"
+  }
+}

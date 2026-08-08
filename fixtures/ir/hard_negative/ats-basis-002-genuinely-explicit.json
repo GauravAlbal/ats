@@ -1,0 +1,63 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-002-genuinely-explicit",
+  "source": {
+    "content_sha256": "1f090af933c70bc6f16efff4ac2a4ada3eaa1ad10dd02428328dfd8e627a3ada",
+    "normalized_sha256": "1f090af933c70bc6f16efff4ac2a4ada3eaa1ad10dd02428328dfd8e627a3ada",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-002-genuinely-explicit.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-002-genuinely-explicit",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "OUT-B2-3",
+          "role": "observation",
+          "proposition": "The audit log shows 41 stale-policy rejections in the last quarter.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "EXPLICIT",
+            "rationale": "The count is stated verbatim in the source log."
+          },
+          "source_refs": [
+            "EV-B2-3"
+          ],
+          "extensions": {
+            "source_basis": {
+              "EV-B2-3": "EXPLICIT"
+            }
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "EV-B2-3",
+          "proposition": "The audit log records 41 stale-policy rejections in the last quarter.",
+          "source": {
+            "source_id": "src-EV-B2-3",
+            "source_type": "synthetic_fixture",
+            "availability": "present",
+            "locator": "fixtures/ir/sources/EV-B2-3.txt"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

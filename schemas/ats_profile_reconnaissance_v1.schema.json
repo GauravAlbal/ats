@@ -1,0 +1,544 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_profile_reconnaissance_v1.schema.json",
+  "title": "ATS Profile Reconnaissance V1",
+  "description": "A bounded diagnostic run beside a Stage 2 sampling frame, asking why an authorised corpus declares no SPECIFY profile. The report binds four rival explanations, the broad signal set used to select bundles, the per-bundle signal provenance, two independent blind classification passes, the agreement between them, and one verdict among the explanations or an explicit `undecided`. It is a repository-local governance artifact, not a normative ATS-1 object: it produces no label, no rule verdict, and no conformance claim (spec Sections 9.3, 9.4, 9.5, 17.4, 17.8).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "generated_at",
+    "study",
+    "policy",
+    "corpus",
+    "signals",
+    "selection",
+    "bundle_context",
+    "blinding",
+    "annotators",
+    "passes",
+    "classifications",
+    "agreement",
+    "verdict"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.profile_reconnaissance.v1" },
+    "report_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "report_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "generated_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+
+    "study": {
+      "description": "What is being asked, which answers were admissible before any data was collected, and what kind of instrument produced the answers. The explanations are declared up front so the study cannot be read as having discovered the one it was designed to find.",
+      "type": "object",
+      "required": [
+        "question",
+        "explanations",
+        "instrument",
+        "relationship_to_frame"
+      ],
+      "properties": {
+        "question": { "type": "string", "minLength": 1 },
+        "explanations": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["explanation_id", "statement"],
+            "properties": {
+              "explanation_id": {
+                "enum": [
+                  "true_corpus_absence",
+                  "candidate_mining_deficiency",
+                  "context_bundle_deficiency",
+                  "profile_boundary_defect"
+                ]
+              },
+              "statement": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "instrument": {
+          "description": "What the agreement figure in this report measures. Two LLM passes measure instrument reproducibility; describing that as human inter-rater reliability would claim evidence nobody collected.",
+          "type": "string",
+          "minLength": 1
+        },
+        "relationship_to_frame": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+
+    "policy": {
+      "description": "Every declared number the draw depends on. A threshold nobody can read is a threshold nobody can dispute.",
+      "type": "object",
+      "required": [
+        "seed",
+        "target_bundles",
+        "max_repository_share",
+        "one_bundle_per_leakage_component",
+        "selector",
+        "decision_thresholds"
+      ],
+      "properties": {
+        "seed": { "type": "integer" },
+        "target_bundles": { "type": "integer", "minimum": 1 },
+        "max_repository_share": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+        "one_bundle_per_leakage_component": { "const": true },
+        "selector": { "type": "string", "minLength": 1 },
+        "decision_thresholds": {
+          "description": "The shares the verdict criteria are evaluated against, declared before the passes ran so a criterion cannot be tuned to the answer.",
+          "type": "object",
+          "required": [
+            "material_share",
+            "negligible_share",
+            "predominance_share",
+            "specification_shape_signals",
+            "minimum_selector_yield"
+          ],
+          "properties": {
+            "material_share": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "negligible_share": { "type": "number", "minimum": 0, "maximum": 1 },
+            "predominance_share": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 },
+            "specification_shape_signals": { "type": "integer", "minimum": 1 },
+            "minimum_selector_yield": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "corpus": {
+      "description": "What the selector was allowed to read, resolved per repository and per path. An unauthorised repository appears here only as an exclusion with the resolution that blocked it (spec Section 16.9).",
+      "type": "object",
+      "required": [
+        "corpus_sha256",
+        "authorised_documents",
+        "authorised_repositories",
+        "excluded_repositories",
+        "path_excluded_documents",
+        "required_uses"
+      ],
+      "properties": {
+        "corpus_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "authorised_documents": { "type": "integer", "minimum": 0 },
+        "path_excluded_documents": { "type": "integer", "minimum": 0 },
+        "required_uses": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "authorised_repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["repository", "revision"],
+            "properties": {
+              "repository": { "type": "string", "minLength": 1 },
+              "revision": { "type": "string", "minLength": 1 },
+              "authority_basis": { "type": "string" },
+              "declared_by": { "type": "string" },
+              "declaration_location": { "type": "string" },
+              "declaration_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+              "issued_at": { "type": "string" },
+              "review_after": { "type": "string" },
+              "expires_in_days": { "type": "integer" },
+              "documents": { "type": "integer", "minimum": 0 },
+              "selections": { "type": "integer", "minimum": 0 }
+            },
+            "additionalProperties": true
+          }
+        },
+        "excluded_repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["repository", "reason"],
+            "properties": {
+              "repository": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "signals": {
+      "description": "The broad requirement-shape signal set, deliberately wider than the production miner's. Every signal names where its vocabulary came from; a signal ATS-1 enumerates no vocabulary for declares `no_declared_vocabulary` and carries no phrases at all, because inventing a word list under an ATS-1 citation is the failure ADR-0006 exists to prevent.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "signal_id",
+          "description",
+          "spec_ref",
+          "vocabulary_source",
+          "origin",
+          "detection",
+          "phrase_count",
+          "spans_fired",
+          "documents_fired",
+          "bundles_fired"
+        ],
+        "properties": {
+          "signal_id": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "spec_ref": { "type": "string", "minLength": 1 },
+          "vocabulary_source": { "type": "string", "minLength": 1 },
+          "origin": {
+            "enum": [
+              "lexicon",
+              "spec_enumeration",
+              "normative_schema_enum",
+              "detector_vocabulary",
+              "no_declared_vocabulary"
+            ]
+          },
+          "detection": { "enum": ["phrase", "structural"] },
+          "phrase_count": { "type": "integer", "minimum": 0 },
+          "phrases": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "not_matched": {
+            "description": "Words a reader might expect this signal to carry and that it deliberately does not, because ATS-1 does not enumerate them. Recorded so the gap is visible rather than silent.",
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "spans_fired": { "type": "integer", "minimum": 0 },
+          "documents_fired": { "type": "integer", "minimum": 0 },
+          "bundles_fired": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "selection": {
+      "description": "One row per selected bundle, with the signals that surfaced it. This provenance is recorded in the report and withheld from the classifier: an annotator told which signals fired has been handed the shape of the expected answer (Sections 13.2, 16.5, 17.8).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "bundle_id",
+          "source_artifact_id",
+          "repository",
+          "document_family",
+          "domain",
+          "split_group",
+          "content_sha256",
+          "signals_fired",
+          "signal_count",
+          "block_kind",
+          "context_completeness"
+        ],
+        "properties": {
+          "bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+          "source_artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+          "repository": { "type": "string", "minLength": 1 },
+          "document_family": { "type": "string", "minLength": 1 },
+          "domain": { "type": "string", "minLength": 1 },
+          "split_group": { "type": "string", "minLength": 1 },
+          "content_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+          "heading_path": { "type": "array", "items": { "type": "string" } },
+          "signals_fired": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "signal_count": { "type": "integer", "minimum": 1 },
+          "block_kind": { "type": "string", "minLength": 1 },
+          "context_completeness": { "type": "string", "minLength": 1 },
+          "declared_profile_hypotheses": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "bundle_context": {
+      "description": "How much context the drawn bundles actually carried, aggregated over the draw. Recorded because `selection[].context_completeness` is a single word that a reader will otherwise interpret as `the enclosing prose was withheld`. It is a rating over six dimensions and an unknown profile basis degrades it on its own, so the per-dimension tally is what distinguishes a bundle missing its surrounding section from a bundle whose review-comment and policy dimensions were never searched.",
+      "type": "object",
+      "required": ["completeness", "profile_basis", "dimension_availability"],
+      "properties": {
+        "completeness": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "profile_basis": {
+          "type": "object",
+          "additionalProperties": { "type": "integer", "minimum": 0 }
+        },
+        "dimension_availability": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": { "type": "integer", "minimum": 0 }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "blinding": {
+      "description": "What the classifier was shown, and what it was not. The visible set is an allow-list: a field added to the bundle schema later is withheld until somebody deliberately admits it, which is the direction a blinding mechanism has to fail in.",
+      "type": "object",
+      "required": ["visible_to_classifier", "withheld_from_classifier", "rationale"],
+      "properties": {
+        "visible_to_classifier": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "withheld_from_classifier": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+
+
+    "annotators": {
+      "description": "The annotator registry bound to this report. `kind` is load-bearing: it prevents an LLM reproducibility figure from being reported as human agreement.",
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["annotator_id", "kind"],
+        "properties": {
+          "annotator_id": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["llm", "human", "hybrid"] },
+          "model": { "type": "string", "minLength": 1 },
+          "prompt_id": { "type": "string", "minLength": 1 },
+          "prompt_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "passes": {
+      "description": "Each pass frozen by the content hash of its raw judgments before agreement was computed, so a disagreement cannot be resolved by revising an earlier answer.",
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["annotator_id", "state", "judgment_count"],
+        "properties": {
+          "annotator_id": { "type": "string", "minLength": 1 },
+          "state": { "enum": ["open", "frozen", "unavailable"] },
+          "judgment_count": { "type": "integer", "minimum": 0 },
+          "path": { "type": "string" },
+          "judgments_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+          "detail": { "type": "string" },
+          "refused": {
+            "description": "Answers dropped because they fell outside the declared class vocabulary. Counted rather than repaired into the nearest legal value, which would invent an opinion nobody held.",
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "classifications": {
+      "description": "One row per (bundle, annotator). `insufficient_context` is a real answer and never a guess (ADR-0002).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "bundle_id",
+          "annotator_id",
+          "classification",
+          "rationale",
+          "persuasive_signals",
+          "requested_additional_context"
+        ],
+        "properties": {
+          "bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+          "annotator_id": { "type": "string", "minLength": 1 },
+          "classification": {
+            "enum": [
+              "SPECIFY",
+              "ASSESS",
+              "mixed",
+              "reserved_profile",
+              "not_applicable",
+              "insufficient_context"
+            ]
+          },
+          "rationale": { "type": "string" },
+          "persuasive_signals": {
+            "description": "What the annotator said it found persuasive, in the annotator's own words. Not the selector's signal ids, which the annotator never saw.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "requested_additional_context": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "evidence_offsets": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+
+    "agreement": {
+      "description": "Agreement between the two passes, per class, with every disagreement preserved. A pooled score alone would hide which class the instrument is unstable on.",
+      "type": "object",
+      "required": [
+        "compared",
+        "agreed",
+        "observed_agreement",
+        "per_class",
+        "disagreements",
+        "caveat"
+      ],
+      "properties": {
+        "compared": { "type": "integer", "minimum": 0 },
+        "agreed": { "type": "integer", "minimum": 0 },
+        "observed_agreement": { "type": "number", "minimum": 0, "maximum": 1 },
+        "per_class": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["classification", "by_annotator", "both", "either", "agreement"],
+            "properties": {
+              "classification": { "type": "string", "minLength": 1 },
+              "by_annotator": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["annotator_id", "count"],
+                  "properties": {
+                    "annotator_id": { "type": "string", "minLength": 1 },
+                    "count": { "type": "integer", "minimum": 0 }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "both": { "type": "integer", "minimum": 0 },
+              "either": { "type": "integer", "minimum": 0 },
+              "agreement": {
+                "description": "Jaccard agreement for the class: both / either. Null when neither annotator used the class, because zero over zero is not agreement.",
+                "type": ["number", "null"],
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "disagreements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["bundle_id", "labels", "signals_fired"],
+            "properties": {
+              "bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+              "labels": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "type": "object",
+                  "required": ["annotator_id", "classification", "rationale"],
+                  "properties": {
+                    "annotator_id": { "type": "string", "minLength": 1 },
+                    "classification": { "type": "string", "minLength": 1 },
+                    "rationale": { "type": "string" }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "signals_fired": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "caveat": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+
+    "verdict": {
+      "description": "One explanation, or `undecided`. Each criterion is evaluated independently against its declared threshold; a verdict is issued only when exactly one is supported, because picking among several supported readings to have picked one is the failure this study is most exposed to.",
+      "type": "object",
+      "required": [
+        "explanation",
+        "statement",
+        "criteria",
+        "counts",
+        "what_would_resolve"
+      ],
+      "properties": {
+        "explanation": {
+          "enum": [
+            "true_corpus_absence",
+            "candidate_mining_deficiency",
+            "context_bundle_deficiency",
+            "profile_boundary_defect",
+            "undecided"
+          ]
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "criteria": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": ["explanation_id", "supported", "test", "observed"],
+            "properties": {
+              "explanation_id": { "type": "string", "minLength": 1 },
+              "supported": { "type": "boolean" },
+              "test": { "type": "string", "minLength": 1 },
+              "observed": { "type": "string", "minLength": 1 },
+              "limb": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "what_would_resolve": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "refusals": {
+      "description": "What this study declined to do, in the same shape as the mining and profile refusals, so a reader sees the boundaries without reading the code.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["refusal_id", "statement"],
+        "properties": {
+          "refusal_id": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
+          "spec_ref": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

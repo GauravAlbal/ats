@@ -1,0 +1,61 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-001-undeclared-use",
+  "source": {
+    "content_sha256": "9c06f6ef5767b4c172932a3826096e07714e498f36d1cfc287efb6e059963daa",
+    "normalized_sha256": "9c06f6ef5767b4c172932a3826096e07714e498f36d1cfc287efb6e059963daa",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-001-undeclared-use.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-001-undeclared-use",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C001-9",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition. This requirement id REQ-C001-9 is used here but is absent from the stable_coordinates block.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C001-9",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier",
+            "acceptance_criterion_id": "AC-C001-1"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C001-1",
+      "source_pointer": "#/sections/0/claims/0"
+    },
+    {
+      "kind": "acceptance_criterion_id",
+      "id": "AC-C001-1",
+      "source_pointer": "#/sections/0/claims/0/requirement/acceptance_criterion_id"
+    }
+  ]
+}

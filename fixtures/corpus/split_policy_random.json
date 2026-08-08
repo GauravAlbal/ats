@@ -1,0 +1,26 @@
+{
+  "policy_id": "split-fixture-random-refused",
+  "seed": "ats-v0-smoke",
+  "partitions": [
+    {
+      "name": "train",
+      "kind": "training",
+      "target_fraction": 0.6
+    },
+    {
+      "name": "dev",
+      "kind": "development",
+      "target_fraction": 0.2
+    },
+    {
+      "name": "eval",
+      "kind": "in_domain_evaluation",
+      "target_fraction": 0.2,
+      "disjoint_on": [
+        "source_document",
+        "source_mutation_pair"
+      ]
+    }
+  ],
+  "grouping_dimensions": []
+}

@@ -1,0 +1,6 @@
+{
+  "domain": "acceptance-kernel",
+  "handling_policy": "public",
+  "repository_group": "ats-sample",
+  "use_authority": "external_training_permitted"
+}

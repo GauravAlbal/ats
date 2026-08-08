@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_context_bundle_v1.schema.json",
+  "title": "ATS Context Bundle V1",
+  "description": "The minimum context needed to adjudicate one candidate span. Spec Section 17.4: an isolated sentence SHOULD NOT be labeled when the rule depends on discarded context, so every field here is either present or explicitly typed as unavailable.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "source_artifact_id",
+    "source_revision",
+    "source_span",
+    "span_text",
+    "containing_block",
+    "heading_path",
+    "preceding_context",
+    "following_context",
+    "local_definitions",
+    "glossary_entries",
+    "profile_hypothesis",
+    "policy_context",
+    "diff",
+    "review_comment",
+    "later_edit"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.context_bundle.v1" },
+    "bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "source_artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "source_revision": { "type": "string", "minLength": 1 },
+    "source_span": { "$ref": "ats_common_v1.schema.json#/$defs/span" },
+    "span_text": { "type": "string", "minLength": 1 },
+    "containing_block": {
+      "type": "object",
+      "required": ["kind", "text", "span"],
+      "properties": {
+        "kind": {
+          "enum": ["paragraph", "list", "list_item", "table", "code_block", "block_quote", "heading"]
+        },
+        "text": { "type": "string" },
+        "span": { "$ref": "ats_common_v1.schema.json#/$defs/span" }
+      },
+      "additionalProperties": false
+    },
+    "heading_path": { "type": "array", "items": { "type": "string" } },
+    "preceding_context": { "$ref": "#/$defs/optional_text" },
+    "following_context": { "$ref": "#/$defs/optional_text" },
+    "local_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["term", "definition", "locator"],
+        "properties": {
+          "term": { "type": "string", "minLength": 1 },
+          "definition": { "type": "string", "minLength": 1 },
+          "locator": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "glossary_entries": {
+      "type": "array",
+      "items": { "$ref": "ats_common_v1.schema.json#/$defs/glossary_entry" }
+    },
+    "profile_hypothesis": {
+      "type": "object",
+      "required": ["profile", "basis"],
+      "properties": {
+        "profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+        "basis": {
+          "enum": ["heading_path", "declared_front_matter", "path_convention", "annotator_supplied", "unknown"]
+        },
+        "alternatives": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/profile" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_context": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "policy_snapshot_id": { "type": "string" },
+        "policy_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" }
+      },
+      "additionalProperties": false
+    },
+    "diff": { "$ref": "#/$defs/optional_text" },
+    "review_comment": { "$ref": "#/$defs/optional_text" },
+    "later_edit": { "$ref": "#/$defs/optional_text" },
+    "reversal": { "$ref": "#/$defs/optional_text" },
+    "context_completeness": {
+      "enum": ["complete", "partial", "insufficient"],
+      "description": "An annotator MUST be able to see that context was truncated."
+    },
+    "extensions": { "type": "object" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "optional_text": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "text": { "type": "string" },
+        "locator": { "type": "string" },
+        "span": { "$ref": "ats_common_v1.schema.json#/$defs/span" }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "availability": { "const": "present" } }, "required": ["availability"] },
+          "then": { "required": ["text"] }
+        }
+      ]
+    }
+  }
+}

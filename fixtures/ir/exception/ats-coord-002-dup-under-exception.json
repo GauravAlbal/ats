@@ -1,0 +1,79 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-002-dup-under-exception",
+  "source": {
+    "content_sha256": "08955425866f2a5f50ab6444e2494fae9ebfb13d7b6e1602d5bc2d1bb12ef0a6",
+    "normalized_sha256": "08955425866f2a5f50ab6444e2494fae9ebfb13d7b6e1602d5bc2d1bb12ef0a6",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-002-dup-under-exception.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-002-dup-under-exception",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C002-8",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition. The duplicate declaration is covered by policy exception EX-DRAFT2-002.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-8",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-8",
+      "source_pointer": "#/sections/0/claims/0"
+    },
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-8",
+      "source_pointer": "#/sections/0/claims/1"
+    }
+  ],
+  "extensions": {
+    "policy_exceptions": [
+      {
+        "schema_version": "ats.policy_exception.v1",
+        "exception_id": "EX-DRAFT2-002",
+        "sha256": "feec8cd01a3bbd5e7b8a4e071c6d2705b3084521a2f387211d2c6adfd73d36bd",
+        "rule_id": "ATS-COORD-002",
+        "from_state": "required",
+        "to_state": "required",
+        "scope": {
+          "artifact_id": "fixture-coord-002-dup-under-exception",
+          "locator": "#/stable_coordinates/1"
+        },
+        "rationale": "The duplicate declaration results from a merge of two amendment lines; it is declared under the exception machinery for explicit review. ATS-COORD-002 is unwaivable (spec 6.4), so the rule state is unchanged.",
+        "authorized_by": "draft2-fixture-authority",
+        "created_at": "2026-08-07T00:00:00Z"
+      }
+    ]
+  }
+}

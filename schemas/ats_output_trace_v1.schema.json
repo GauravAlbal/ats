@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_output_trace_v1.schema.json",
+  "title": "ATS Output Trace V1",
+  "description": "Sidecar mapping rendered Markdown blocks to the TextIR objects they realize. Repository-local: ATS-1 requires source mapping (Section 14.4) but defines no wire format for it.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "ir_sha256",
+    "output_sha256",
+    "policy_snapshot_id",
+    "policy_sha256",
+    "profiles",
+    "marker_scheme",
+    "blocks"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.output_trace.v1" },
+    "artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "trace_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "ir_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256",
+      "description": "SHA-256 over the JCS-canonical bytes of the source TextIR document."
+    },
+    "output_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256",
+      "description": "SHA-256 over the exact bytes of the rendered Markdown."
+    },
+    "output_normalized_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "policy_snapshot_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "policy_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "ats_common_v1.schema.json#/$defs/profile" }
+    },
+    "renderer": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "skill_id": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "marker_scheme": {
+      "type": "object",
+      "required": ["kind", "pattern"],
+      "properties": {
+        "kind": { "const": "html_comment" },
+        "pattern": {
+          "const": "<!-- ats:block {block_id} -->",
+          "description": "Invisible in ordinary Markdown viewers; deterministic for the linter."
+        },
+        "end_pattern": { "const": "<!-- /ats:block {block_id} -->" }
+      },
+      "additionalProperties": false
+    },
+    "created_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "unmapped_ir_objects": {
+      "type": "array",
+      "description": "IR object ids the renderer deliberately did not realize, with the authority that permits the omission.",
+      "items": {
+        "type": "object",
+        "required": ["object_id", "reason"],
+        "properties": {
+          "object_id": { "type": "string", "minLength": 1 },
+          "reason": {
+            "enum": [
+              "not_material",
+              "retention_contract_allowed_omission",
+              "policy_exception",
+              "profile_not_applicable"
+            ]
+          },
+          "authorization_ref": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "type": "object" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "block": {
+      "type": "object",
+      "required": [
+        "block_id",
+        "marker",
+        "ordinal",
+        "text_sha256",
+        "material",
+        "display_role",
+        "section_id",
+        "claim_ids",
+        "evidence_ids",
+        "relation_ids",
+        "requirement_ids",
+        "forecast_ids"
+      ],
+      "properties": {
+        "block_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{0,127}$",
+          "description": "Stable, lowercase, hyphen-separated. Appears verbatim inside the Markdown marker."
+        },
+        "marker": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The exact marker line as written into the Markdown."
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zero-based position in document order; MUST be dense and strictly increasing."
+        },
+        "text_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256",
+          "description": "SHA-256 over the exact UTF-8 bytes of the block body, marker line excluded."
+        },
+        "material": { "type": "boolean" },
+        "display_role": {
+          "enum": [
+            "question",
+            "key_judgment",
+            "likelihood",
+            "confidence",
+            "confidence_basis",
+            "supporting_evidence",
+            "contrary_evidence",
+            "alternatives",
+            "assumption",
+            "boundary",
+            "update_indicator",
+            "recommendation",
+            "forecast",
+            "requirement",
+            "acceptance_criterion",
+            "authority",
+            "exception",
+            "rationale",
+            "note",
+            "heading",
+            "glossary",
+            "open_question"
+          ]
+        },
+        "section_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+        "profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+        "heading_path": { "type": "array", "items": { "type": "string" } },
+        "claim_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "relation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "requirement_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "forecast_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "update_indicator_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "coordinates": {
+          "type": "array",
+          "uniqueItems": true,
+          "description": "Stable semantic coordinates this block renders (draft.2 D-C, spec 7.17). Distinct from the object-kind id fields: a coordinate may name an object declared outside the artifact.",
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "p0_fields": {
+          "type": "array",
+          "description": "P0 values this block renders, each with the exact source value and its JSON Pointer into the IR (spec Section 11.3.1).",
+          "items": {
+            "type": "object",
+            "required": ["field_ref", "ir_pointer", "rendered"],
+            "properties": {
+              "field_ref": { "type": "string", "minLength": 1 },
+              "ir_pointer": { "type": "string", "minLength": 1 },
+              "rendered": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "p1_relations": {
+          "type": "array",
+          "description": "P1 relations this block declares it realizes (spec Section 11.3.2).",
+          "items": {
+            "type": "object",
+            "required": ["relation_id", "type", "direction"],
+            "properties": {
+              "relation_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+              "type": { "type": "string", "minLength": 1 },
+              "direction": { "enum": ["source_to_target", "target_to_source"] },
+              "scope_note": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "content_class": {
+          "enum": ["prose", "quotation", "code", "log", "schema", "counterexample", "table"],
+          "description": "Spec Section 5.6: quoted or code regions MUST be marked so surface exemptions are never silent."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

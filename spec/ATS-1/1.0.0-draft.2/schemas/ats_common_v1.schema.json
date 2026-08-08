@@ -1,0 +1,1702 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_common_v1.schema.json",
+  "title": "ATS-1 Common Definitions",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "profile": {
+      "oneOf": [
+        {
+          "enum": [
+            "ASSESS",
+            "SPECIFY",
+            "TRANSFORM"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^(X-[A-Z0-9]+-[A-Z0-9-]+|ATS-X-[A-Z0-9]+-[A-Z0-9-]+)$"
+        }
+      ]
+    },
+    "rule_state": {
+      "enum": [
+        "disabled",
+        "shadow",
+        "advisory",
+        "required"
+      ]
+    },
+    "conformance_status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_APPLICABLE",
+        "UNAVAILABLE",
+        "INSUFFICIENT_EVIDENCE"
+      ]
+    },
+    "availability": {
+      "enum": [
+        "present",
+        "not_found",
+        "not_searched",
+        "unavailable",
+        "withheld",
+        "not_applicable"
+      ]
+    },
+    "span": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "character",
+            "line",
+            "locator",
+            "json_pointer"
+          ]
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "start_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "end_line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "character"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "start",
+              "end"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "line"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "start_line",
+              "end_line"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "locator",
+                  "json_pointer"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "locator"
+            ]
+          }
+        }
+      ]
+    },
+    "source_ref": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_type",
+        "availability"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_type": {
+          "enum": [
+            "direct_observation",
+            "test",
+            "benchmark",
+            "repository_artifact",
+            "external_source",
+            "model_output",
+            "human_report",
+            "formal_derivation",
+            "simulation",
+            "synthetic_fixture",
+            "policy",
+            "other"
+          ]
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "search_scope": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "availability": {
+                "const": "present"
+              }
+            }
+          },
+          "then": {
+            "anyOf": [
+              {
+                "required": [
+                  "locator"
+                ]
+              },
+              {
+                "required": [
+                  "content_sha256"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "likelihood": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "wep",
+            "point",
+            "interval",
+            "not_applicable"
+          ]
+        },
+        "term": {
+          "enum": [
+            "almost_no_chance",
+            "very_unlikely",
+            "unlikely",
+            "roughly_even_chance",
+            "likely",
+            "very_likely",
+            "almost_certain"
+          ]
+        },
+        "display": {
+          "type": "string"
+        },
+        "lower": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "upper": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "point": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "range_shown_inline": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "wep"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "term",
+              "lower",
+              "upper",
+              "range_shown_inline"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "point"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "point"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "interval"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "lower",
+              "upper"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "confidence_basis": {
+      "type": "object",
+      "required": [
+        "basis_type",
+        "evidence_quality",
+        "evidence_coverage",
+        "source_independence",
+        "directness",
+        "consistency",
+        "assumption_sensitivity",
+        "environmental_stability",
+        "contrary_evidence",
+        "rationale"
+      ],
+      "properties": {
+        "basis_type": {
+          "enum": [
+            "empirical",
+            "formal",
+            "direct_observation",
+            "expert_judgment",
+            "mixed"
+          ]
+        },
+        "evidence_quality": {
+          "enum": [
+            "weak",
+            "mixed",
+            "strong",
+            "unknown"
+          ]
+        },
+        "evidence_coverage": {
+          "enum": [
+            "narrow",
+            "partial",
+            "broad",
+            "unknown"
+          ]
+        },
+        "source_independence": {
+          "enum": [
+            "single",
+            "partially_independent",
+            "independent",
+            "not_applicable",
+            "unknown"
+          ]
+        },
+        "directness": {
+          "enum": [
+            "indirect",
+            "mixed",
+            "direct",
+            "unknown"
+          ]
+        },
+        "consistency": {
+          "enum": [
+            "conflicting",
+            "mixed",
+            "convergent",
+            "unknown"
+          ]
+        },
+        "assumption_sensitivity": {
+          "enum": [
+            "high",
+            "moderate",
+            "low",
+            "unknown"
+          ]
+        },
+        "environmental_stability": {
+          "enum": [
+            "volatile",
+            "mixed",
+            "stable",
+            "not_applicable",
+            "unknown"
+          ]
+        },
+        "contrary_evidence": {
+          "enum": [
+            "unaddressed",
+            "addressed",
+            "none_found",
+            "not_searched",
+            "not_applicable",
+            "unknown"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "assessment_confidence": {
+      "type": "object",
+      "required": [
+        "level",
+        "basis"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "low",
+            "moderate",
+            "high"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/confidence_basis"
+        }
+      },
+      "additionalProperties": false
+    },
+    "force": {
+      "type": "object",
+      "properties": {
+        "likelihood": {
+          "$ref": "#/$defs/likelihood"
+        },
+        "assessment_confidence": {
+          "$ref": "#/$defs/assessment_confidence"
+        },
+        "evidential": {
+          "enum": [
+            "consistent_with",
+            "suggests",
+            "supports",
+            "strongly_supports",
+            "establishes"
+          ]
+        },
+        "causal": {
+          "enum": [
+            "associated_with",
+            "predicts",
+            "contributes_to",
+            "causes",
+            "necessary_for",
+            "sufficient_for"
+          ]
+        },
+        "deontic": {
+          "enum": [
+            "MUST",
+            "MUST_NOT",
+            "SHOULD",
+            "SHOULD_NOT",
+            "MAY",
+            "CAN",
+            "CANNOT",
+            "REQUIRED_BY"
+          ]
+        },
+        "external_authority": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "deontic": {
+                "const": "REQUIRED_BY"
+              }
+            },
+            "required": [
+              "deontic"
+            ]
+          },
+          "then": {
+            "required": [
+              "external_authority"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "external_authority"
+            ]
+          },
+          "then": {
+            "properties": {
+              "deontic": {
+                "const": "REQUIRED_BY"
+              }
+            },
+            "required": [
+              "deontic"
+            ]
+          }
+        }
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "population": {
+          "type": "string"
+        },
+        "system": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "time_horizon": {
+          "type": "string"
+        },
+        "authority_domain": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "evidence_window": {
+          "type": "string"
+        },
+        "unknown_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "quantifier": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "none",
+            "one",
+            "some",
+            "at_least_one",
+            "most",
+            "all",
+            "exact_count",
+            "minimum",
+            "maximum",
+            "range",
+            "proportion",
+            "unspecified"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "lower": {
+          "type": "number"
+        },
+        "upper": {
+          "type": "number"
+        },
+        "denominator": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "exact_count",
+                  "minimum",
+                  "maximum",
+                  "proportion"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "value"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "range"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "lower",
+              "upper"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "proportion"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "denominator"
+            ]
+          }
+        }
+      ]
+    },
+    "requirement_slots": {
+      "type": "object",
+      "required": [
+        "requirement_id",
+        "actor",
+        "deontic",
+        "action",
+        "object",
+        "source_authority"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "actor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deontic": {
+          "enum": [
+            "MUST",
+            "MUST_NOT",
+            "SHOULD",
+            "SHOULD_NOT",
+            "MAY"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "object": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string"
+        },
+        "trigger": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "timing": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance_criterion": {
+          "type": "string"
+        },
+        "acceptance_criterion_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "semantic_basis": {
+          "$ref": "#/$defs/semantic_basis"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "indivisible_actions_justification": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "forecast_slots": {
+      "type": "object",
+      "required": [
+        "forecast_id",
+        "outcome_definition",
+        "resolution",
+        "resolution_source",
+        "update_policy",
+        "outcome_status"
+      ],
+      "properties": {
+        "forecast_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "outcome_definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution_source": {
+          "type": "string"
+        },
+        "update_policy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome_status": {
+          "enum": [
+            "open",
+            "resolved_true",
+            "resolved_false",
+            "void",
+            "ambiguous"
+          ]
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "claim_id",
+        "role",
+        "proposition",
+        "material",
+        "polarity",
+        "status"
+      ],
+      "properties": {
+        "claim_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "role": {
+          "enum": [
+            "definition",
+            "observation",
+            "sourced_report",
+            "assumption",
+            "inference",
+            "judgment",
+            "forecast",
+            "recommendation",
+            "requirement",
+            "exception",
+            "boundary",
+            "open_question"
+          ]
+        },
+        "proposition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "type": "string"
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "material": {
+          "type": "boolean"
+        },
+        "materiality_rationale": {
+          "type": "string"
+        },
+        "polarity": {
+          "enum": [
+            "positive",
+            "negative"
+          ]
+        },
+        "quantifier": {
+          "$ref": "#/$defs/quantifier"
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "force": {
+          "$ref": "#/$defs/force"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "assumption_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "boundary_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "exception_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "asserted",
+            "ambiguous",
+            "unresolved",
+            "withdrawn",
+            "superseded"
+          ]
+        },
+        "interpretations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2
+        },
+        "requirement": {
+          "$ref": "#/$defs/requirement_slots"
+        },
+        "forecast": {
+          "$ref": "#/$defs/forecast_slots"
+        },
+        "semantic_basis": {
+          "$ref": "#/$defs/semantic_basis"
+        },
+        "decision_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "requirement"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "requirement"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "const": "forecast"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "forecast"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ambiguous"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "interpretations"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "evidence_id",
+        "proposition",
+        "source",
+        "availability"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "proposition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source_ref"
+        },
+        "availability": {
+          "$ref": "#/$defs/availability"
+        },
+        "quality_notes": {
+          "type": "string"
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "relation_id",
+        "source_id",
+        "type",
+        "target_id",
+        "material"
+      ],
+      "properties": {
+        "relation_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "type": {
+          "enum": [
+            "consistent_with",
+            "supports",
+            "strongly_supports",
+            "contradicts",
+            "qualifies",
+            "depends_on",
+            "condition_for",
+            "exception_to",
+            "derived_from",
+            "associated_with",
+            "predicts",
+            "contributes_to",
+            "causes",
+            "necessary_for",
+            "sufficient_for",
+            "contrasts_with",
+            "alternative_to",
+            "updates",
+            "reverses"
+          ]
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "material": {
+          "type": "boolean"
+        },
+        "scope": {
+          "$ref": "#/$defs/scope"
+        },
+        "basis_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "dependency_target": {
+          "$ref": "#/$defs/identifier"
+        },
+        "semantic_basis": {
+          "$ref": "#/$defs/semantic_basis"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "glossary_entry": {
+      "type": "object",
+      "required": [
+        "concept_id",
+        "canonical_term",
+        "definition",
+        "scope"
+      ],
+      "properties": {
+        "concept_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "canonical_term": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_abbreviations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "deprecated_aliases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "audience": {
+          "enum": [
+            "novice",
+            "practitioner",
+            "expert",
+            "mixed"
+          ]
+        },
+        "external_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "update_indicator": {
+      "type": "object",
+      "required": [
+        "indicator_id",
+        "text",
+        "target_claim_refs"
+      ],
+      "properties": {
+        "indicator_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_claim_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "observation_condition": {
+          "type": "string"
+        },
+        "effect": {
+          "enum": [
+            "increase_likelihood",
+            "decrease_likelihood",
+            "change_confidence",
+            "invalidate_assumption",
+            "activate_exception",
+            "reverse_recommendation",
+            "reevaluate"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "model_artifact": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_exception": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "exception_id",
+        "sha256",
+        "rule_id",
+        "from_state",
+        "to_state",
+        "scope",
+        "rationale",
+        "authorized_by",
+        "created_at"
+      ],
+      "properties": {
+        "exception_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "rule_id": {
+          "type": "string",
+          "pattern": "^ATS-[A-Z]+-[0-9]{3}$"
+        },
+        "from_state": {
+          "$ref": "#/$defs/rule_state"
+        },
+        "to_state": {
+          "$ref": "#/$defs/rule_state"
+        },
+        "scope": {
+          "type": "object",
+          "minProperties": 1,
+          "properties": {
+            "artifact_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "section_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "claim_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "locator": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authorized_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "non_expiring_justification": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema_version": {
+          "const": "ats.policy_exception.v1"
+        }
+      },
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "expires_at"
+          ],
+          "not": {
+            "required": [
+              "non_expiring_justification"
+            ]
+          }
+        },
+        {
+          "required": [
+            "non_expiring_justification"
+          ],
+          "not": {
+            "required": [
+              "expires_at"
+            ]
+          }
+        }
+      ]
+    },
+    "detector": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "class",
+        "authority"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "class": {
+          "enum": [
+            "D0",
+            "D1",
+            "D2",
+            "D3",
+            "D4"
+          ]
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "detector_status": {
+          "enum": [
+            "deterministic",
+            "probabilistic"
+          ]
+        },
+        "detector_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "authority": {
+          "enum": [
+            "candidate_only",
+            "proposal_only",
+            "conformance_evidence"
+          ]
+        },
+        "authority_basis_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "authority": {
+                "const": "conformance_evidence"
+              }
+            },
+            "required": [
+              "authority"
+            ]
+          },
+          "then": {
+            "required": [
+              "authority_basis_ref"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "class": {
+                "const": "D2"
+              }
+            },
+            "required": [
+              "class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "authority": {
+                "const": "candidate_only"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "class": {
+                "const": "D3"
+              }
+            },
+            "required": [
+              "class"
+            ]
+          },
+          "then": {
+            "properties": {
+              "authority": {
+                "const": "proposal_only"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "interpretation": {
+      "type": "object",
+      "required": [
+        "interpretation_id",
+        "reading"
+      ],
+      "properties": {
+        "interpretation_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1
+        },
+        "force": {
+          "$ref": "#/$defs/force"
+        },
+        "material_difference": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "repair": {
+      "type": "object",
+      "required": [
+        "repair_id",
+        "replacement",
+        "autofix_class",
+        "protected_impact"
+      ],
+      "properties": {
+        "repair_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "replacement": {
+          "type": "string"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "autofix_class": {
+          "enum": [
+            "safe_p2",
+            "review_required",
+            "forbidden"
+          ]
+        },
+        "protected_impact": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "expected_delta": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "adjudication": {
+      "type": "object",
+      "required": [
+        "adjudication_id",
+        "finding_id",
+        "disposition",
+        "adjudicator",
+        "rationale",
+        "timestamp",
+        "policy_snapshot_id"
+      ],
+      "properties": {
+        "adjudication_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "finding_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "disposition": {
+          "enum": [
+            "accepted",
+            "rejected",
+            "waived",
+            "deferred",
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "adjudicator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "selected_interpretation_id": {
+          "type": "string"
+        },
+        "authorized_repair_id": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policy_snapshot_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "waiver": {
+          "type": "object",
+          "required": [
+            "scope",
+            "expires_at"
+          ],
+          "properties": {
+            "scope": {
+              "type": "object",
+              "minProperties": 1,
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "section_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "claim_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "locator": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": false
+            },
+            "expires_at": {
+              "$ref": "#/$defs/timestamp"
+            },
+            "exception_ref": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "waived"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "waiver"
+            ]
+          }
+        }
+      ]
+    },
+    "semantic_basis": {
+      "type": "object",
+      "required": [
+        "basis"
+      ],
+      "properties": {
+        "basis": {
+          "enum": [
+            "EXPLICIT",
+            "DERIVED",
+            "INFERRED",
+            "UNAVAILABLE",
+            "AUTHOR_JUDGMENT"
+          ]
+        },
+        "rationale": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "semantic_delta": {
+      "type": "object",
+      "required": [
+        "delta_id",
+        "type",
+        "material",
+        "source_ref"
+      ],
+      "properties": {
+        "delta_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "type": {
+          "enum": [
+            "preserved",
+            "omitted",
+            "added",
+            "weakened",
+            "strengthened",
+            "contradicted",
+            "scope_changed",
+            "polarity_changed",
+            "quantifier_changed",
+            "likelihood_changed",
+            "confidence_changed",
+            "evidential_force_changed",
+            "causal_force_changed",
+            "deontic_force_changed",
+            "source_attribution_changed",
+            "authority_changed",
+            "condition_changed",
+            "exception_changed",
+            "relation_changed",
+            "ambiguous_after_transform",
+            "authorized_change"
+          ]
+        },
+        "material": {
+          "type": "boolean"
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "output_ref": {
+          "type": "string"
+        },
+        "old_value": {},
+        "new_value": {},
+        "authorization_ref": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "conformance_vector": {
+      "type": "object",
+      "required": [
+        "mechanical",
+        "profile",
+        "semantic_review",
+        "preservation",
+        "forecast_calibration"
+      ],
+      "properties": {
+        "mechanical": {
+          "$ref": "#/$defs/conformance_status"
+        },
+        "profile": {
+          "$ref": "#/$defs/conformance_status"
+        },
+        "semantic_review": {
+          "$ref": "#/$defs/conformance_status"
+        },
+        "preservation": {
+          "$ref": "#/$defs/conformance_status"
+        },
+        "forecast_calibration": {
+          "$ref": "#/$defs/conformance_status"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

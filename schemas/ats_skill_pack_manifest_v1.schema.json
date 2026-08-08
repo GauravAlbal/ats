@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_skill_pack_manifest_v1.schema.json",
+  "title": "ATS Skill Pack Manifest V1",
+  "description": "Public manifest contract for a generated ATS skill pack. It distinguishes the ATS-1 standard version from the implementation version and the skill-pack version, binds the pack to its canonical source (a tree hash over skills/public), and enumerates every host representation with per-file hashes so drift is detectable deterministically.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "skill_pack_version",
+    "implementation_version",
+    "standard_versions_supported",
+    "canonical_source_sha256",
+    "skills",
+    "hosts",
+    "generated_at",
+    "source_commit",
+    "packager_version"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.skill_pack_manifest.v1"
+    },
+    "skill_pack_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "implementation_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "standard_versions_supported": {
+      "type": "object",
+      "required": [
+        "new_authoring",
+        "legacy_interpretation"
+      ],
+      "properties": {
+        "new_authoring": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legacy_interpretation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "canonical_source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "skills": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "path",
+          "sha256"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "recipes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "hosts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "identity",
+          "files"
+        ],
+        "properties": {
+          "identity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "path",
+                "sha256"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_commit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packager_version": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}

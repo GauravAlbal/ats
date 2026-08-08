@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_text_ir_v1.schema.json",
+  "title": "ATS TextIRV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "source",
+    "policy_snapshot_id",
+    "language",
+    "audience",
+    "sections",
+    "extraction_status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.text_ir.v1"
+    },
+    "artifact_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "content_sha256",
+        "media_type"
+      ],
+      "properties": {
+        "content_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        },
+        "normalized_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_snapshot_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "language": {
+      "const": "en"
+    },
+    "audience": {
+      "type": "object",
+      "required": [
+        "expertise"
+      ],
+      "properties": {
+        "audience_id": {
+          "type": "string"
+        },
+        "expertise": {
+          "enum": [
+            "novice",
+            "practitioner",
+            "expert",
+            "mixed"
+          ]
+        },
+        "assumed_glossary_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "locale": {
+          "type": "string"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "section_id",
+          "profiles",
+          "claims",
+          "evidence",
+          "relations",
+          "update_indicators"
+        ],
+        "properties": {
+          "section_id": {
+            "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+          },
+          "heading": {
+            "type": "string"
+          },
+          "profiles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "ats_common_v1.schema.json#/$defs/profile"
+            }
+          },
+          "span": {
+            "$ref": "ats_common_v1.schema.json#/$defs/span"
+          },
+          "claims": {
+            "type": "array",
+            "items": {
+              "$ref": "ats_common_v1.schema.json#/$defs/claim"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "ats_common_v1.schema.json#/$defs/evidence"
+            }
+          },
+          "relations": {
+            "type": "array",
+            "items": {
+              "$ref": "ats_common_v1.schema.json#/$defs/relation"
+            }
+          },
+          "update_indicators": {
+            "type": "array",
+            "items": {
+              "$ref": "ats_common_v1.schema.json#/$defs/update_indicator"
+            }
+          },
+          "display": {
+            "type": "object"
+          },
+          "extensions": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "glossary": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/glossary_entry"
+      }
+    },
+    "extraction_status": {
+      "enum": [
+        "complete",
+        "partial",
+        "ambiguous",
+        "unavailable"
+      ]
+    },
+    "extraction_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "issue_id",
+          "status",
+          "description"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "partial",
+              "ambiguous",
+              "unavailable"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "span": {
+            "$ref": "ats_common_v1.schema.json#/$defs/span"
+          },
+          "affected_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidate_interpretations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

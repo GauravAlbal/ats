@@ -1,0 +1,522 @@
+{
+  "schema_version": "ats.capability.v1",
+  "implementation_name": "arqtext-reference-skeleton",
+  "implementation_version": "0.0.1",
+  "ats_versions": [
+    "1.0.0-draft.1"
+  ],
+  "schema_versions": [
+    "ats.text_ir.v1",
+    "ats.policy_snapshot.v1",
+    "ats.ruleset.v1",
+    "ats.finding.v1",
+    "ats.retention_contract.v1",
+    "ats.preservation_report.v1",
+    "ats.acceptance_receipt.v1",
+    "ats.policy_exception.v1",
+    "ats.adjudication.v1",
+    "ats.force_lexicon.v1",
+    "ats.package_manifest.v1"
+  ],
+  "profiles": [
+    "ASSESS",
+    "SPECIFY",
+    "TRANSFORM"
+  ],
+  "rules": [
+    {
+      "rule_id": "ATS-TERM-001",
+      "detector_classes": [
+        "D1",
+        "D3"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-TERM-002",
+      "detector_classes": [
+        "D3",
+        "D4"
+      ],
+      "autofix": "forbidden",
+      "authority_by_class": {
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      }
+    },
+    {
+      "rule_id": "ATS-TERM-003",
+      "detector_classes": [
+        "D0",
+        "D1"
+      ],
+      "autofix": "safe_p2",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-REF-001",
+      "detector_classes": [
+        "D1",
+        "D3"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-SCOPE-001",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-NUM-001",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-NUM-002",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-TIME-001",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-TIME-002",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-PRES-001",
+      "detector_classes": [
+        "D0",
+        "D4"
+      ],
+      "autofix": "forbidden",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-001",
+      "detector_classes": [
+        "D0",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-002",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D4"
+      ],
+      "autofix": "safe_p2",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-003",
+      "detector_classes": [
+        "D0"
+      ],
+      "autofix": "safe_p2",
+      "authority_by_class": {
+        "D0": "conformance_evidence"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-004",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-005",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-006",
+      "detector_classes": [
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      }
+    },
+    {
+      "rule_id": "ATS-EPI-007",
+      "detector_classes": [
+        "D0",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-DEON-001",
+      "detector_classes": [
+        "D0",
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures",
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-DEON-002",
+      "detector_classes": [
+        "D0",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-DEON-003",
+      "detector_classes": [
+        "D0",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D0": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D0": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-REQ-001",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-REQ-002",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-REQ-003",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EVID-001",
+      "detector_classes": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-EVID-002",
+      "detector_classes": [
+        "D3",
+        "D4"
+      ],
+      "autofix": "forbidden",
+      "authority_by_class": {
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      }
+    },
+    {
+      "rule_id": "ATS-EVID-003",
+      "detector_classes": [
+        "D3",
+        "D4"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D3": "proposal_only",
+        "D4": "proposal_only"
+      }
+    },
+    {
+      "rule_id": "ATS-DISC-001",
+      "detector_classes": [
+        "D1",
+        "D3"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-DISC-002",
+      "detector_classes": [
+        "D1",
+        "D3"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D1": "conformance_evidence",
+        "D3": "proposal_only"
+      },
+      "authority_basis_refs": {
+        "D1": "validation:ats-draft1-deterministic-fixtures"
+      }
+    },
+    {
+      "rule_id": "ATS-DISC-003",
+      "detector_classes": [
+        "D3"
+      ],
+      "autofix": "review_required",
+      "authority_by_class": {
+        "D3": "proposal_only"
+      }
+    },
+    {
+      "rule_id": "ATS-PRES-002",
+      "detector_classes": [
+        "D4"
+      ],
+      "autofix": "forbidden",
+      "authority_by_class": {
+        "D4": "proposal_only"
+      }
+    }
+  ],
+  "languages": [
+    "en"
+  ],
+  "formats": [
+    "text/plain",
+    "text/markdown",
+    "application/json"
+  ],
+  "autofix_classes": [
+    "safe_p2",
+    "review_required",
+    "forbidden"
+  ],
+  "preservation_methods": [
+    "exact_p0_comparison",
+    "typed_p1_comparison",
+    "boundary_question_check"
+  ],
+  "semantic_models": [],
+  "deterministic_replay": true,
+  "known_limitations": [
+    "Reference skeleton declares the target surface; it is not an implemented linter."
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_fleet_policy_v1.schema.json",
+  "title": "ATS Fleet Policy V1",
+  "description": "The machine-readable policy contract Arq consumes to decide when ATS applies to an artifact, what enforcement is required, and how failures are treated. Applicability is by artifact intent/policy, never inferred only from filename: every class entry carries its applicability_basis. Repository overrides are explicit and receipt-bound.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "policy_id",
+    "created_at",
+    "text_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.fleet_policy.v1"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "default_exclusions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "text_policy": {
+      "type": "object",
+      "required": [
+        "standard",
+        "version",
+        "required_for",
+        "enforcement",
+        "failure_policy"
+      ],
+      "properties": {
+        "standard": {
+          "const": "ATS-1"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_for": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "enforcement": {
+          "type": "object",
+          "required": [
+            "ir_schema",
+            "deterministic_ir_lint",
+            "output_trace",
+            "deterministic_output_lint",
+            "semantic_review",
+            "p0_preservation",
+            "stable_coordinate_preservation"
+          ],
+          "properties": {
+            "ir_schema": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "deterministic_ir_lint": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "output_trace": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "deterministic_output_lint": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "semantic_review": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "p0_preservation": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            },
+            "stable_coordinate_preservation": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "failure_policy": {
+          "type": "object",
+          "required": [
+            "unknown_nonblocking",
+            "inferred_material_semantics",
+            "deterministic_integrity_failure"
+          ],
+          "properties": {
+            "unknown_nonblocking": {
+              "enum": [
+                "preserve",
+                "review_required",
+                "block"
+              ]
+            },
+            "inferred_material_semantics": {
+              "enum": [
+                "preserve",
+                "review_required",
+                "block"
+              ]
+            },
+            "deterministic_integrity_failure": {
+              "enum": [
+                "preserve",
+                "review_required",
+                "block"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "applicability_basis": {
+          "type": "string",
+          "minLength": 1,
+          "description": "How applicability is decided for the classes: by declared artifact intent, by repository convention, or by explicit override."
+        }
+      },
+      "additionalProperties": false
+    },
+    "repository_overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "repository",
+          "receipt_binding"
+        ],
+        "properties": {
+          "repository": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required_for_additions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required_for_removals": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "default_exclusions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "enforcement_overrides": {
+            "type": "object",
+            "additionalProperties": {
+              "enum": [
+                "required",
+                "advisory",
+                "disabled"
+              ]
+            }
+          },
+          "failure_policy": {
+            "$ref": "#/properties/text_policy/properties/failure_policy"
+          },
+          "receipt_binding": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicability_basis": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

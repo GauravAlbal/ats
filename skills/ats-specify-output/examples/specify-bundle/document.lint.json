@@ -1,0 +1,340 @@
+{
+  "schema_version": "ats.output_lint_report.v1",
+  "report_id": "outlint:fixture-specify-stale-policy:a69aeffb480a272c",
+  "artifact_id": "fixture-specify-stale-policy",
+  "output_sha256": "a69aeffb480a272c28062948c2746d798ffe2264acea498e3c0f95322682d467",
+  "trace_sha256": "37268b205708ff7637abf64b21311be24daf465850a951dd9d6a20741e7841b7",
+  "ir_sha256": "6ec21218ff8acb3918d6350fbd8fe88a9dfff8627fc27998949ccebc2b93f7f5",
+  "policy_snapshot_id": "policy-fixture-specify",
+  "policy_sha256": "7b30c3e27567413e22ebf983660a1687590b3ceab50ca17ad31f4f9c34766d2f",
+  "spec_version": "1.0.0-draft.1",
+  "profiles": [
+    "SPECIFY"
+  ],
+  "implementation": {
+    "name": "ats",
+    "version": "0.1.0",
+    "rule_registry_version": "1.0.0-draft.1",
+    "lexicon_version": "1.0.0-draft.1",
+    "parser_version": "markdown-it-py/commonmark@4.2.0"
+  },
+  "checks": [
+    {
+      "check_id": "OUT-BYTES",
+      "title": "Output and IR hashes match the trace",
+      "status": "PASS",
+      "required": true,
+      "detail": "833 byte(s) hash to a69aeffb480a272c28062948c2746d798ffe2264acea498e3c0f95322682d467",
+      "spec_ref": "ATS-1 14.2, 14.13, Appendix C"
+    },
+    {
+      "check_id": "OUT-MARKDOWN-PARSE",
+      "title": "The document parses with a real Markdown parser",
+      "status": "PASS",
+      "required": true,
+      "detail": "9 top-level block(s) parsed by markdown-it-py/commonmark@4.2.0",
+      "spec_ref": "ATS-1 14.4, 16.3"
+    },
+    {
+      "check_id": "OUT-CONSTRUCTS",
+      "title": "Unsupported Markdown constructs are identified",
+      "status": "PASS",
+      "required": true,
+      "detail": "every construct present is evaluated; 8 of the constructs Section 16.3 names are absent from this document (bullet_list, ordered_list, table, fence, blockquote, code_inline, link, footnote)",
+      "spec_ref": "ATS-1 16.3"
+    },
+    {
+      "check_id": "OUT-MARKERS",
+      "title": "Source-map markers are intact and unique",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 marker(s) match the trace exactly",
+      "spec_ref": "ATS-1 14.4"
+    },
+    {
+      "check_id": "OUT-TRACE-SCHEMA",
+      "title": "The trace validates and binds the same policy and IR",
+      "status": "PASS",
+      "required": true,
+      "detail": "trace 37268b205708ff76… binds policy 'policy-fixture-specify' and 4 block(s)",
+      "spec_ref": "ATS-1 6.6, 14.13"
+    },
+    {
+      "check_id": "OUT-BLOCK-HASHES",
+      "title": "Each block's declared hash matches its rendered bytes",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block hash(es) reproduce from the document bytes",
+      "spec_ref": "ATS-1 14.2, 16.2"
+    },
+    {
+      "check_id": "OUT-IR-REFS",
+      "title": "Every block reference resolves to an IR object of the right kind",
+      "status": "PASS",
+      "required": true,
+      "detail": "1 referenced object(s) resolve",
+      "spec_ref": "ATS-1 14.4"
+    },
+    {
+      "check_id": "OUT-MATERIAL-COVERAGE",
+      "title": "Every material IR object is mapped or authorized as omitted",
+      "status": "PASS",
+      "required": true,
+      "detail": "1 of 1 material object(s) are mapped; 0 carry an authorized omission",
+      "spec_ref": "ATS-1 11.7, 11.8"
+    },
+    {
+      "check_id": "OUT-UNKNOWN-REFS",
+      "title": "No block references an object absent from the IR",
+      "status": "PASS",
+      "required": true,
+      "detail": "every referenced identifier exists in the IR",
+      "spec_ref": "ATS-1 11.7"
+    },
+    {
+      "check_id": "OUT-BLOCK-ORDER",
+      "title": "Block ordering is dense, ascending, and matches the document",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) in stable document order",
+      "spec_ref": "ATS-1 14.4, 16.2"
+    },
+    {
+      "check_id": "OUT-PROFILE-SECTIONS",
+      "title": "Profile-required sections are rendered",
+      "status": "PASS",
+      "required": true,
+      "detail": "SPECIFY structural obligations are satisfied by 4 display role(s)",
+      "spec_ref": "ATS-1 9.2.12, 9.3.5"
+    },
+    {
+      "check_id": "OUT-WEP-CANONICAL",
+      "title": "Canonical WEP phrases only",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 8.3"
+    },
+    {
+      "check_id": "OUT-WEP-INLINE-RANGE",
+      "title": "First material WEP use shows its range",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 8.4"
+    },
+    {
+      "check_id": "OUT-DEONTIC-KEYWORDS",
+      "title": "Deontic keywords are canonical and uppercase",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 8.16, 1.3"
+    },
+    {
+      "check_id": "OUT-ACRONYMS",
+      "title": "Acronyms are expanded or permitted",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 10.5"
+    },
+    {
+      "check_id": "OUT-UNITS",
+      "title": "Rendered P0 numbers carry units",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 10.9, 9.3.8"
+    },
+    {
+      "check_id": "OUT-RELATIVE-TIME",
+      "title": "Relative time is anchored",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 10.11"
+    },
+    {
+      "check_id": "OUT-TERMINOLOGY",
+      "title": "Terminology, intensifier, and timing constraints",
+      "status": "PASS",
+      "required": true,
+      "detail": "4 block(s) inspected",
+      "spec_ref": "ATS-1 10.2, 10.20, 10.21, 9.3.7"
+    },
+    {
+      "check_id": "OUT-HEADINGS-LISTS",
+      "title": "Heading and list mechanics",
+      "status": "PASS",
+      "required": true,
+      "detail": "5 block(s) inspected",
+      "spec_ref": "ATS-1 10.17, 10.18"
+    },
+    {
+      "check_id": "OUT-P0-EXACT",
+      "title": "Declared P0 values render exactly",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 declared P0 value(s) render exactly",
+      "spec_ref": "ATS-1 11.3.1, 11.6"
+    },
+    {
+      "check_id": "OUT-P1-DECLARED",
+      "title": "Material P1 relations are declared by a rendered block",
+      "status": "NOT_APPLICABLE",
+      "required": true,
+      "detail": "the IR declares no material relation",
+      "spec_ref": "ATS-1 11.3.2"
+    },
+    {
+      "check_id": "OUT-POLICY-EXCEPTIONS",
+      "title": "No unrecorded or invalid policy exception is in play",
+      "status": "PASS",
+      "required": true,
+      "detail": "0 exception(s) in the snapshot are active and correctly scoped",
+      "spec_ref": "ATS-1 6.3"
+    },
+    {
+      "check_id": "OUT-FINDING-DISPOSITIONS",
+      "title": "Every surfaced finding carries a disposition",
+      "status": "UNAVAILABLE",
+      "required": true,
+      "detail": "no receipt was supplied, so no disposition record exists to check (spec 15.3)",
+      "spec_ref": "ATS-1 13.6, 15.3"
+    },
+    {
+      "check_id": "OUT-CONFORMANCE-VECTOR",
+      "title": "The conformance vector is computed per dimension without aggregation",
+      "status": "PASS",
+      "required": true,
+      "detail": "mechanical=PASS, profile=PASS, semantic_review=UNAVAILABLE, preservation=NOT_APPLICABLE, forecast_calibration=INSUFFICIENT_EVIDENCE; no dimension is averaged into another (spec 5.2, 15.6)",
+      "spec_ref": "ATS-1 5.2, 15.6, 15.7"
+    },
+    {
+      "check_id": "OUT-RECEIPT",
+      "title": "The candidate receipt is well formed and binds this bundle",
+      "status": "NOT_APPLICABLE",
+      "required": true,
+      "detail": "no receipt was supplied to this run",
+      "spec_ref": "ATS-1 14.13, 16.12"
+    }
+  ],
+  "rule_results": [],
+  "findings": [],
+  "block_coverage": {
+    "blocks_declared": 4,
+    "material_ir_objects": 1,
+    "material_ir_objects_mapped": 1,
+    "unmapped_material_ir_objects": [],
+    "authorized_omissions": [],
+    "unknown_ir_references": [],
+    "blocks_found": 4
+  },
+  "p0_checks": [
+    {
+      "field_ref": "REQ-POLICY-017.requirement.requirement_id",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "REQ-POLICY-017",
+      "source_value": "REQ-POLICY-017",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.deontic",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "MUST",
+      "source_value": "MUST",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.actor",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "verifier",
+      "source_value": "verifier",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.action",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "reject",
+      "source_value": "reject",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.object",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "acceptance receipt",
+      "source_value": "acceptance receipt",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.trigger",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "executor presents an acceptance receipt",
+      "source_value": "executor presents an acceptance receipt",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.condition",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "receipt policy_sha256 differs from the current resolved policy snapshot",
+      "source_value": "receipt policy_sha256 differs from the current resolved policy snapshot",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.timing",
+      "block_id": "specify-req-policy-017",
+      "rendered_value": "before the acceptance transition",
+      "source_value": "before the acceptance transition",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.acceptance_criterion",
+      "block_id": "specify-acceptance-criterion",
+      "rendered_value": "A stale-policy fixture returns refused_stale_policy, emits no accepted transition, and records both policy hashes.",
+      "source_value": "A stale-policy fixture returns refused_stale_policy, emits no accepted transition, and records both policy hashes.",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "REQ-POLICY-017.requirement.source_authority",
+      "block_id": "specify-authority",
+      "rendered_value": "Arq acceptance-policy kernel",
+      "source_value": "Arq acceptance-policy kernel",
+      "status": "preserved"
+    }
+  ],
+  "p1_checks": [],
+  "finding_dispositions": {
+    "surfaced": 0,
+    "dispositioned": 0,
+    "undispositioned": []
+  },
+  "summary": {
+    "checks_total": 25,
+    "by_status": {
+      "PASS": 22,
+      "FAIL": 0,
+      "UNAVAILABLE": 1,
+      "NOT_APPLICABLE": 2,
+      "REVIEW_REQUIRED": 0
+    },
+    "required_failed": 0,
+    "required_unavailable": 1
+  },
+  "conformance": {
+    "mechanical": "PASS",
+    "profile": "PASS",
+    "semantic_review": "UNAVAILABLE",
+    "preservation": "NOT_APPLICABLE",
+    "forecast_calibration": "INSUFFICIENT_EVIDENCE"
+  },
+  "conformance_rationale": {
+    "mechanical": "output bytes, markers, block hashes, references, ordering, declared P0 values, and every applicable surface rule executed and passed",
+    "profile": "SPECIFY structural obligations are satisfied by 4 display role(s); 1 of 1 material object(s) are mapped; 0 carry an authorized omission. Structural obligations are satisfied at the rendering level; the IR linter owns semantic slot completeness.",
+    "semantic_review": "Mapping a block to an IR object establishes that the renderer declared the object, not that the prose realizes it with the same meaning and force. Section 15.3 requires every surfaced finding to be dispositioned by an authorized human or a promoted detector, and Section 14.11 assigns final semantic acceptance to an external authority. This implementation holds neither, so semantic_review is never PASS here.",
+    "preservation": "TRANSFORM is not among the active profiles, so this rendering is not evaluated as a source-to-output transformation (spec 15.4)",
+    "forecast_calibration": "0 forecast claim(s) rendered. Section 15.5 requires a declared cohort, resolved outcomes, a scoring rule, reliability analysis, uncertainty estimates, and a pre-declared evidence threshold; none is implemented."
+  },
+  "created_at": "2026-08-03T00:00:00Z",
+  "report_sha256": "75324aea9a7039f2379dfa42bb43b93b932670a188c8dfdbdadd452e780aadba"
+}

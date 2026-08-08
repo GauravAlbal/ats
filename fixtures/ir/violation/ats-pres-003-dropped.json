@@ -1,0 +1,141 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-pres-003-dropped",
+  "source": {
+    "content_sha256": "466a9209f3f3b813bb40c511dfc390ba57b72658ef202102178947fdac19d088",
+    "normalized_sha256": "466a9209f3f3b813bb40c511dfc390ba57b72658ef202102178947fdac19d088",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-pres-003-dropped.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-pres-003-dropped",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-P3-3",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-3",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        },
+        {
+          "claim_id": "C-P3-4",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-4",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        },
+        {
+          "claim_id": "C-P3-5",
+          "role": "requirement",
+          "proposition": "The reviewer MUST confirm the archived trail before sign-off.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-5",
+            "deontic": "MUST",
+            "action": "confirm",
+            "object": "the archived trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "reviewer"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [
+        {
+          "relation_id": "REL-P3-3",
+          "source_id": "C-P3-3",
+          "type": "depends_on",
+          "target_id": "C-P3-4",
+          "material": true,
+          "dependency_target": "C-P3-4"
+        },
+        {
+          "relation_id": "REL-P3-4",
+          "source_id": "C-P3-4",
+          "type": "condition_for",
+          "target_id": "C-P3-5",
+          "material": true,
+          "dependency_target": "C-P3-5"
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "extensions": {
+    "output_trace": {
+      "schema_version": "ats.output_trace.v1",
+      "artifact_id": "fixture-pres-003-dropped",
+      "ir_sha256": "6cf5a3cc1c9fd3a7f5e7a2b4f975abf24f66d2d56e03d781cbc0bffe2b731d97",
+      "output_sha256": "4ded7b9683114478d3317e9a60b7aa9736e36b9e54fac1386563bdc3ad077e6d",
+      "policy_snapshot_id": "policy-fixture-draft2",
+      "policy_sha256": "d19949912c13d0dcd296767d09ab084cfacfef7c5175a1947e7384dbec3dfc57",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "marker_scheme": {
+        "kind": "html_comment",
+        "pattern": "<!-- ats:block {block_id} -->"
+      },
+      "blocks": [
+        {
+          "block_id": "b1",
+          "marker": "<!-- ats:block b1 -->",
+          "ordinal": 0,
+          "text_sha256": "7dc96f776c8423e57a2785489a3f9c43fb6e756876d6ad9a9cac4aa4e72ec193",
+          "material": true,
+          "display_role": "requirement",
+          "section_id": "s1",
+          "claim_ids": [
+            "C-P3-3",
+            "C-P3-4"
+          ],
+          "evidence_ids": [],
+          "relation_ids": [
+            "REL-P3-3"
+          ],
+          "requirement_ids": [],
+          "forecast_ids": [],
+          "p1_relations": [
+            {
+              "relation_id": "REL-P3-3",
+              "type": "depends_on",
+              "direction": "source_to_target"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

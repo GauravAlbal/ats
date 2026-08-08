@@ -1,0 +1,166 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "example-specify-closure",
+  "source": {
+    "content_sha256": "3b7e2a9f0c1d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f",
+    "media_type": "text/plain",
+    "locator": "examples/closure_source.txt"
+  },
+  "policy_snapshot_id": "policy-example-specify",
+  "language": "en",
+  "audience": {
+    "audience_id": "arq-implementers",
+    "expertise": "expert",
+    "assumed_glossary_refs": [
+      "arq-core-v1"
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "requirement",
+      "heading": "Shard-aware acceptance",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-SHARD-001",
+          "role": "requirement",
+          "proposition": "The verifier MUST evaluate each policy shard against the resolved snapshot under which the shard was authored.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-SHARD-001",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "evaluate",
+            "object": "each policy shard",
+            "trigger": "when a shard is presented for acceptance",
+            "condition": "against the resolved snapshot under which the shard was authored",
+            "timing": "before the acceptance transition",
+            "scope": "Arq acceptance-policy kernel",
+            "exceptions": [
+              "emergency rollback freeze"
+            ],
+            "constraints": [
+              "read-only access to the shard registry"
+            ],
+            "acceptance_criterion_id": "AC-SHARD-001",
+            "acceptance_criterion": "A shard evaluated under a mismatched snapshot is refused with no accepted transition.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "A shard proves conformance only under the snapshot that evaluated it."
+          }
+        },
+        {
+          "claim_id": "REQ-SHARD-002",
+          "role": "requirement",
+          "proposition": "The planner MUST attach the source shard lineage to every derived task it creates from a resolved snapshot.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq planner",
+            "authority_domain": "Arq planning-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-SHARD-002",
+            "actor": "planner",
+            "deontic": "MUST",
+            "action": "attach",
+            "object": "the source shard lineage",
+            "trigger": "when it creates a derived task from a resolved snapshot",
+            "condition": "to every derived task it creates",
+            "timing": "at task creation time",
+            "scope": "Arq planning-policy kernel",
+            "exceptions": [],
+            "constraints": [],
+            "acceptance_criterion_id": "AC-SHARD-002",
+            "acceptance_criterion": "Every derived task in the projection carries a lineage record naming its source shard.",
+            "source_authority": "Arq planning-policy kernel",
+            "rationale": "Lineage lets a downstream task be re-verified against the shard that generated it."
+          }
+        },
+        {
+          "claim_id": "AC-SHARD-001",
+          "role": "definition",
+          "proposition": "Acceptance criterion AC-SHARD-001: a shard evaluated under a mismatched snapshot is refused with no accepted transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "AC-SHARD-002",
+          "role": "definition",
+          "proposition": "Acceptance criterion AC-SHARD-002: every derived task in the projection carries a lineage record naming its source shard.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "OBS-SHARD-001",
+          "role": "observation",
+          "proposition": "Shards are authored independently and may be presented in any order.",
+          "material": true,
+          "polarity": "positive",
+          "source_refs": [
+            "e1"
+          ],
+          "status": "asserted"
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e1",
+          "proposition": "The shard-authoring workflow description states that shards are authored independently.",
+          "source": {
+            "source_id": "shard-authoring-workflow",
+            "source_type": "repository_artifact",
+            "availability": "present",
+            "locator": "workflows/shard-authoring.md"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [
+        {
+          "relation_id": "rel1",
+          "source_id": "REQ-SHARD-002",
+          "type": "depends_on",
+          "target_id": "REQ-SHARD-001",
+          "dependency_target": "REQ-SHARD-001",
+          "material": true,
+          "notes": "Lineage can only be attached once shard evaluation is tied to the authored snapshot."
+        },
+        {
+          "relation_id": "rel2",
+          "source_id": "OBS-SHARD-001",
+          "type": "supports",
+          "target_id": "REQ-SHARD-001",
+          "material": true
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "shard-lineage",
+      "canonical_term": "source shard lineage",
+      "definition": "The record linking a derived task to the policy shard and snapshot from which it was generated.",
+      "scope": "Arq planning projection",
+      "audience": "expert"
+    }
+  ],
+  "extraction_status": "complete"
+}

@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_output_lint_report_v1.schema.json",
+  "title": "ATS Output Lint Report V1",
+  "description": "Deterministic result of `ats output lint`. Proves that required IR objects were declared and mapped; it does not claim that mapping proves semantic realization (that stays REVIEW_REQUIRED).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "artifact_id",
+    "output_sha256",
+    "trace_sha256",
+    "ir_sha256",
+    "policy_snapshot_id",
+    "policy_sha256",
+    "spec_version",
+    "profiles",
+    "implementation",
+    "checks",
+    "rule_results",
+    "findings",
+    "block_coverage",
+    "summary",
+    "conformance",
+    "conformance_rationale",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.output_lint_report.v1" },
+    "report_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "report_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "output_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "trace_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "ir_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "policy_snapshot_id": { "type": "string", "minLength": 1 },
+    "policy_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "spec_version": { "type": "string", "minLength": 1 },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "$ref": "ats_common_v1.schema.json#/$defs/profile" }
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["name", "version", "parser_version", "rule_registry_version", "lexicon_version"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "parser_version": { "type": "string", "minLength": 1 },
+        "rule_registry_version": { "type": "string", "minLength": 1 },
+        "lexicon_version": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "ats_ir_lint_report_v1.schema.json#/$defs/check_result" }
+    },
+    "rule_results": {
+      "type": "array",
+      "items": { "$ref": "ats_rule_result_v1.schema.json" }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "ats_finding_v1.schema.json" }
+    },
+    "unsupported_constructs": {
+      "type": "array",
+      "description": "Markdown constructs the parser recognised but this implementation does not evaluate (spec Section 16.3).",
+      "items": {
+        "type": "object",
+        "required": ["construct", "line", "detail"],
+        "properties": {
+          "construct": { "type": "string", "minLength": 1 },
+          "line": { "type": "integer", "minimum": 1 },
+          "detail": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "block_coverage": {
+      "type": "object",
+      "required": [
+        "blocks_declared",
+        "blocks_found",
+        "material_ir_objects",
+        "material_ir_objects_mapped",
+        "unmapped_material_ir_objects",
+        "unknown_ir_references"
+      ],
+      "properties": {
+        "blocks_declared": { "type": "integer", "minimum": 0 },
+        "blocks_found": { "type": "integer", "minimum": 0 },
+        "material_ir_objects": { "type": "integer", "minimum": 0 },
+        "material_ir_objects_mapped": { "type": "integer", "minimum": 0 },
+        "unmapped_material_ir_objects": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "unknown_ir_references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        },
+        "authorized_omissions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "p0_checks": {
+      "type": "array",
+      "description": "Exact-rendering results for declared P0 values (spec Section 11.3.1).",
+      "items": {
+        "type": "object",
+        "required": ["field_ref", "block_id", "status"],
+        "properties": {
+          "field_ref": { "type": "string" },
+          "block_id": { "type": "string" },
+          "status": { "enum": ["preserved", "changed_unauthorized", "unavailable"] },
+          "source_value": { "type": "string" },
+          "rendered_value": { "type": "string" },
+          "detail": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "p1_checks": {
+      "type": "array",
+      "description": "Declared-representation results for material P1 relations (spec Section 11.3.2).",
+      "items": {
+        "type": "object",
+        "required": ["relation_id", "status"],
+        "properties": {
+          "relation_id": { "type": "string" },
+          "status": { "enum": ["declared", "missing", "direction_changed", "unavailable"] },
+          "block_ids": { "type": "array", "items": { "type": "string" } },
+          "detail": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "finding_dispositions": {
+      "type": "object",
+      "required": ["surfaced", "dispositioned", "undispositioned"],
+      "properties": {
+        "surfaced": { "type": "integer", "minimum": 0 },
+        "dispositioned": { "type": "integer", "minimum": 0 },
+        "undispositioned": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+    "receipt_verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["PASS", "FAIL", "UNAVAILABLE", "NOT_APPLICABLE"] },
+        "receipt_id": { "type": "string" },
+        "declared_sha256": { "type": "string" },
+        "recomputed_sha256": { "type": "string" },
+        "detail": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["checks_total", "by_status", "required_failed", "required_unavailable"],
+      "properties": {
+        "checks_total": { "type": "integer", "minimum": 0 },
+        "by_status": {
+          "type": "object",
+          "required": ["PASS", "FAIL", "UNAVAILABLE", "NOT_APPLICABLE", "REVIEW_REQUIRED"],
+          "properties": {
+            "PASS": { "type": "integer", "minimum": 0 },
+            "FAIL": { "type": "integer", "minimum": 0 },
+            "UNAVAILABLE": { "type": "integer", "minimum": 0 },
+            "NOT_APPLICABLE": { "type": "integer", "minimum": 0 },
+            "REVIEW_REQUIRED": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "required_failed": { "type": "integer", "minimum": 0 },
+        "required_unavailable": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "conformance": { "$ref": "ats_common_v1.schema.json#/$defs/conformance_vector" },
+    "conformance_rationale": {
+      "type": "object",
+      "required": ["mechanical", "profile", "semantic_review", "preservation", "forecast_calibration"],
+      "additionalProperties": false,
+      "properties": {
+        "mechanical": { "type": "string", "minLength": 1 },
+        "profile": { "type": "string", "minLength": 1 },
+        "semantic_review": { "type": "string", "minLength": 1 },
+        "preservation": { "type": "string", "minLength": 1 },
+        "forecast_calibration": { "type": "string", "minLength": 1 }
+      }
+    },
+    "created_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" }
+  },
+  "additionalProperties": false
+}

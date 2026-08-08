@@ -1,0 +1,31 @@
+{
+  "schema_version": "ats.policy_snapshot.v1",
+  "snapshot_id": "policy-fixture-assess-transform",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "created_at": "2026-08-03T00:00:00Z",
+  "profiles": [
+    "ASSESS",
+    "TRANSFORM"
+  ],
+  "audience": {
+    "expertise": "expert",
+    "audience_id": "arq-engineering",
+    "locale": "en-US"
+  },
+  "glossary_refs": [
+    "arq-core-v1"
+  ],
+  "lexicon_refs": [
+    "ats_force_lexicon_v1"
+  ],
+  "rule_overrides": {},
+  "exceptions": [],
+  "finding_budget": {
+    "guardrail": "all_critical",
+    "coach": 5
+  },
+  "model_artifacts": [],
+  "fallback_policy": "fail_closed",
+  "snapshot_sha256": "2d484b22e7b695df457908db55e96b641cd8601df61c899d0abf688424b79f38"
+}

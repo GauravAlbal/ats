@@ -1,0 +1,20 @@
+{
+  "schema_version": "ats.policy_exception.v1",
+  "exception_id": "exception-example-disc-001",
+  "sha256": "f9787ac1127dd3676ae94cf6dd81d385e50a97a09ae9acd03f05f67a1bfd3e38",
+  "rule_id": "ATS-DISC-001",
+  "from_state": "advisory",
+  "to_state": "shadow",
+  "scope": {
+    "artifact_id": "artifact-example-long-form",
+    "section_id": "historical-background",
+    "description": "Only the historical-background section of this artifact."
+  },
+  "rationale": "The section is intentionally chronological and is not used as a decision surface.",
+  "authorized_by": "human:ats-policy-owner",
+  "created_at": "2026-08-02T22:05:00Z",
+  "expires_at": "2026-11-01T00:00:00Z",
+  "evidence_refs": [
+    "issue:ats-41"
+  ]
+}

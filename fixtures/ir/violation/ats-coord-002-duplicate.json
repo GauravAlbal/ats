@@ -1,0 +1,60 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-002-duplicate",
+  "source": {
+    "content_sha256": "dd62aaae9f33d5be675e75ddae308196909362c2b140c92e937d727564b4f2c6",
+    "normalized_sha256": "dd62aaae9f33d5be675e75ddae308196909362c2b140c92e937d727564b4f2c6",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-002-duplicate.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-002-duplicate",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C002-1",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-1",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-1",
+      "source_pointer": "#/sections/0/claims/0"
+    },
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-1",
+      "source_pointer": "#/sections/0/claims/1"
+    }
+  ]
+}

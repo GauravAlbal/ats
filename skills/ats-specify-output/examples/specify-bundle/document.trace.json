@@ -1,0 +1,149 @@
+{
+  "schema_version": "ats.output_trace.v1",
+  "artifact_id": "fixture-specify-stale-policy",
+  "ir_sha256": "6ec21218ff8acb3918d6350fbd8fe88a9dfff8627fc27998949ccebc2b93f7f5",
+  "output_sha256": "a69aeffb480a272c28062948c2746d798ffe2264acea498e3c0f95322682d467",
+  "policy_snapshot_id": "policy-fixture-specify",
+  "policy_sha256": "7b30c3e27567413e22ebf983660a1687590b3ceab50ca17ad31f4f9c34766d2f",
+  "profiles": [
+    "SPECIFY"
+  ],
+  "renderer": {
+    "name": "ats-specify-output",
+    "version": "0.1.0",
+    "skill_id": "skills/ats-specify-output"
+  },
+  "marker_scheme": {
+    "kind": "html_comment",
+    "pattern": "<!-- ats:block {block_id} -->",
+    "end_pattern": "<!-- /ats:block {block_id} -->"
+  },
+  "created_at": "2026-08-03T00:00:00Z",
+  "blocks": [
+    {
+      "block_id": "specify-req-policy-017",
+      "marker": "<!-- ats:block specify-req-policy-017 -->",
+      "ordinal": 0,
+      "text_sha256": "0be8bb16d2174e9a68f0bccb4e3cf22a82774ddbe1ffc1be51d339315e4af59f",
+      "material": true,
+      "display_role": "requirement",
+      "section_id": "requirement",
+      "claim_ids": [
+        "REQ-POLICY-017"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [
+        "REQ-POLICY-017"
+      ],
+      "forecast_ids": [],
+      "profile": "SPECIFY",
+      "p0_fields": [
+        {
+          "field_ref": "REQ-POLICY-017.requirement.requirement_id",
+          "ir_pointer": "/sections/0/claims/0/requirement/requirement_id",
+          "rendered": "REQ-POLICY-017"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.deontic",
+          "ir_pointer": "/sections/0/claims/0/requirement/deontic",
+          "rendered": "MUST"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.actor",
+          "ir_pointer": "/sections/0/claims/0/requirement/actor",
+          "rendered": "verifier"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.action",
+          "ir_pointer": "/sections/0/claims/0/requirement/action",
+          "rendered": "reject"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.object",
+          "ir_pointer": "/sections/0/claims/0/requirement/object",
+          "rendered": "acceptance receipt"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.trigger",
+          "ir_pointer": "/sections/0/claims/0/requirement/trigger",
+          "rendered": "executor presents an acceptance receipt"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.condition",
+          "ir_pointer": "/sections/0/claims/0/requirement/condition",
+          "rendered": "receipt policy_sha256 differs from the current resolved policy snapshot"
+        },
+        {
+          "field_ref": "REQ-POLICY-017.requirement.timing",
+          "ir_pointer": "/sections/0/claims/0/requirement/timing",
+          "rendered": "before the acceptance transition"
+        }
+      ]
+    },
+    {
+      "block_id": "specify-acceptance-criterion",
+      "marker": "<!-- ats:block specify-acceptance-criterion -->",
+      "ordinal": 1,
+      "text_sha256": "cd9be7e013f15940d8aede7401cb14d3f9e4a64c1ed5b0a9ad45b4b6ba9a6015",
+      "material": true,
+      "display_role": "acceptance_criterion",
+      "section_id": "requirement",
+      "claim_ids": [
+        "REQ-POLICY-017"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "SPECIFY",
+      "p0_fields": [
+        {
+          "field_ref": "REQ-POLICY-017.requirement.acceptance_criterion",
+          "ir_pointer": "/sections/0/claims/0/requirement/acceptance_criterion",
+          "rendered": "A stale-policy fixture returns refused_stale_policy, emits no accepted transition, and records both policy hashes."
+        }
+      ]
+    },
+    {
+      "block_id": "specify-authority",
+      "marker": "<!-- ats:block specify-authority -->",
+      "ordinal": 2,
+      "text_sha256": "212c20ff529b994896cd977f0e955cf8a1a68be3928f1d80f53d3c73184c3ac6",
+      "material": true,
+      "display_role": "authority",
+      "section_id": "requirement",
+      "claim_ids": [
+        "REQ-POLICY-017"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "SPECIFY",
+      "p0_fields": [
+        {
+          "field_ref": "REQ-POLICY-017.requirement.source_authority",
+          "ir_pointer": "/sections/0/claims/0/requirement/source_authority",
+          "rendered": "Arq acceptance-policy kernel"
+        }
+      ]
+    },
+    {
+      "block_id": "specify-rationale",
+      "marker": "<!-- ats:block specify-rationale -->",
+      "ordinal": 3,
+      "text_sha256": "788e0d018085bdfb1c3207b3384ead24eb32019f275c7662c00b7fd19d979dd4",
+      "material": false,
+      "display_role": "rationale",
+      "section_id": "requirement",
+      "claim_ids": [],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "SPECIFY"
+    }
+  ],
+  "trace_sha256": "37268b205708ff7637abf64b21311be24daf465850a951dd9d6a20741e7841b7"
+}

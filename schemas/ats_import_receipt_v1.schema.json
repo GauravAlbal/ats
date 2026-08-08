@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_import_receipt_v1.schema.json",
+  "title": "ATS Normative Package Import Receipt V1",
+  "description": "Repository-local record of one normative-package import. Deliberately excluded from the upstream package manifest.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "standard",
+    "spec_version",
+    "imported_at",
+    "extraction_path",
+    "source_archive",
+    "manifest_sha256",
+    "manifest_file_count",
+    "manifest_verification",
+    "package_validator"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.import_receipt.v1" },
+    "standard": { "const": "ATS-1" },
+    "spec_version": { "type": "string", "minLength": 1 },
+    "imported_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "revalidation_requested_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "extraction_path": { "type": "string", "minLength": 1 },
+    "source_archive": {
+      "type": "object",
+      "required": ["filename", "sha256", "bytes", "expected_sha256", "sha256_matches"],
+      "properties": {
+        "filename": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "expected_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "sha256_matches": { "type": "boolean" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "root_prefix": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "manifest_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "manifest_file_count": { "type": "integer", "minimum": 1 },
+    "manifest_verification": {
+      "type": "object",
+      "required": ["status", "files_checked", "mismatches", "missing", "unlisted"],
+      "properties": {
+        "status": { "enum": ["match", "mismatch"] },
+        "files_checked": { "type": "integer", "minimum": 0 },
+        "mismatches": { "type": "array", "items": { "type": "string" } },
+        "missing": { "type": "array", "items": { "type": "string" } },
+        "unlisted": { "type": "array", "items": { "type": "string" } },
+        "excluded_from_manifest": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "package_validator": {
+      "type": "object",
+      "required": ["command", "exit_code", "stdout", "status"],
+      "properties": {
+        "command": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "exit_code": { "type": ["integer", "null"] },
+        "stdout": { "type": ["string", "null"] },
+        "stderr": { "type": ["string", "null"] },
+        "status": { "enum": ["PASS", "FAIL", "PENDING"] },
+        "interpreter": { "type": "string" },
+        "recorded_at": {
+          "anyOf": [
+            { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+            { "type": "null" }
+          ]
+        },
+        "requirements": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

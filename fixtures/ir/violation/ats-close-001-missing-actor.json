@@ -1,0 +1,47 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-close-001-missing-actor",
+  "source": {
+    "content_sha256": "3af6784d64fdea48ba033f8af4f99f6bced009e52258a98d1ce5cca625d3c8c0",
+    "normalized_sha256": "3af6784d64fdea48ba033f8af4f99f6bced009e52258a98d1ce5cca625d3c8c0",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-close-001-missing-actor.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-close-001-missing-actor",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C1-2",
+          "role": "requirement",
+          "proposition": "The ledger MUST record every transition before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C1-2",
+            "actor": " ",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "every transition",
+            "source_authority": "Arq acceptance kernel"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

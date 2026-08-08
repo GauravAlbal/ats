@@ -1,0 +1,116 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-pres-003-authorized-semantic-change",
+  "source": {
+    "content_sha256": "12f0040212dc0ad069291dbeb05403e3cb2f3476da7ffcad7cc541beeb3a564b",
+    "normalized_sha256": "12f0040212dc0ad069291dbeb05403e3cb2f3476da7ffcad7cc541beeb3a564b",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-pres-003-authorized-semantic-change.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-pres-003-authorized-semantic-change",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-P3-7",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-7",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        },
+        {
+          "claim_id": "C-P3-8",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-8",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [
+        {
+          "relation_id": "REL-P3-7",
+          "source_id": "C-P3-7",
+          "type": "depends_on",
+          "target_id": "C-P3-8",
+          "material": true,
+          "dependency_target": "C-P3-8"
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "extensions": {
+    "output_trace": {
+      "schema_version": "ats.output_trace.v1",
+      "artifact_id": "fixture-pres-003-authorized-semantic-change",
+      "ir_sha256": "1cc8a8bd2249ed62e187b246206f13f053dd9f4e7f6aa3866caa7b06a0cdd118",
+      "output_sha256": "9888742ac1e6975c456fc2bc6ab016daa73777f993587f9a01069a09c5a51704",
+      "policy_snapshot_id": "policy-fixture-draft2",
+      "policy_sha256": "d19949912c13d0dcd296767d09ab084cfacfef7c5175a1947e7384dbec3dfc57",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "marker_scheme": {
+        "kind": "html_comment",
+        "pattern": "<!-- ats:block {block_id} -->"
+      },
+      "blocks": [
+        {
+          "block_id": "b1",
+          "marker": "<!-- ats:block b1 -->",
+          "ordinal": 0,
+          "text_sha256": "7dc96f776c8423e57a2785489a3f9c43fb6e756876d6ad9a9cac4aa4e72ec193",
+          "material": true,
+          "display_role": "requirement",
+          "section_id": "s1",
+          "claim_ids": [
+            "C-P3-7",
+            "C-P3-8"
+          ],
+          "evidence_ids": [],
+          "relation_ids": [],
+          "requirement_ids": [],
+          "forecast_ids": []
+        }
+      ]
+    },
+    "authorized_semantic_change": {
+      "change_id": "CHG-DRAFT2-007",
+      "rule_id": "ATS-PRES-003",
+      "changed_relation": "REL-P3-7",
+      "authority": "draft2-fixture-change-authority",
+      "authorization_ref": "CHG-DRAFT2-007",
+      "rationale": "The dependency was removed because the archive step is subsumed by the reject step under the approved semantic change."
+    }
+  }
+}

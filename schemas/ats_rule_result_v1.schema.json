@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_rule_result_v1.schema.json",
+  "title": "ATS Rule Result V1",
+  "description": "The explicit result of evaluating one ATS-1 rule under one resolved state. Repository-local: ATS-1 defines conformance dimensions, not per-rule result records. REVIEW_REQUIRED marks a rule whose implemented detector recognises only a subset of violations and therefore cannot certify conformance from the absence of a finding (spec Sections 5.4 and 16.5).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "rule_id",
+    "rule_version",
+    "profile",
+    "effective_state",
+    "status",
+    "decision_power",
+    "detector",
+    "finding_ids"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.rule_result.v1" },
+    "rule_id": { "type": "string", "pattern": "^ATS-[A-Z]+-[0-9]{3}$" },
+    "rule_version": { "type": "string", "minLength": 1 },
+    "profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+    "effective_state": { "$ref": "ats_common_v1.schema.json#/$defs/rule_state" },
+    "status": {
+      "enum": ["PASS", "FAIL", "UNAVAILABLE", "NOT_APPLICABLE", "REVIEW_REQUIRED"]
+    },
+    "decision_power": {
+      "enum": ["decides", "detects_violations", "undecidable"]
+    },
+    "detector": { "$ref": "ats_common_v1.schema.json#/$defs/detector" },
+    "finding_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "missing_inputs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "reason": { "type": "string" },
+    "subchecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subcheck_id", "status"],
+        "properties": {
+          "subcheck_id": { "type": "string", "minLength": 1 },
+          "status": {
+            "enum": ["PASS", "FAIL", "UNAVAILABLE", "NOT_APPLICABLE", "REVIEW_REQUIRED"]
+          },
+          "spec_ref": { "type": "string" },
+          "detail": { "type": "string" },
+          "observed": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "PASS" } }, "required": ["status"] },
+      "then": {
+        "properties": { "decision_power": { "const": "decides" } },
+        "description": "Only a complete decision procedure may report PASS."
+      }
+    },
+    {
+      "if": { "properties": { "status": { "const": "UNAVAILABLE" } }, "required": ["status"] },
+      "then": { "required": ["reason"] }
+    },
+    {
+      "if": {
+        "properties": { "status": { "const": "REVIEW_REQUIRED" } },
+        "required": ["status"]
+      },
+      "then": { "required": ["reason"] }
+    }
+  ],
+  "additionalProperties": false
+}

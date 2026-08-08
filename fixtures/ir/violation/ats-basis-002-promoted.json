@@ -1,0 +1,63 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-002-promoted",
+  "source": {
+    "content_sha256": "13f5a14f28c323bdd0a2c92f8409e4f3bec55391f2fecfd18afd111ddb9b298a",
+    "normalized_sha256": "13f5a14f28c323bdd0a2c92f8409e4f3bec55391f2fecfd18afd111ddb9b298a",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-002-promoted.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-002-promoted",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "OUT-B2-2",
+          "role": "judgment",
+          "proposition": "The acceptance kernel rejects stale-policy transitions at 55-80%: the source declared this band explicitly.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "EXPLICIT",
+            "rationale": "The output presents the band as stated by the source."
+          },
+          "source_refs": [
+            "EV-B2-2"
+          ],
+          "extensions": {
+            "source_basis": {
+              "EV-B2-2": "INFERRED"
+            }
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "EV-B2-2",
+          "proposition": "Audit entries show rejections clustering around stale-policy transitions.",
+          "source": {
+            "source_id": "src-EV-B2-2",
+            "source_type": "synthetic_fixture",
+            "availability": "present",
+            "locator": "fixtures/ir/sources/EV-B2-2.txt"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

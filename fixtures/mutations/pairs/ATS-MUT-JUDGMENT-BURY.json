@@ -1,0 +1,290 @@
+{
+  "expected_impact": {
+    "expected_delta_classes": [],
+    "expected_label": "violation",
+    "expected_protected_impact": [
+      "P2"
+    ],
+    "rules": [
+      {
+        "normative_statement": "The load-bearing judgment, requirement, or answer SHOULD precede background that cannot change its interpretation.",
+        "rule_id": "ATS-DISC-001",
+        "rule_version": "1.0.0-draft.1",
+        "severity": "minor"
+      }
+    ],
+    "synthetic_evidence_note": "A synthetic mutation demonstrates that the rule can be violated in this way. It is not evidence that the violation occurs in real repositories (spec 17.5).",
+    "target_rule_ids": [
+      "ATS-DISC-001"
+    ]
+  },
+  "mutant": {
+    "domain": "acceptance-kernel",
+    "example_id": "ats-example-sha256:e0842ac366598413c6484e250a4cb87174bdf72d01ae7c26aa6f25a007773cdd",
+    "extensions": {
+      "x-ats-repo-mutation-family": "ATS-MUT-JUDGMENT-BURY",
+      "x-ats-repo-record-sha256": "e0842ac366598413c6484e250a4cb87174bdf72d01ae7c26aa6f25a007773cdd",
+      "x-ats-repo-source-example-id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+      "x-ats-repo-text-ir": {
+        "artifact_id": "fixture-mutation-source-specify",
+        "audience": {
+          "audience_id": "arq-implementers",
+          "expertise": "expert"
+        },
+        "extraction_status": "complete",
+        "glossary": [
+          {
+            "audience": "expert",
+            "canonical_term": "policy_sha256",
+            "concept_id": "policy-sha256",
+            "definition": "The SHA-256 digest of the JCS-canonical resolved policy snapshot.",
+            "scope": "Arq receipt schema"
+          }
+        ],
+        "language": "en",
+        "policy_snapshot_id": "policy-fixture-specify",
+        "schema_version": "ats.text_ir.v1",
+        "sections": [
+          {
+            "claims": [
+              {
+                "claim_id": "REQ-POLICY-018",
+                "force": {
+                  "deontic": "SHOULD"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The verifier SHOULD retain both policy hashes in the refusal record.",
+                "requirement": {
+                  "acceptance_criterion": "The refusal record carries both hashes unless redaction applies.",
+                  "action": "retain",
+                  "actor": "verifier",
+                  "deontic": "SHOULD",
+                  "exceptions": [
+                    "A redaction policy withholds the resolved snapshot hash."
+                  ],
+                  "object": "both policy hashes",
+                  "requirement_id": "REQ-POLICY-018",
+                  "source_authority": "Arq acceptance-policy kernel"
+                },
+                "role": "requirement",
+                "scope": {
+                  "authority_domain": "Arq acceptance-policy kernel",
+                  "system": "Arq verifier"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "REQ-POLICY-017",
+                "force": {
+                  "deontic": "MUST"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt within 500 milliseconds.",
+                "quantifier": {
+                  "kind": "maximum",
+                  "unit": "milliseconds",
+                  "value": 500
+                },
+                "requirement": {
+                  "acceptance_criterion": "A stale-policy fixture returns refused_stale_policy and records both policy hashes.",
+                  "action": "reject",
+                  "actor": "verifier",
+                  "condition": "receipt policy_sha256 differs from the current resolved policy snapshot",
+                  "constraints": [
+                    "The 500 millisecond boundary is inclusive."
+                  ],
+                  "deontic": "MUST",
+                  "exceptions": [],
+                  "object": "acceptance receipt",
+                  "rationale": "A receipt proves conformance only under the policy used to evaluate it.",
+                  "requirement_id": "REQ-POLICY-017",
+                  "source_authority": "Arq acceptance-policy kernel",
+                  "timing": "within 500 milliseconds",
+                  "trigger": "executor presents an acceptance receipt"
+                },
+                "role": "requirement",
+                "scope": {
+                  "authority_domain": "Arq acceptance-policy kernel",
+                  "system": "Arq verifier"
+                },
+                "status": "asserted"
+              }
+            ],
+            "evidence": [],
+            "heading": "Stale-policy rejection",
+            "profiles": [
+              "SPECIFY"
+            ],
+            "relations": [],
+            "section_id": "requirements",
+            "update_indicators": []
+          }
+        ],
+        "source": {
+          "content_sha256": "4ad25be77c198e748184e4e5179c7f5588898bca53ec8f60ce87dc04bfa12c0b",
+          "locator": "fixtures/mutations/sources/specify_mutation_source.json",
+          "media_type": "text/plain"
+        }
+      }
+    },
+    "label": "violation",
+    "mutation_operator": "ATS-MUT-JUDGMENT-BURY",
+    "profile": "SPECIFY",
+    "protected_impact": [
+      "P2"
+    ],
+    "provenance": "synthetic_mutation",
+    "rationale": "Move a key judgment behind background: the leading requirement REQ-POLICY-017 was moved behind the background claims of its section; no claim content changed. Synthetic mutation under ATS-MUT-JUDGMENT-BURY; it is tagged synthetic and MUST NOT be counted as independent real-world evidence of rule prevalence or user value (spec 17.5).",
+    "repository_group": "ats-seed",
+    "rule_id": "ATS-DISC-001",
+    "schema_version": "ats.text_example.v1",
+    "split_group": "mutation-source-specify",
+    "synthetic": true,
+    "text": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt within 500 milliseconds.",
+    "use_authority": "ATS repository fixture"
+  },
+  "operator_id": "ATS-MUT-JUDGMENT-BURY",
+  "source_example": {
+    "domain": "acceptance-kernel",
+    "example_id": "ats-example-sha256:ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+    "extensions": {
+      "x-ats-repo-record-sha256": "ec30a82587d671fc74105bf7b4aafd6e3cc6fdd8e2fb19eec321bca37e5f2091",
+      "x-ats-repo-text-ir": {
+        "artifact_id": "fixture-mutation-source-specify",
+        "audience": {
+          "audience_id": "arq-implementers",
+          "expertise": "expert"
+        },
+        "extraction_status": "complete",
+        "glossary": [
+          {
+            "audience": "expert",
+            "canonical_term": "policy_sha256",
+            "concept_id": "policy-sha256",
+            "definition": "The SHA-256 digest of the JCS-canonical resolved policy snapshot.",
+            "scope": "Arq receipt schema"
+          }
+        ],
+        "language": "en",
+        "policy_snapshot_id": "policy-fixture-specify",
+        "schema_version": "ats.text_ir.v1",
+        "sections": [
+          {
+            "claims": [
+              {
+                "claim_id": "REQ-POLICY-017",
+                "force": {
+                  "deontic": "MUST"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt within 500 milliseconds.",
+                "quantifier": {
+                  "kind": "maximum",
+                  "unit": "milliseconds",
+                  "value": 500
+                },
+                "requirement": {
+                  "acceptance_criterion": "A stale-policy fixture returns refused_stale_policy and records both policy hashes.",
+                  "action": "reject",
+                  "actor": "verifier",
+                  "condition": "receipt policy_sha256 differs from the current resolved policy snapshot",
+                  "constraints": [
+                    "The 500 millisecond boundary is inclusive."
+                  ],
+                  "deontic": "MUST",
+                  "exceptions": [],
+                  "object": "acceptance receipt",
+                  "rationale": "A receipt proves conformance only under the policy used to evaluate it.",
+                  "requirement_id": "REQ-POLICY-017",
+                  "source_authority": "Arq acceptance-policy kernel",
+                  "timing": "within 500 milliseconds",
+                  "trigger": "executor presents an acceptance receipt"
+                },
+                "role": "requirement",
+                "scope": {
+                  "authority_domain": "Arq acceptance-policy kernel",
+                  "system": "Arq verifier"
+                },
+                "status": "asserted"
+              },
+              {
+                "claim_id": "REQ-POLICY-018",
+                "force": {
+                  "deontic": "SHOULD"
+                },
+                "material": true,
+                "polarity": "positive",
+                "proposition": "The verifier SHOULD retain both policy hashes in the refusal record.",
+                "requirement": {
+                  "acceptance_criterion": "The refusal record carries both hashes unless redaction applies.",
+                  "action": "retain",
+                  "actor": "verifier",
+                  "deontic": "SHOULD",
+                  "exceptions": [
+                    "A redaction policy withholds the resolved snapshot hash."
+                  ],
+                  "object": "both policy hashes",
+                  "requirement_id": "REQ-POLICY-018",
+                  "source_authority": "Arq acceptance-policy kernel"
+                },
+                "role": "requirement",
+                "scope": {
+                  "authority_domain": "Arq acceptance-policy kernel",
+                  "system": "Arq verifier"
+                },
+                "status": "asserted"
+              }
+            ],
+            "evidence": [],
+            "heading": "Stale-policy rejection",
+            "profiles": [
+              "SPECIFY"
+            ],
+            "relations": [],
+            "section_id": "requirements",
+            "update_indicators": []
+          }
+        ],
+        "source": {
+          "content_sha256": "4ad25be77c198e748184e4e5179c7f5588898bca53ec8f60ce87dc04bfa12c0b",
+          "locator": "fixtures/mutations/sources/specify_mutation_source.json",
+          "media_type": "text/plain"
+        }
+      }
+    },
+    "label": "conforming",
+    "profile": "SPECIFY",
+    "protected_impact": [
+      "P0"
+    ],
+    "provenance": "human_authored_fixture",
+    "rationale": "Hand-authored mutation source carrying every slot the operators need.",
+    "repository_group": "ats-seed",
+    "rule_id": "ATS-REQ-001",
+    "schema_version": "ats.text_example.v1",
+    "split_group": "mutation-source-specify",
+    "synthetic": false,
+    "text": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt within 500 milliseconds.",
+    "use_authority": "ATS repository fixture"
+  },
+  "split_group": "mutation-source-specify",
+  "transformation": {
+    "description": "Move the leading judgment or requirement to the end of its section's claim list, leaving every claim's content untouched. Section 10.16 makes the position of the key answer a load-bearing choice.",
+    "detail": "the leading requirement REQ-POLICY-017 was moved behind the background claims of its section; no claim content changed",
+    "kind": "ir_claim_reorder",
+    "new_value": {
+      "claim_id": "REQ-POLICY-017",
+      "position": 1
+    },
+    "old_value": {
+      "claim_id": "REQ-POLICY-017",
+      "position": 0
+    },
+    "output_sha256": "4e5939bd0f8680591860765e80c8e0ed50cf98581214caf47f4f00f01eefe39a",
+    "source_sha256": "fe7f44d7ca0679dd4811de55206b68c2cdfd71afb6f326160763107b66a3377d",
+    "target_pointer": "/sections/0/claims"
+  }
+}

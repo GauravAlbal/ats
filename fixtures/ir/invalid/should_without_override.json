@@ -1,0 +1,71 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-invalid-should-without-override",
+  "source": {
+    "content_sha256": "93261226b7f79d31b419f98b8e1917d557ee22e0a8a31fc1f9ad84a2c5ffd9e3",
+    "normalized_sha256": "93261226b7f79d31b419f98b8e1917d557ee22e0a8a31fc1f9ad84a2c5ffd9e3",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/specify_stale_policy.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-specify",
+  "language": "en",
+  "audience": {
+    "audience_id": "arq-implementers",
+    "expertise": "expert",
+    "assumed_glossary_refs": [
+      "arq-core-v1"
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "requirement",
+      "heading": "Stale-policy rejection",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-POLICY-017",
+          "role": "requirement",
+          "proposition": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier SHOULD reject the receipt before the acceptance transition.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "SHOULD"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-POLICY-017",
+            "actor": "verifier",
+            "deontic": "SHOULD",
+            "action": "reject",
+            "object": "acceptance receipt",
+            "trigger": "executor presents an acceptance receipt",
+            "condition": "receipt policy_sha256 differs from the current resolved policy snapshot",
+            "timing": "before the acceptance transition",
+            "exceptions": [],
+            "acceptance_criterion": "A stale-policy fixture returns refused_stale_policy, emits no accepted transition, and records both policy hashes.",
+            "source_authority": "Arq acceptance-policy kernel"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "policy-sha256",
+      "canonical_term": "policy_sha256",
+      "definition": "The SHA-256 digest of the JCS-canonical resolved policy snapshot.",
+      "scope": "Arq receipt schema",
+      "audience": "expert"
+    }
+  ],
+  "extraction_status": "complete"
+}

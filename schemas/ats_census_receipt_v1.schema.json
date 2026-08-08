@@ -1,0 +1,433 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_census_receipt_v1.schema.json",
+  "title": "ATS Census Receipt V1",
+  "description": "What one corpus census run actually was, in enough detail that a later run can tell a changed corpus apart from a changed miner. A census reports statistics over documents that a miner selected, read, normalized, and clustered; when a number moves, either the documents moved or the code did, and nothing in the statistics themselves distinguishes the two. This record pins both sides: every inventoried repository at its exact revision with the selection it was given, and the implementation revision, worktree cleanliness, normalization procedure, and clustering parameters that read them. Every field whose input was unavailable carries an explicit availability state rather than a plausible substitute (spec Section 5.4), because a receipt that quietly filled a gap would claim reproducibility it cannot support.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "stage",
+    "spec_version",
+    "census",
+    "implementation",
+    "repositories",
+    "artifact_identity",
+    "corpus_statistics",
+    "stage_1_gate",
+    "elapsed"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.census_receipt.v1" },
+    "receipt_sha256": {
+      "description": "The receipt's own content address: SHA-256 over its RFC 8785 canonical serialization with this field removed (Appendix C). It is what a later run compares first, and what a report cites when it claims a census is the one this receipt describes.",
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "generated_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "stage": {
+      "description": "The census run's own description of which stage produced it, copied from the census rather than restated here.",
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_version": {
+      "description": "The imported normative package version in force at emission.",
+      "type": "string",
+      "minLength": 1
+    },
+    "census": {
+      "description": "The census document this receipt describes, bound by the SHA-256 of its exact bytes. Without this binding a receipt could be paired with any census.",
+      "type": "object",
+      "required": ["path", "sha256", "schema_version", "generated_at"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+        "schema_version": { "type": "string", "minLength": 1 },
+        "generated_at": { "type": "string", "minLength": 1 },
+        "spec_version": { "type": "string", "minLength": 1 },
+        "implementation": {
+          "description": "The implementation identity the census itself recorded, kept beside the identity resolved at emission so a receipt emitted later than its census cannot silently overwrite it.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "implementation": {
+      "description": "The miner: which revision of this repository read the corpus, and under which procedures. A statistic is only reproducible against a named implementation.",
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "revision",
+        "worktree",
+        "normalization_version",
+        "schema_set_sha256",
+        "clustering"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "revision": {
+          "description": "Git HEAD of this repository at emission.",
+          "$ref": "#/$defs/revision_state"
+        },
+        "worktree": {
+          "description": "Whether the implementation checkout carried uncommitted or untracked changes at emission. A dirty worktree means the code that produced the census is not the code its revision names, so the run cannot be replayed from the revision alone. It is recorded rather than hidden, and `unknown` is distinct from `clean`.",
+          "type": "object",
+          "required": ["state", "changed_paths", "detail"],
+          "properties": {
+            "state": { "enum": ["clean", "dirty", "unknown"] },
+            "changed_paths": {
+              "description": "Porcelain status entries with their two-character status prefix removed; a rename is reported as `old -> new`, exactly as git names it.",
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "detail": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "normalization_version": {
+          "description": "ats.hashes.NORMALIZATION_VERSION. Every normalized hash in the corpus is reproducible only under this procedure.",
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_set_sha256": {
+          "description": "Content address over every schema in play, normative and local. A schema change alters what validated, so it alters what the census was permitted to record.",
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        },
+        "clustering": {
+          "description": "The near-duplicate implementation and its parameters. Both are needed: the parameters can stay fixed while the procedure changes, and either can move a cluster assignment.",
+          "type": "object",
+          "required": [
+            "near_duplicate_version",
+            "shingle_width",
+            "near_duplicate_threshold"
+          ],
+          "properties": {
+            "near_duplicate_version": { "type": "string", "minLength": 1 },
+            "shingle_width": { "type": "integer", "minimum": 1 },
+            "near_duplicate_threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "repositories": {
+      "description": "One entry per inventory the census run performed, including the template-collapse probes, because a probe reads a repository at a revision exactly as a census entry does.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/repository_run" }
+    },
+    "artifact_identity": {
+      "description": "The exact set of source artifacts the run produced: every identifier, their count, and one digest over the sorted list. The digest is the cheap comparison a later run makes first; the list is what localizes the difference when it moves. A partial list is refused, because it would look like a shrunken corpus rather than a missing input.",
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "count": { "type": "integer", "minimum": 0 },
+        "digest": {
+          "description": "SHA-256 over the RFC 8785 canonical serialization of the sorted identifier array.",
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" }
+        },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "availability": { "const": "present" } },
+            "required": ["availability"]
+          },
+          "then": { "required": ["count", "digest", "artifact_ids"] },
+          "else": { "required": ["detail"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "corpus_statistics": {
+      "description": "The census totals, copied verbatim. Recomputing them here would create a second answer that can disagree with the document this receipt is supposed to bind.",
+      "type": "object",
+      "required": [
+        "repositories",
+        "documents",
+        "bytes",
+        "families",
+        "domains",
+        "outside_constellation",
+        "candidates",
+        "distinct_rules_touched"
+      ],
+      "properties": {
+        "repositories": { "type": "integer", "minimum": 0 },
+        "documents": { "type": "integer", "minimum": 0 },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "families": { "type": "integer", "minimum": 0 },
+        "domains": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "outside_constellation": { "type": "integer", "minimum": 0 },
+        "candidates": { "type": "integer", "minimum": 0 },
+        "distinct_rules_touched": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "stage_1_gate": {
+      "description": "The Stage 1 gate outcomes, copied from the census. Stage 2 is gated on them, so the receipt records which conditions held at the revisions it pins.",
+      "type": "object",
+      "required": ["checks", "passed", "total", "clear_to_label"],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "passed", "detail"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "passed": { "type": "boolean" },
+              "detail": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "passed": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 1 },
+        "clear_to_label": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "elapsed": {
+      "description": "Total wall-clock time across every inventory. A total is reported only when every repository reported one: summing the measured subset would understate the run while looking like a measurement.",
+      "type": "object",
+      "required": ["availability", "measured_repositories", "total_repositories"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "total_seconds": { "type": "number", "minimum": 0 },
+        "measured_repositories": { "type": "integer", "minimum": 0 },
+        "total_repositories": { "type": "integer", "minimum": 0 },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "availability": { "const": "present" } },
+            "required": ["availability"]
+          },
+          "then": { "required": ["total_seconds"] },
+          "else": { "required": ["detail"] }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "revision_state": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "sha": { "type": "string", "minLength": 7 },
+        "detail": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "availability": { "const": "present" } },
+            "required": ["availability"]
+          },
+          "then": { "required": ["sha"] },
+          "else": { "required": ["detail"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "repository_run": {
+      "description": "One repository, at one revision, read under one selection.",
+      "type": "object",
+      "required": [
+        "repository",
+        "family",
+        "role",
+        "revision",
+        "documents",
+        "raw_inventory",
+        "selection",
+        "authority_declaration",
+        "elapsed"
+      ],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "family": {
+          "description": "The document family this inventory was chosen to contribute. Repository and family together identify one inventory, because the same repository is inventoried twice when a subtree is probed separately.",
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "description": "`census` counts toward the corpus statistics; `template_probe` is measured beside them and deliberately excluded from them.",
+          "enum": ["census", "template_probe"]
+        },
+        "revision": {
+          "description": "The exact revision the inventory pinned. Every artifact from this repository was read at this commit.",
+          "type": "string",
+          "minLength": 7
+        },
+        "documents": { "type": "integer", "minimum": 0 },
+        "raw_inventory": {
+          "description": "The cached inventory the artifact identifiers were read from, bound by the SHA-256 of its exact bytes. Raw inventories stay local and gitignored (spec Section 16.9), so the digest is how a committed receipt refers to one.",
+          "type": "object",
+          "required": ["name", "availability"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+            "sha256": {
+              "oneOf": [
+                { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+                { "type": "null" }
+              ]
+            },
+            "artifacts": { "type": "integer", "minimum": 0 },
+            "detail": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": { "availability": { "const": "present" } },
+                "required": ["availability"]
+              },
+              "then": { "required": ["sha256", "artifacts"] },
+              "else": { "required": ["detail"] }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "selection": {
+          "description": "The include and exclude globs this inventory was given. Empty arrays are a selection: they mean no glob was applied, which is not the same as not knowing what was applied.",
+          "type": "object",
+          "required": ["availability"],
+          "properties": {
+            "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+            "include": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "exclude": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "detail": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": { "availability": { "const": "present" } },
+                "required": ["availability"]
+              },
+              "then": { "required": ["include", "exclude"] },
+              "else": { "required": ["detail"] }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "authority_declaration": {
+          "description": "The authority declaration in force for this repository, bound by the SHA-256 of the exact declaration bytes. A repository nobody has declared anything about carries `sha256: null` under `not_found`; a null here is the recorded absence of a declaration, never a stand-in for one that could not be read.",
+          "type": "object",
+          "required": ["availability", "location", "sha256", "inventory_agreement"],
+          "properties": {
+            "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+            "location": {
+              "description": "`repository` for a declaration the owner ships in place, `pilot_overlay` for an operator-authored stand-in, null for neither.",
+              "oneOf": [
+                { "enum": ["repository", "pilot_overlay"] },
+                { "type": "null" }
+              ]
+            },
+            "source": { "type": "string", "minLength": 1 },
+            "sha256": {
+              "oneOf": [
+                { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+                { "type": "null" }
+              ]
+            },
+            "declared_by": { "type": "string", "minLength": 1 },
+            "effective_from_revision": { "type": "string", "minLength": 1 },
+            "inventory_agreement": {
+              "description": "Whether the cached inventory recorded resolving this same declaration. `diverged` means the declaration in force at emission is not the one the run used, so this digest does not bind the run's authority basis; `unrecorded` means the inventory carries no resolved authority to compare against.",
+              "enum": ["agrees", "diverged", "unrecorded"]
+            },
+            "detail": { "type": "string", "minLength": 1 },
+            "provenance": {
+              "description": "Who declared this authority, on what basis, and until when. A digest binds the bytes and says nothing about whose declaration they are: an operator overlay hashed into this field is indistinguishable from a repository's own declaration hashed into it, and the two are not interchangeable because only the overlay expires. `repository_owned` is derived from where the declaration was found, never from the basis it claims, so an overlay whose basis is `owner_declared` still reports false.",
+              "type": "object",
+              "required": [
+                "declaration_location",
+                "repository_owned",
+                "principal",
+                "authority_basis",
+                "issued_at",
+                "review_after",
+                "review_status",
+                "superseded_by"
+              ],
+              "properties": {
+                "declaration_location": {
+                  "oneOf": [
+                    { "enum": ["repository", "pilot_overlay"] },
+                    { "type": "null" }
+                  ]
+                },
+                "repository_owned": { "type": "boolean" },
+                "principal": { "type": ["string", "null"], "minLength": 1 },
+                "authority_basis": { "type": "string", "minLength": 1 },
+                "issued_at": { "type": ["string", "null"] },
+                "review_after": { "type": ["string", "null"] },
+                "review_status": {
+                  "description": "`unchecked` is a real answer and not a synonym for `current`: a caller with no clock has not established that the declaration is still live.",
+                  "enum": ["current", "overdue", "unchecked", "not_applicable"]
+                },
+                "superseded_by": { "type": ["string", "null"], "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": { "availability": { "const": "present" } },
+                "required": ["availability"]
+              },
+              "then": { "required": ["source", "declared_by", "provenance"] },
+              "else": { "required": ["detail"] }
+            },
+            {
+              "if": {
+                "properties": { "availability": { "const": "not_found" } },
+                "required": ["availability"]
+              },
+              "then": { "required": ["provenance"] }
+            }
+          ],
+          "additionalProperties": false
+        },
+        "elapsed": {
+          "description": "Wall-clock time this inventory took. It is a property of the run, so a receipt emitted from cached inventories reports it unavailable rather than timing its own JSON read.",
+          "type": "object",
+          "required": ["availability"],
+          "properties": {
+            "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+            "seconds": { "type": "number", "minimum": 0 },
+            "detail": { "type": "string", "minLength": 1 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": { "availability": { "const": "present" } },
+                "required": ["availability"]
+              },
+              "then": { "required": ["seconds"] },
+              "else": { "required": ["detail"] }
+            }
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

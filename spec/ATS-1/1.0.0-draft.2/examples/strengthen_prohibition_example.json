@@ -1,0 +1,100 @@
+{
+  "example_kind": "transformation_pair",
+  "example_id": "example-strengthen-prohibition",
+  "rule_under_test": "ATS-BASIS-002",
+  "scenario": {
+    "summary": "The source text does not declare an authority hierarchy between the receipt policy and the artifact policy. A transformation MUST NOT silently convert the INFERRED precedence value into an explicit source-authoritative fact.",
+    "material_axis": "authority precedence",
+    "source_basis": "INFERRED",
+    "notes": "Per ATS-BASIS-002 the compiler MAY preserve the value as INFERRED, represent it as unresolved, or ask for adjudication; it MUST NOT pretend the source declared it."
+  },
+  "source_ir": {
+    "schema_version": "ats.text_ir.v1",
+    "artifact_id": "example-strengthen-prohibition-source",
+    "source": {
+      "content_sha256": "5f4d3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d",
+      "media_type": "text/plain",
+      "locator": "examples/strengthen_prohibition_source.txt"
+    },
+    "policy_snapshot_id": "policy-example-specify",
+    "language": "en",
+    "audience": {
+      "audience_id": "arq-implementers",
+      "expertise": "expert",
+      "assumed_glossary_refs": [
+        "arq-core-v1"
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "authority",
+        "heading": "Policy precedence",
+        "profiles": [
+          "TRANSFORM"
+        ],
+        "claims": [
+          {
+            "claim_id": "C1",
+            "role": "inference",
+            "proposition": "Where the receipt policy and the artifact policy conflict, the receipt policy takes precedence.",
+            "material": true,
+            "polarity": "positive",
+            "scope": {
+              "system": "Arq acceptance-policy kernel",
+              "authority_domain": "Arq acceptance-policy kernel"
+            },
+            "source_refs": [
+              "e1"
+            ],
+            "status": "asserted",
+            "semantic_basis": {
+              "basis": "INFERRED",
+              "rationale": "The source describes both policies but declares no precedence between them; a competent reader may infer precedence, but the source does not establish it uniquely or normatively."
+            }
+          }
+        ],
+        "evidence": [
+          {
+            "evidence_id": "e1",
+            "proposition": "Receipts are evaluated under the policy snapshot in force at acceptance time; the source does not state what happens when the receipt policy and the artifact policy conflict.",
+            "source": {
+              "source_id": "authority-model-note",
+              "source_type": "repository_artifact",
+              "availability": "present",
+              "locator": "notes/authority-model.md"
+            },
+            "availability": "present"
+          }
+        ],
+        "relations": [],
+        "update_indicators": []
+      }
+    ],
+    "glossary": [],
+    "extraction_status": "complete"
+  },
+  "paths": {
+    "conforming": {
+      "path_id": "conforming",
+      "transformation": "preserve_inferred",
+      "verdict": "conforming",
+      "basis_after": "INFERRED",
+      "output_side": {
+        "kind": "rendered_text",
+        "rendered_text": "Where the receipt policy and the artifact policy conflict, the receipt policy may take precedence (inferred: the source declares no authority hierarchy).",
+        "notes": "The INFERRED precedence is preserved as INFERRED and flagged as inferred in the rendered text; no silent strengthening occurs. ATS-BASIS-002 conforming path."
+      }
+    },
+    "nonconforming": {
+      "path_id": "nonconforming",
+      "transformation": "silent_promotion",
+      "verdict": "violation",
+      "basis_after": "EXPLICIT",
+      "output_side": {
+        "kind": "rendered_text",
+        "rendered_text": "Where the receipt policy and the artifact policy conflict, the receipt policy takes precedence.",
+        "notes": "The rendered text presents the inferred precedence as a flat, source-authoritative fact. The INFERRED basis is silently promoted to EXPLICIT with no source support and no adjudication — the ATS-BASIS-002 violation this example demonstrates."
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "ats.fleet_policy.v1",
+  "policy_id": "39a2e495346135ba9b03fe5b593a424ee73a73d282af214205f8a4097920a1f2",
+  "created_at": "2026-08-07T00:00:00Z",
+  "text_policy": {
+    "standard": "ATS-1",
+    "version": "1.0.0-draft.2",
+    "required_for": [
+      "architecture",
+      "technical_proposal",
+      "rfc",
+      "implementation_spec",
+      "capability_program",
+      "implementation_plan",
+      "postmortem",
+      "diagnostic",
+      "forensic_analysis",
+      "technical_assessment",
+      "acceptance_record",
+      "change_control_record"
+    ],
+    "enforcement": {
+      "ir_schema": "required",
+      "deterministic_ir_lint": "required",
+      "output_trace": "required",
+      "deterministic_output_lint": "required",
+      "semantic_review": "advisory",
+      "p0_preservation": "required",
+      "stable_coordinate_preservation": "required"
+    },
+    "failure_policy": {
+      "unknown_nonblocking": "preserve",
+      "inferred_material_semantics": "review_required",
+      "deterministic_integrity_failure": "block"
+    },
+    "applicability_basis": "declared artifact intent and policy classification"
+  },
+  "default_exclusions": [
+    "exploratory_chat",
+    "scratch_notes",
+    "brainstorming",
+    "blog_posts",
+    "marketing_copy",
+    "README_marketing",
+    "ordinary_issue_comments",
+    "casual_explanation",
+    "social_copy"
+  ]
+}

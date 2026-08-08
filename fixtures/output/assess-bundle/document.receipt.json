@@ -1,0 +1,44 @@
+{
+  "schema_version": "ats.acceptance_receipt.v1",
+  "receipt_id": "candidate:fixture-assess-rust-kernel:f0994c8b259133af",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "source_sha256": "1c4098e4305c49849065f1c430dfdffbbf5df654b20e48377efe7b72cc4aa7d5",
+  "policy_snapshot_id": "policy-example-assess",
+  "policy_snapshot_sha256": "7d2503c20bd94a1f76770575575f35d757b1ecce42adb5d37c87677cc3d6128c",
+  "implementation": {
+    "name": "ats",
+    "version": "0.5.0",
+    "rule_registry_version": "1.0.0-draft.1",
+    "lexicon_version": "1.0.0-draft.1",
+    "parser_version": "markdown-it-py/commonmark@4.2.0"
+  },
+  "profiles": [
+    "ASSESS"
+  ],
+  "deterministic_summary": {
+    "required_passed": 22,
+    "required_failed": 0,
+    "required_unavailable": 1,
+    "advisory_findings": 0
+  },
+  "semantic_summary": {
+    "proposed": 1,
+    "accepted": 0,
+    "rejected": 0,
+    "waived": 0,
+    "unresolved": 1,
+    "abstained": 1
+  },
+  "conformance": {
+    "mechanical": "PASS",
+    "profile": "PASS",
+    "semantic_review": "UNAVAILABLE",
+    "preservation": "NOT_APPLICABLE",
+    "forecast_calibration": "INSUFFICIENT_EVIDENCE"
+  },
+  "adjudicator": "arq-acceptance-authority",
+  "created_at": "2026-08-03T00:00:00Z",
+  "output_sha256": "ec7ea8378f720578538291acb07831ab72ea3c75eb9fdf8d36c39565aac77361",
+  "receipt_sha256": "6b14a505bd4bff9755fe6656ff3e8514a64f1dba33ce8619dd25cadafc2d50c5"
+}

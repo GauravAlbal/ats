@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_ruleset_v1.schema.json",
+  "title": "ATS RulesetV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "standard",
+    "spec_version",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.ruleset.v1"
+    },
+    "standard": {
+      "const": "ATS-1"
+    },
+    "spec_version": {
+      "type": "string"
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "schema_version",
+          "rule_id",
+          "rule_version",
+          "title",
+          "category",
+          "normative_statement",
+          "rationale",
+          "default_states",
+          "severity",
+          "detector_classes",
+          "required_inputs",
+          "protected_impact",
+          "autofix",
+          "waivable",
+          "fixture_requirements"
+        ],
+        "properties": {
+          "schema_version": {
+            "const": "ats.rule.v1"
+          },
+          "rule_id": {
+            "type": "string",
+            "pattern": "^ATS-[A-Z]+-[0-9]{3}$"
+          },
+          "rule_version": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "enum": [
+              "terminology",
+              "reference",
+              "scope",
+              "quantity",
+              "time",
+              "preservation",
+              "epistemics",
+              "deontics",
+              "requirements",
+              "evidence",
+              "discourse"
+            ]
+          },
+          "normative_statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "default_states": {
+            "type": "object",
+            "properties": {
+              "ASSESS": {
+                "$ref": "ats_common_v1.schema.json#/$defs/rule_state"
+              },
+              "SPECIFY": {
+                "$ref": "ats_common_v1.schema.json#/$defs/rule_state"
+              },
+              "TRANSFORM": {
+                "$ref": "ats_common_v1.schema.json#/$defs/rule_state"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "ASSESS",
+              "SPECIFY",
+              "TRANSFORM"
+            ]
+          },
+          "severity": {
+            "enum": [
+              "critical",
+              "major",
+              "minor",
+              "info"
+            ]
+          },
+          "detector_classes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "D0",
+                "D1",
+                "D2",
+                "D3",
+                "D4"
+              ]
+            }
+          },
+          "required_inputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "protected_impact": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "P0",
+                "P1",
+                "P2"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "autofix": {
+            "enum": [
+              "safe_p2",
+              "review_required",
+              "forbidden"
+            ]
+          },
+          "waivable": {
+            "type": "boolean"
+          },
+          "exceptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fixture_requirements": {
+            "type": "array",
+            "minItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "conforming",
+                "violation",
+                "near_miss",
+                "hard_negative",
+                "exception",
+                "ambiguous",
+                "insufficient_context"
+              ]
+            }
+          },
+          "notes": {
+            "type": "string"
+          },
+          "fixture_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

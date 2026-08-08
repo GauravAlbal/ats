@@ -1,0 +1,51 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-close-001-non-extractable",
+  "source": {
+    "content_sha256": "080dcc3aefe9dad4f1ce5c34fe17da078958d5ec9f1cc7170e07ef17c0b3f69d",
+    "normalized_sha256": "080dcc3aefe9dad4f1ce5c34fe17da078958d5ec9f1cc7170e07ef17c0b3f69d",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-close-001-non-extractable.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-close-001-non-extractable",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-C1-5",
+          "role": "judgment",
+          "proposition": "The migration is likely to reduce invalid-state defects.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "INFERRED",
+            "rationale": "No controlled ablation exists."
+          }
+        },
+        {
+          "claim_id": "C-C1-6",
+          "role": "observation",
+          "proposition": "Existing failures cluster around illegal intermediate states.",
+          "material": false,
+          "polarity": "positive",
+          "status": "asserted"
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

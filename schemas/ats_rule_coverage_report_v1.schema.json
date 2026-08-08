@@ -1,0 +1,721 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_rule_coverage_report_v1.schema.json",
+  "title": "ATS Rule Coverage Report V1",
+  "description": "Per-rule mining coverage over an inventoried corpus, with an explanation for every rule that received no candidate. A zero candidate count is ambiguous between at least six mechanisms -- natural rarity, a missing deterministic surface, an unwired miner cue, a profile the corpus never declares, an irrelevant rule, and unavailable context -- so this report refuses to publish the count without the mechanism (spec Section 12.9, 17.5, 18.5). Candidate counts are diagnostic, never a target: a rule that is genuinely rare MUST stay at zero rather than be raised by broadening a vocabulary. Candidate count is also not a quality measure in either direction -- a rule with zero candidates can still be valid and a rule with many candidates can still be useless -- so each rule additionally carries a disposition, which says what should be DONE about the rule and is a separate closed vocabulary from the mechanism hypothesis.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_sha256",
+    "generated_at",
+    "spec_version",
+    "implementation",
+    "mining_constraint",
+    "census",
+    "authority",
+    "example_store",
+    "annotation_evidence",
+    "zero_reason_vocabulary",
+    "disposition_vocabulary",
+    "observation_vocabulary",
+    "disposition_ledger",
+    "rules",
+    "totals"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.rule_coverage_report.v1"
+    },
+    "report_sha256": {
+      "description": "Content address over the report with this field removed (Appendix C steps 1-4). Regenerating over unchanged inputs reproduces it.",
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "generated_at": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "spec_version": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "implementation": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "rule_registry_version",
+        "lexicon_version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rule_registry_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lexicon_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "mining_constraint": {
+      "description": "The rule that governs how this report may be acted on. It travels with the data because a coverage table invites exactly the response it forbids.",
+      "type": "string",
+      "minLength": 1
+    },
+    "census": {
+      "description": "The inventory the candidate counts were read from. The census is an input, not a recomputation: its own bytes are addressed so a later report cannot silently describe a different corpus.",
+      "type": "object",
+      "required": [
+        "path",
+        "census_sha256",
+        "documents",
+        "repositories",
+        "document_families",
+        "candidates"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "census_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        },
+        "documents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repositories": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "document_families": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "candidates": {
+          "description": "Distinct candidates in the census. This is smaller than the sum of the per-rule counts, because one cue can be relevant to several rules.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "authority": {
+      "description": "Which repositories' prose the natural counts are entitled to draw on (spec Section 16.9, 17.13). Local availability of text is not authority to mine it.",
+      "type": "object",
+      "required": [
+        "overlay_dir",
+        "basis",
+        "use",
+        "authorized_repositories",
+        "unauthorized_repositories",
+        "path_scoping",
+        "path_scoping_note"
+      ],
+      "properties": {
+        "overlay_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "basis": {
+          "description": "Where the resolved authority came from. A census that predates the authority layer carries no resolution of its own, so the overlay is applied to it after the fact and says so.",
+          "enum": [
+            "pilot_overlay",
+            "inventory_record"
+          ]
+        },
+        "use": {
+          "description": "The single use these counts are resolved for. Authority is per use; inventorying a document is not authority to mine it.",
+          "type": "string",
+          "minLength": 1
+        },
+        "authorized_repositories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "unauthorized_repositories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "path_scoping": {
+          "description": "Whether each declaration's path excludes were intersected with the counts. A per-repository aggregate cannot express a per-path exclusion, so this is reported rather than assumed.",
+          "enum": [
+            "applied",
+            "not_applied"
+          ]
+        },
+        "path_scoping_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "example_store": {
+      "description": "The labelled-example store the mutation and hard-negative counts were read from. When it does not exist the counts are null, never zero: nothing was searched, so nothing was found to be absent (ADR-0002).",
+      "type": "object",
+      "required": [
+        "path",
+        "availability",
+        "examples"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "$ref": "ats_common_v1.schema.json#/$defs/availability"
+        },
+        "examples": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "disposition_ledger": {
+      "description": "The operator ledger the dispositions were read from. A disposition is a claim about a rule and cannot be derived from a corpus measurement, so it is an input to this report. When the ledger does not exist the count is null, never zero, and every rule reports insufficient_evidence (ADR-0002).",
+      "type": "object",
+      "required": [
+        "path",
+        "availability",
+        "dispositions",
+        "note"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "$ref": "ats_common_v1.schema.json#/$defs/availability"
+        },
+        "dispositions": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "zero_reason_vocabulary": {
+      "description": "The closed vocabulary of suspected_reason_for_zero, with the meaning each value carries. A value the corpus never assigns is still listed: the vocabulary describes what can be said, not what happened to be said.",
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "required": [
+          "reason",
+          "meaning"
+        ],
+        "properties": {
+          "reason": {
+            "$ref": "#/$defs/zero_reason"
+          },
+          "meaning": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "disposition_vocabulary": {
+      "description": "The closed vocabulary of the disposition field, with the meaning each value carries. Listed in full whether or not the corpus assigns a value, because the vocabulary describes what can be said. It is deliberately not the zero_reason vocabulary: a reason is a hypothesis about the mechanism that produced a count, a disposition is what should be done about the rule, and the two must never be conflated. The shared token naturally_rare means different things in each list.",
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": [
+          "disposition",
+          "meaning"
+        ],
+        "properties": {
+          "disposition": {
+            "$ref": "#/$defs/disposition"
+          },
+          "meaning": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rules": {
+      "description": "One row per rule in the registry, in rule-id order. Every registry rule appears exactly once; a rule missing from this array would be a rule whose coverage nobody reported.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/rule_row"
+      }
+    },
+    "totals": {
+      "type": "object",
+      "required": [
+        "rules",
+        "rules_with_candidates",
+        "rules_without_candidates",
+        "reason_counts",
+        "disposition_counts",
+        "rules_with_tested_disposition",
+        "zero_candidate_disposition_counts"
+      ],
+      "properties": {
+        "rules": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rules_with_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rules_without_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason_counts": {
+          "description": "How many rules each reason accounts for. A reason with no rules is omitted rather than reported as zero.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/zero_reason"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "disposition_counts": {
+          "description": "How many rules each disposition accounts for. A disposition with no rules is omitted rather than reported as zero.",
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/disposition"
+          },
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "rules_with_tested_disposition": {
+          "description": "How many rules have had their disposition tested against at least one annotated example. Before the annotation pilot reports this is 0, and 0 here is a measurement rather than an absence: every rule was examined and none had been tested.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "zero_candidate_disposition_counts": {
+          "description": "Dispositions across the rules with no mining candidate. Reported separately because these are the rules the report exists for, and a value that is mostly insufficient_evidence here is a finding about what the pilot tested rather than a defect in the classification.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotation_evidence": {
+      "description": "The completed annotation round the per-rule observations were recomputed from. When it was not read every count is null and every list empty, so 'no round was read' is distinguishable from 'no pass was asked about this rule' (ADR-0002).",
+      "type": "object",
+      "required": [
+        "path",
+        "availability",
+        "round_id",
+        "frame_id",
+        "bundles",
+        "probe_bundles",
+        "rules_probed",
+        "judgment_records",
+        "decline_records",
+        "sources",
+        "declared_profile_observations",
+        "profiles_never_observed",
+        "note"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "availability": {
+          "$ref": "ats_common_v1.schema.json#/$defs/availability"
+        },
+        "round_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "frame_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "bundles": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "probe_bundles": {
+          "description": "Bundles in the zero_candidate_rule_probe stratum, the only stratum drawn to test a rule the miner never nominated a candidate for.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "rules_probed": {
+          "description": "Distinct rules those probe bundles were drawn for. A zero-candidate rule outside this set was not tested, which is a fact about the round rather than about the rule.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "judgment_records": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "decline_records": {
+          "description": "Records of an annotator reading a span and reporting the rule inapplicable. Counted because a decline is positive evidence that a reader looked, which an absent candidate count can never be.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "role",
+              "judgments_path",
+              "judgments",
+              "judgments_sha256",
+              "declines_path",
+              "declines",
+              "declines_sha256"
+            ],
+            "properties": {
+              "role": {
+                "type": "string",
+                "minLength": 1
+              },
+              "judgments_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "judgments": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "judgments_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "declines_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "declines": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "declines_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "declared_profile_observations": {
+          "description": "Profiles annotators recorded while reading, and how many bundle-passes recorded each. This is the pilot's only profile evidence produced by a reader rather than guessed from a heading path.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "profile",
+              "bundle_passes"
+            ],
+            "properties": {
+              "profile": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bundle_passes": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "profiles_never_observed": {
+          "description": "Stable profiles no annotator recorded. Meaningful only beside a non-empty declared_profile_observations: readers recorded a profile and never recorded this one, which is a measured negative rather than an unmeasured one.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "observation_vocabulary": {
+      "description": "Every per-rule observation the report can recompute, and what each licenses. Closed: a disposition ledger citing an observation outside this set is refused, because a claim resting on a quantity nobody computes cannot be checked.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "observation",
+          "meaning"
+        ],
+        "properties": {
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "meaning": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "zero_reason": {
+      "enum": [
+        "naturally_rare",
+        "no_deterministic_surface_signal",
+        "miner_lacks_cue",
+        "corpus_lacks_profile",
+        "over_specified_or_irrelevant",
+        "context_unavailable",
+        "not_applicable_has_candidates"
+      ]
+    },
+    "disposition": {
+      "description": "What should be DONE about a rule. Distinct from zero_reason, which hypothesises the mechanism behind a count. insufficient_evidence is the default and the honest state of a rule no annotated example has tested; rule_boundary_defective and rule_unnecessary assert something about the standard and are never derived, only recorded from adjudicated evidence.",
+      "enum": [
+        "naturally_rare",
+        "profile_absent",
+        "requires_semantic_retrieval",
+        "requires_unavailable_context",
+        "deterministic_miner_deficient",
+        "rule_boundary_defective",
+        "rule_unnecessary",
+        "insufficient_evidence"
+      ]
+    },
+    "disposition_evidence": {
+      "description": "Whether the disposition has been tested against annotated examples, what tested it, the observations it rests on, and what would refute it. tested_by is empty exactly when tested_against_annotated_examples is false, and basis is always present so that an untested disposition states that it is untested rather than leaving the reader to infer it from a blank (ADR-0002). observed_counts holds values RECOMPUTED from the annotation round, never the ledger's copy of them, so a stale hand-typed number cannot be published; it and overturned_by are null for a rule the ledger does not mention, which is distinct from an empty object meaning 'measured, nothing found'.",
+      "type": "object",
+      "required": [
+        "tested_against_annotated_examples",
+        "tested_by",
+        "basis",
+        "observed_counts",
+        "overturned_by"
+      ],
+      "properties": {
+        "tested_against_annotated_examples": {
+          "type": "boolean"
+        },
+        "tested_by": {
+          "description": "Identifiers of the annotation rounds, adjudications, or curated examples that tested this disposition. Empty until something has.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_counts": {
+          "description": "Per-rule observations recomputed from the annotation round, keyed by a name in the report's observation_vocabulary. Null when the ledger records nothing for the rule.",
+          "type": [
+            "object",
+            "null"
+          ],
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "overturned_by": {
+          "description": "The observation that would refute this disposition. Required of every ledger entry: the pilot's samples are small enough that each disposition is one contrary judgment away from being wrong, and a claim nobody can say how to falsify is not a finding.",
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "rule_row": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "candidate_count",
+        "repository_count",
+        "document_family_count",
+        "natural_candidate_count",
+        "mutation_candidate_count",
+        "hard_negative_count",
+        "deterministic_signal_available",
+        "semantic_signal_required",
+        "profile_dependency",
+        "context_dependency",
+        "suspected_reason_for_zero",
+        "recommended_action",
+        "disposition",
+        "disposition_evidence"
+      ],
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "pattern": "^ATS-[A-Z]+-[0-9]{3}$"
+        },
+        "candidate_count": {
+          "description": "Candidates relevant to this rule across the whole census corpus, authorized or not. This is the count the phrase 'zero-candidate rule' refers to.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "repository_count": {
+          "description": "Repositories in which at least one such candidate occurred.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "document_family_count": {
+          "description": "Document families in which at least one such candidate occurred. A rule whose candidates all sit in one family is concentrated, however large the count.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "natural_candidate_count": {
+          "description": "The subset of candidate_count mined from natural prose that an owner declaration authorizes for candidate mining -- the natural evidence Stage 2 may act on. Kept separate from every synthetic count because Section 17.5 forbids treating a synthetic example as evidence of real-world prevalence, and forbids a total that mixes them.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "mutation_candidate_count": {
+          "description": "Examples in the example store whose provenance is synthetic_mutation. Never added to a natural count (spec Section 17.5). Null when the store was not searched.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "hard_negative_count": {
+          "description": "Examples in the example store labelled hard_negative, which Section 17.6 requires per semantic rule. Null when the store was not searched.",
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "deterministic_signal_available": {
+          "description": "Whether a deterministic vocabulary for this rule can be matched in raw document prose, and whether the miner is wired to it. Derived from ats.corpus.mine.build_signals and from the vocabulary_source of each subcheck in the capability declaration -- never from an opinion about the rule.",
+          "enum": [
+            "wired_text_signal",
+            "wired_artifact_declared_signal",
+            "unwired_text_vocabulary",
+            "no_prose_vocabulary",
+            "no_vocabulary_declared"
+          ]
+        },
+        "semantic_signal_required": {
+          "description": "Whether closing this rule needs a semantic judgment. Derived from the registry's detector_classes (D3 is the semantic-critic class, spec Section 12.3) and from the capability's declared decision_power: a detector that only detects violations reports REVIEW_REQUIRED on silence, so it cannot close the rule alone.",
+          "enum": [
+            "required",
+            "supplementary",
+            "not_declared"
+          ]
+        },
+        "profile_dependency": {
+          "description": "How the rule depends on profile resolution. Derived from the registry's default_states and required_inputs. A rule disabled outside a profile the corpus never declares cannot be mined at all.",
+          "enum": [
+            "disabled_except_transform",
+            "disabled_in_assess",
+            "profile_input_required",
+            "profile_independent"
+          ]
+        },
+        "context_dependency": {
+          "description": "The most blocking class of input the rule requires beyond the document's own bytes, derived from the registry's required_inputs.",
+          "enum": [
+            "document_only",
+            "artifact_declaration_required",
+            "revision_or_neighbour_context_required",
+            "authored_ir_required",
+            "paired_ir_required"
+          ]
+        },
+        "suspected_reason_for_zero": {
+          "description": "Why this rule received no candidate. 'Suspected' is literal: the value is derived from the declared signal, profile, and context facts, and its evidence is recorded per rule by the report producer. not_applicable_has_candidates is the value for a rule that has candidates, so the field is never null and absence is never a reading.",
+          "$ref": "#/$defs/zero_reason"
+        },
+        "recommended_action": {
+          "description": "What to do about the count. For a zero this names the mechanism to fix or the reason to leave it alone; it never recommends broadening a vocabulary to raise a count.",
+          "type": "string",
+          "minLength": 1
+        },
+        "disposition": {
+          "description": "What should be done about this rule, as opposed to why its count came out as it did. Never derived from candidate_count or from suspected_reason_for_zero: a zero does not condemn a rule and a large count does not defend one, so only an annotated example can settle it. insufficient_evidence until one has.",
+          "$ref": "#/$defs/disposition"
+        },
+        "disposition_evidence": {
+          "$ref": "#/$defs/disposition_evidence"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

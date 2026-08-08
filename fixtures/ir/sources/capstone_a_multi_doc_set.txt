@@ -1,0 +1,19 @@
+=== document 1: storage-service ===
+
+The storage service persists tenant blobs. It is the foundation of the
+platform, and this document is the authoritative reference for the storage
+subsystem. Blobs are stored under content-addressed keys with an immutable
+version. The storage service retains every blob version for at least 30 days.
+
+=== document 2: gateway-service ===
+
+The gateway forwards tenant requests to the storage service and enforces
+tenant quotas. This document describes the gateway subsystem. The gateway
+SHALL NOT bypass the storage service's versioning when writing blobs. Quota
+enforcement happens at the gateway, before any write reaches storage.
+
+=== document 3: retention-policy ===
+
+Retention rules apply to stored blobs. This document defines the retention
+schedule. Blobs marked for deletion are purged once the retention window
+expires. The retention schedule is reviewed quarterly.

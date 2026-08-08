@@ -1,0 +1,56 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-001-missing-basis",
+  "source": {
+    "content_sha256": "d41db2db3cc3eacf4798455543b936bb0fe62df10b79472bec3b491db5cbb269",
+    "normalized_sha256": "d41db2db3cc3eacf4798455543b936bb0fe62df10b79472bec3b491db5cbb269",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-001-missing-basis.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-001-missing-basis",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-B1-3",
+          "role": "judgment",
+          "proposition": "The acceptance kernel is likely to reject stale-policy transitions (55-80%).",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "DERIVED",
+            "rationale": "The likelihood follows mechanically from the declared transition table."
+          }
+        },
+        {
+          "claim_id": "C-B1-4",
+          "role": "judgment",
+          "proposition": "The migration will reduce invalid-state defects without changing the acceptance surface.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "basis_policy": {
+    "default_basis": "DERIVED",
+    "declared": true
+  }
+}

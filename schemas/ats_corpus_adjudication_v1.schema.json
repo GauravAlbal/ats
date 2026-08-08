@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_corpus_adjudication_v1.schema.json",
+  "title": "ATS Corpus Adjudication V1",
+  "description": "Append-only resolution of two or more judgments. Distinct from the normative ats.adjudication.v1, which dispositions a finding on an artifact; this dispositions a corpus example. Original judgments are preserved verbatim: a forced majority label MUST NOT erase a genuine ambiguity (spec Section 17.9).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "adjudication_id",
+    "example_id",
+    "rule_id",
+    "rule_version",
+    "judgment_ids",
+    "judgments",
+    "agreement",
+    "disagreement_category",
+    "final_state",
+    "adjudicator",
+    "rationale",
+    "gold_eligible",
+    "timestamp"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.corpus_adjudication.v1" },
+    "adjudication_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "example_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "rule_id": { "type": "string", "pattern": "^ATS-[A-Z]+-[0-9]{3}$" },
+    "rule_version": { "type": "string", "minLength": 1 },
+    "judgment_ids": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "judgments": {
+      "type": "array",
+      "minItems": 2,
+      "description": "The complete original judgments, retained rather than summarised.",
+      "items": { "$ref": "ats_judgment_v1.schema.json" }
+    },
+    "agreement": { "enum": ["unanimous", "majority", "split"] },
+    "disagreement_category": {
+      "enum": [
+        "none",
+        "annotation_error",
+        "source_ambiguity",
+        "insufficient_context",
+        "profile_disagreement",
+        "policy_disagreement",
+        "rule_boundary_disagreement",
+        "standard_defect",
+        "multiple_valid_interpretations",
+        "true_annotator_disagreement"
+      ]
+    },
+    "final_state": {
+      "enum": [
+        "gold",
+        "gold_with_context_constraint",
+        "hard_negative",
+        "exception",
+        "ambiguous_by_design",
+        "needs_more_context",
+        "needs_rule_revision",
+        "excluded"
+      ]
+    },
+    "context_constraint": {
+      "type": "string",
+      "description": "Required when final_state is gold_with_context_constraint."
+    },
+    "adjudicator": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "standard_ambiguity_discovered": { "type": "string" },
+    "source_ambiguity_discovered": { "type": "string" },
+    "policy_mismatch": { "type": "string" },
+    "annotation_error": { "type": "string" },
+    "required_rule_amendment": { "type": "string" },
+    "required_corpus_correction": { "type": "string" },
+    "gold_eligible": {
+      "type": "boolean",
+      "description": "A case marked needs_rule_revision MUST NOT be gold-eligible under the old rule definition."
+    },
+    "timestamp": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "tool_version": { "type": "string" },
+    "extensions": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "final_state": { "const": "needs_rule_revision" } },
+        "required": ["final_state"]
+      },
+      "then": {
+        "properties": { "gold_eligible": { "const": false } },
+        "required": ["required_rule_amendment"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "final_state": { "const": "gold_with_context_constraint" } },
+        "required": ["final_state"]
+      },
+      "then": { "required": ["context_constraint"] }
+    },
+    {
+      "if": { "properties": { "agreement": { "const": "split" } }, "required": ["agreement"] },
+      "then": { "properties": { "disagreement_category": { "not": { "const": "none" } } } }
+    },
+    {
+      "if": {
+        "properties": { "final_state": { "const": "needs_more_context" } },
+        "required": ["final_state"]
+      },
+      "then": { "properties": { "gold_eligible": { "const": false } } }
+    }
+  ],
+  "additionalProperties": false
+}

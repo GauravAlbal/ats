@@ -1,0 +1,60 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-001-declared",
+  "source": {
+    "content_sha256": "ace106a49d8e81083462e8dab32f5a245abe55d7afe7cc64ff28ef47b29651e8",
+    "normalized_sha256": "ace106a49d8e81083462e8dab32f5a245abe55d7afe7cc64ff28ef47b29651e8",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-001-declared.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-001-declared",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-B1-1",
+          "role": "judgment",
+          "proposition": "The acceptance kernel is likely to reject stale-policy transitions (55-80%).",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "DERIVED",
+            "rationale": "The likelihood follows mechanically from the declared transition table."
+          }
+        },
+        {
+          "claim_id": "C-B1-2",
+          "role": "observation",
+          "proposition": "The audit log shows 41 stale-policy rejections in the last quarter.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "EXPLICIT",
+            "rationale": "The count is stated directly in the audited log."
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "basis_policy": {
+    "default_basis": "DERIVED",
+    "declared": true
+  }
+}

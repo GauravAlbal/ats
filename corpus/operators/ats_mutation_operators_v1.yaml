@@ -1,0 +1,706 @@
+# ATS-1 corpus mutation operator registry.
+#
+# Spec Section 17.5 recommends twenty-two operators and requires that a
+# synthetic mutation change one semantic feature at a time. Every operator here
+# is declared with its preconditions, its exact transformation over a TextIR
+# document, and the rule impact it is expected to produce.
+#
+# An operator that cannot be performed safely and deterministically over a
+# TextIR document is declared `supported: false` with an `unsupported_reason`.
+# It is never implemented through free-form generation: an operator whose output
+# depends on a model completion cannot promise "one semantic feature changed",
+# and a corpus built from such an operator would silently mix an unknown number
+# of edits into every example.
+#
+# Validated against schemas/ats_mutation_operator_v1.schema.json.
+schema_version: ats.mutation_operator.v1
+registry_version: 1.0.0
+ats_version: 1.0.0-draft.1
+
+operators:
+  - operator_id: ATS-MUT-QUAL-DELETE
+    operator_version: 1.0.0
+    title: Delete a qualifier
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001, ATS-SCOPE-001]
+    preconditions:
+      - A material claim whose scope declares a condition.
+    transformation:
+      kind: ir_field_delete
+      description: >-
+        Delete scope.condition from the first material claim that declares one.
+        The proposition is left untouched, so the mutant is an IR preservation
+        pair rather than a natural-prose example.
+      target_pointer: /sections/{s}/claims/{c}/scope/condition
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [omitted, scope_changed]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - IR preservation pair only; the mutant is not a natural-prose example.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim whose condition is stated in the proposition and repeated in scope, where deleting the scope field loses no distinction.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.6, ATS-1 11.3.1, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-WEP-BAND-SHIFT
+    operator_version: 1.0.0
+    title: Move a canonical word of estimative probability to an adjacent band
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EPI-001, ATS-PRES-001]
+    preconditions:
+      - A material claim carrying a likelihood of kind wep with a canonical term.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Replace likelihood.term with the adjacent band in the lexicon's canonical
+        row, leaving lower, upper, and display at the source band. The bounds
+        then contradict the term, which is what makes it an ATS-EPI-001
+        violation as well as a P0 probability-band change. Shifting term and
+        interval together would be a preservation-only mutation and ATS-EPI-001
+        would still pass.
+      target_pointer: /sections/{s}/claims/{c}/force/likelihood/term
+      replacement_source: adjacent_band
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [likelihood_changed, strengthened]
+    deterministic: true
+    invertible: true
+    required_context: [force_lexicon]
+    exclusions:
+      - Not applicable to a point or interval likelihood; those carry no band.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim whose term and interval are both moved, which preserves internal coherence and violates only preservation.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 8.2, ATS-1 8.5, ATS-1 11.3.1, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-WEP-RANGE-STRIP
+    operator_version: 1.0.0
+    title: Remove the inline range from a first-use likelihood phrase
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EPI-002]
+    preconditions:
+      - A material claim whose likelihood is of kind wep with range_shown_inline true.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Set likelihood.range_shown_inline to false and delete likelihood.display.
+        The band itself is preserved; only its first-use rendering is removed.
+      target_pointer: /sections/{s}/claims/{c}/force/likelihood/range_shown_inline
+      replacement_source: literal
+      literal: "false"
+    expected_label: violation
+    expected_protected_impact: [P2]
+    expected_delta_classes: [omitted]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Only the first material use in a section is governed by Section 8.4.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A second use of the same phrase in the same section, where no inline range is required.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 8.4, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-LIKELIHOOD-CONFIDENCE-SWAP
+    operator_version: 1.0.0
+    title: Exchange the likelihood and assessment-confidence fields
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EPI-004, ATS-PRES-001]
+    preconditions:
+      - A material claim carrying both a likelihood and an assessment confidence.
+    transformation:
+      kind: ir_field_swap
+      description: >-
+        Rewrite likelihood.display to the assessment-confidence level word taken
+        from the lexicon, so the claim presents its confidence where its
+        probability belongs. Spec Section 4.8 makes these different quantities;
+        conflating them is the single semantic feature this operator changes.
+      target_pointer: /sections/{s}/claims/{c}/force/likelihood/display
+      replacement_source: sibling_field
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [likelihood_changed, confidence_changed]
+    deterministic: true
+    invertible: true
+    required_context: [force_lexicon, source_ir]
+    exclusions:
+      - Not applicable to a claim carrying only one of the two fields.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim that states both quantities in distinct labeled fields, which Section 8.11 requires.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 4.8, ATS-1 8.11, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-DEONTIC-EXCHANGE
+    operator_version: 1.0.0
+    title: Exchange MAY, CAN, SHOULD, and MUST
+    applicable_profiles: [SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001, ATS-DEON-002]
+    preconditions:
+      - A material claim carrying a deontic force.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Replace force.deontic with the next surface in the fixed cycle
+        MUST to SHOULD to MAY to MUST (and MUST_NOT to SHOULD_NOT to MUST_NOT),
+        mirror the new value into requirement.deontic when the claim has
+        requirement slots, and replace the lexicon surface verbatim in the
+        proposition so the document stays internally consistent. The single
+        changed feature is the obligation force itself.
+      target_pointer: /sections/{s}/claims/{c}/force/deontic
+      replacement_source: force_lexicon
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [deontic_force_changed, weakened]
+    deterministic: true
+    invertible: false
+    required_context: [force_lexicon, source_ir, output_ir]
+    exclusions:
+      - CAN and CANNOT are admissible only on non-requirement claims; requirement_slots.deontic has no CAN, so a requirement-role exchange stays inside MUST, MUST_NOT, SHOULD, SHOULD_NOT, and MAY.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A "should" inside a non-normative discussion of another document, which carries no ATS deontic force.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 8.16, ATS-1 8.17, ATS-1 8.18, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-ACTOR-REMOVE
+    operator_version: 1.0.0
+    title: Remove the explicit actor from a requirement
+    applicable_profiles: [SPECIFY]
+    target_rule_ids: [ATS-REQ-001]
+    preconditions:
+      - A material requirement claim whose actor is not already a concealing form.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Replace requirement.actor with the literal "the system", quoted from the
+        nonconforming SPECIFY example in Section 21.4, and replace the actor
+        phrase in the proposition with the same literal. No placeholder is
+        invented; the concealing form comes from the specification.
+      target_pointer: /sections/{s}/claims/{c}/requirement/actor
+      replacement_source: literal
+      literal: the system
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [omitted, authority_changed]
+    deterministic: true
+    invertible: false
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable when the actor is inherited from a mechanically unambiguous requirement block.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A passive sentence whose actor is irrelevant to the obligation.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 9.3.4, ATS-1 21.4, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-OBLIGATION-MERGE
+    operator_version: 1.0.0
+    title: Merge two obligations into one requirement
+    applicable_profiles: [SPECIFY]
+    target_rule_ids: [ATS-REQ-002]
+    preconditions:
+      - A section containing at least two material requirement claims.
+    transformation:
+      kind: ir_claim_merge
+      description: >-
+        Join the second requirement's action onto the first with " and ", append
+        it to the first proposition, and remove the second claim. No
+        indivisible_actions_justification is added, which is what Section 9.3.3
+        requires of a genuinely single obligation.
+      target_pointer: /sections/{s}/claims/{c}/requirement/action
+      replacement_source: sibling_field
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [omitted, relation_changed]
+    deterministic: true
+    invertible: false
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - Not applicable when the two actions are genuinely indivisible and justified as such.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A requirement whose two verbs describe one indivisible action with a declared justification.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 9.3.3, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-UNIT-STRIP
+    operator_version: 1.0.0
+    title: Remove a unit or denominator
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-NUM-001]
+    preconditions:
+      - A material claim whose quantifier is of kind exact_count, minimum, maximum, range, or proportion and declares a unit.
+    transformation:
+      kind: ir_field_delete
+      description: >-
+        Delete quantifier.unit. Section 10.9 makes the unit part of the number's
+        meaning, so its removal is one semantic change. The denominator of a
+        proportion is deliberately left in place: the TextIR schema requires it,
+        so removing it would produce an invalid quantifier rather than a valid
+        document with a lost distinction, and a mutation that breaks the schema
+        tests the validator instead of the rule.
+      target_pointer: /sections/{s}/claims/{c}/quantifier/unit
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [omitted, quantifier_changed]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable to a quantifier whose scope declares the unit unknown.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A genuinely dimensionless ratio whose dimensionless status is declared.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 10.9, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-THRESHOLD-BOUNDARY-SHIFT
+    operator_version: 1.0.0
+    title: Alter an inclusive or exclusive threshold boundary
+    applicable_profiles: [SPECIFY]
+    target_rule_ids: [ATS-NUM-002]
+    preconditions:
+      - A material requirement claim with a minimum, maximum, or range quantifier whose requirement declares boundary constraints.
+    transformation:
+      kind: ir_field_delete
+      description: >-
+        Delete requirement.constraints, which is where the comparator and
+        inclusivity of the boundary are declared. The numeral is left alone: a
+        deterministic rewrite of "at least" into "more than" would need a
+        comparator vocabulary this specification does not enumerate, so the
+        operator removes the declaration instead of inventing one.
+      target_pointer: /sections/{s}/claims/{c}/requirement/constraints
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [condition_changed, omitted]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable when ordinary language already fixes the boundary semantics unambiguously.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A threshold whose inclusivity is unambiguous from the surrounding acceptance criterion.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 9.3.8, ATS-1 10.10, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-NEGATION-FLIP
+    operator_version: 1.0.0
+    title: Flip an explicit negation
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001]
+    preconditions:
+      - A material claim with a declared polarity.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Invert claim.polarity between positive and negative. Section 18.5 names
+        polarity change as a catastrophic error class, which is exactly why the
+        corpus needs the pair.
+      target_pointer: /sections/{s}/claims/{c}/polarity
+      replacement_source: literal
+      literal: negative
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [polarity_changed, contradicted]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - IR preservation pair only. The mutant MUST NOT be presented as natural prose, because a deterministic text realization of a polarity flip does not exist.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim whose surface carries a negation that is scoped to a subordinate clause and does not flip the claim.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.8, ATS-1 11.3.1, ATS-1 18.5, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-QUANTIFIER-WIDEN
+    operator_version: 1.0.0
+    title: Change some to all
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001]
+    preconditions:
+      - A material claim whose quantifier is of kind some.
+    transformation:
+      kind: ir_field_replace
+      description: Replace quantifier.kind with all, widening the claim's population.
+      target_pointer: /sections/{s}/claims/{c}/quantifier/kind
+      replacement_source: literal
+      literal: all
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [quantifier_changed, strengthened]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - IR preservation pair only. The mutant MUST NOT be presented as natural prose, because a deterministic text realization of the widening does not exist.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim whose population is genuinely exhaustive and whose "all" is therefore accurate.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.7, ATS-1 11.3.1, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-RELATION-REVERSE
+    operator_version: 1.0.0
+    title: Reverse a declared relation direction
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-002]
+    preconditions:
+      - A material relation whose type is directional.
+    transformation:
+      kind: ir_relation_reverse
+      description: >-
+        Swap source_id and target_id on the first material directional relation.
+        Section 11.3.2 protects relation direction, so the endpoints still
+        resolve while the asserted direction is inverted.
+      target_pointer: /sections/{s}/relations/{r}
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P1]
+    expected_delta_classes: [relation_changed, causal_force_changed]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - Not applicable to a symmetric relation such as consistent_with or alternative_to.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A symmetric relation whose reversal changes nothing.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.11, ATS-1 11.3.2, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-CAUSAL-UPGRADE
+    operator_version: 1.0.0
+    title: Replace association with causation
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EVID-002, ATS-PRES-002]
+    preconditions:
+      - A material relation of type associated_with.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Replace the relation type associated_with with causes, taken from the
+        lexicon's causal row. Because the source relation carries no basis_refs,
+        the upgraded relation also violates the causal-basis obligation.
+      target_pointer: /sections/{s}/relations/{r}/type
+      replacement_source: force_lexicon
+    expected_label: violation
+    expected_protected_impact: [P1]
+    expected_delta_classes: [causal_force_changed, strengthened]
+    deterministic: true
+    invertible: true
+    required_context: [force_lexicon, source_ir]
+    exclusions:
+      - Not applicable to a causal verb backed by formal system semantics.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A causal relation stated with an explicit intervention basis, where "causes" is warranted.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 8.14, ATS-1 8.15, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-EXCEPTION-DELETE
+    operator_version: 1.0.0
+    title: Delete an exception
+    applicable_profiles: [SPECIFY]
+    target_rule_ids: [ATS-DEON-003, ATS-PRES-001]
+    preconditions:
+      - A material requirement claim whose deontic is SHOULD or SHOULD_NOT and whose exceptions are non-empty.
+    transformation:
+      kind: ir_field_delete
+      description: >-
+        Empty requirement.exceptions. Section 9.3.11 requires a SHOULD to
+        identify why exceptions may be valid, so the deletion removes the only
+        thing that made the recommendation defeasible in a stated way.
+      target_pointer: /sections/{s}/claims/{c}/requirement/exceptions
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [exception_changed, omitted]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable when the requirement links an override policy instead of enumerating exceptions.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A SHOULD whose override path is a policy reference rather than an enumerated exception.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.13, ATS-1 9.3.11, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-CONTRARY-EVIDENCE-DELETE
+    operator_version: 1.0.0
+    title: Delete contrary-evidence linkage
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EVID-003]
+    preconditions:
+      - A material judgment claim with no assessment confidence that is targeted by a contradicts, alternative_to, or contrasts_with relation.
+    transformation:
+      kind: ir_relation_delete
+      description: >-
+        Remove the relation that links the judgment to its live alternative. The
+        alternative claim itself is preserved, so the only thing lost is the
+        declared linkage Section 9.2.8 requires.
+      target_pointer: /sections/{s}/relations/{r}
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P1]
+    expected_delta_classes: [omitted, relation_changed]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - Not applicable when the judgment records its contrary-evidence state in a confidence basis instead of a relation.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A judgment whose contrary evidence is declared none_found after a stated search.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 9.2.7, ATS-1 9.2.8, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-ASSUMPTION-TO-OBSERVATION
+    operator_version: 1.0.0
+    title: Relabel an assumption as an observation
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EVID-001, ATS-PRES-001]
+    preconditions:
+      - A material claim of role assumption carrying an assessment confidence.
+    transformation:
+      kind: ir_claim_role_change
+      description: >-
+        Change claim.role from assumption to observation. Section 9.2.5 requires
+        the observation, inference, and judgment chain to stay differentiated;
+        an observation carrying an assessment confidence is the resulting
+        role-field incompatibility.
+      target_pointer: /sections/{s}/claims/{c}/role
+      replacement_source: literal
+      literal: observation
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [strengthened, evidential_force_changed]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable to an assumption already presented as an open question.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A direct observation that legitimately carries no confidence label.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.4, ATS-1 9.2.5, ATS-1 9.2.9, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-SOURCE-ATTRIBUTION-STRIP
+    operator_version: 1.0.0
+    title: Remove source attribution
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001]
+    preconditions:
+      - A material evidence object whose source availability is present and which declares a locator.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Set the evidence source availability to not_searched and delete its
+        locator, content hash, and revision. Section 9.2.6 requires a source
+        locator, content hash, execution receipt, or an explicit unavailable
+        state, and Section 18.5 names source-attribution loss as a catastrophic
+        error class.
+      target_pointer: /sections/{s}/evidence/{e}/source
+      replacement_source: literal
+      literal: not_searched
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [source_attribution_changed, omitted]
+    deterministic: true
+    invertible: false
+    required_context: [source_ir, output_ir]
+    exclusions:
+      - Not applicable to evidence whose source is already declared unavailable or withheld.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - Evidence whose source is redacted with an explicit withheld state and retained metadata.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.10, ATS-1 9.2.6, ATS-1 18.5, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-UPDATE-INDICATOR-DELETE
+    operator_version: 1.0.0
+    title: Delete an update or reversal indicator
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-EPI-006]
+    preconditions:
+      - An update indicator targeting a material judgment or forecast claim.
+    transformation:
+      kind: ir_field_delete
+      description: >-
+        Remove the update indicator. Section 7.14 makes an update indicator the
+        statement of what would change the judgment, so its removal leaves the
+        judgment unfalsifiable rather than merely shorter.
+      target_pointer: /sections/{s}/update_indicators/{u}
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [omitted]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable when the extraction issues already record the indicator as unavailable.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A judgment whose update policy is carried by a forecast update_policy slot instead of an indicator.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 7.14, ATS-1 9.2.4, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-EVIDENTIAL-STRENGTHEN
+    operator_version: 1.0.0
+    title: Strengthen evidential force
+    applicable_profiles: [ASSESS, TRANSFORM]
+    target_rule_ids: [ATS-PRES-001]
+    preconditions:
+      - A material claim carrying an evidential force below the strongest lexicon term.
+    transformation:
+      kind: ir_field_replace
+      description: >-
+        Move force.evidential one step up the lexicon's evidential row, for
+        example suggests to supports. The described basis is unchanged, so the
+        expression now exceeds it.
+      target_pointer: /sections/{s}/claims/{c}/force/evidential
+      replacement_source: force_lexicon
+    expected_label: violation
+    expected_protected_impact: [P0]
+    expected_delta_classes: [evidential_force_changed, strengthened]
+    deterministic: true
+    invertible: true
+    required_context: [force_lexicon, source_ir]
+    exclusions:
+      - Not applicable to a claim already at establishes.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A claim whose basis genuinely establishes it under stated assumptions.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 8.12, ATS-1 8.13, ATS-1 11.6, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-RESTATEMENT-INSERT
+    operator_version: 1.0.0
+    title: Insert a zero-information restatement
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-DISC-003]
+    preconditions:
+      - A section containing at least one material claim.
+    transformation:
+      kind: ir_claim_insert
+      description: >-
+        Insert an immaterial inference claim whose proposition is a verbatim copy
+        of the first material claim's proposition. The copy adds no information,
+        which is precisely what Section 10.19 treats as unfunctional repetition,
+        and copying keeps the operator deterministic.
+      target_pointer: /sections/{s}/claims/-
+      replacement_source: sibling_field
+    expected_label: violation
+    expected_protected_impact: [P2]
+    expected_delta_classes: [added]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - Not applicable when the repetition performs a declared function such as a summary or a checklist restatement.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - Repeated terminology that is required for referential stability.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 10.19, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-JUDGMENT-BURY
+    operator_version: 1.0.0
+    title: Move a key judgment behind background
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-DISC-001]
+    preconditions:
+      - A section whose first material claim is a judgment or requirement and which holds at least two claims.
+    transformation:
+      kind: ir_claim_reorder
+      description: >-
+        Move the leading judgment or requirement to the end of its section's
+        claim list, leaving every claim's content untouched. Section 10.16 makes
+        the position of the key answer a load-bearing choice.
+      target_pointer: /sections/{s}/claims
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P2]
+    deterministic: true
+    invertible: true
+    required_context: [source_ir]
+    exclusions:
+      - No semantic delta class describes a pure reordering, which is why Section 11.3.3 places ordering in P2 rather than P0 or P1.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A section whose background genuinely alters the interpretation of the judgment and therefore precedes it.
+    split_group_policy: inherit_source
+    supported: true
+    spec_refs: [ATS-1 10.16, ATS-1 11.3.3, ATS-1 17.5]
+
+  - operator_id: ATS-MUT-ANTECEDENT-AMBIGUATE
+    operator_version: 1.0.0
+    title: Introduce a second plausible antecedent
+    applicable_profiles: [ASSESS, SPECIFY, TRANSFORM]
+    target_rule_ids: [ATS-REF-001]
+    preconditions:
+      - A material claim containing a pronoun or demonstrative with exactly one plausible antecedent.
+    transformation:
+      kind: text_span_replace
+      description: >-
+        Would insert a second noun phrase that a pronoun in the span could
+        equally refer to, so the reference becomes ambiguous while the rest of
+        the claim is unchanged.
+      replacement_source: none
+    expected_label: violation
+    expected_protected_impact: [P1]
+    expected_delta_classes: [ambiguous_after_transform]
+    deterministic: false
+    invertible: false
+    required_context: [source_text, syntax]
+    exclusions:
+      - Declared unsupported; see unsupported_reason.
+    hard_negative_pair_required: true
+    hard_negative_classes:
+      - A pronoun with several grammatically possible antecedents where only one is semantically plausible.
+    split_group_policy: inherit_source
+    supported: false
+    unsupported_reason: >-
+      Inventing a second plausible antecedent requires generating a noun phrase
+      that is grammatically compatible with the pronoun, semantically plausible
+      in the domain, and different from the real antecedent. No deterministic
+      procedure over a TextIR document produces that, and a model completion
+      would change an unknown number of semantic features at once, which
+      Section 17.5 forbids for a one-feature mutation. The operator is declared
+      here so the gap is visible and countable; ats.corpus.mutate.apply_operator
+      raises UnsupportedCapabilityError rather than degrading to generation.
+    spec_refs: [ATS-1 10.6, ATS-1 13.4, ATS-1 17.5]

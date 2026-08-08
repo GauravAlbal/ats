@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_corpus_authority_v1.schema.json",
+  "title": "ATS Corpus Authority V1",
+  "description": "A repository owner's declaration of what a corpus may do with the repository's prose, resolved per use rather than as a single permission. Local availability of source text is not authority to extract it (spec Section 16.9, 17.13), so every use starts unknown and only an explicit declaration moves it. A use whose value is unknown MUST NOT inherit allow from another use, from the repository root, or from any default. A declaration binds nine things and none of them has a default: who issued it (principal), why they may speak for the repository (authority_basis), which repository (repository.name, repository.origin, repository.root_commit), at which revision (repository.effective_from_revision), for which uses (uses), over which paths (content), when it was issued (issued_at), when it must be revisited (review_after), and what replaced it (superseded_by, explicitly null while nothing has). A declaration that omits one of these is refused rather than completed.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "principal",
+    "authority_basis",
+    "repository",
+    "uses",
+    "content",
+    "handling",
+    "provenance",
+    "issued_at",
+    "review_after",
+    "superseded_by"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.corpus_authority.v1" },
+    "authority_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "principal": {
+      "description": "Who issued this declaration. An identity, not a role: `owner`, `operator`, and `the team` name a seat, and a seat cannot be asked to revisit its own declaration, cannot withdraw it, and outlives whoever occupied it. The scheme-qualified `id` makes the difference mechanical.",
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": {
+          "description": "A scheme-qualified identity, for example `https://github.com/<account>` or `mailto:<address>`.",
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9+.\\-]*:\\S"
+        },
+        "kind": {
+          "description": "A service account can hold an identity but cannot exercise the judgment a review date asks for, so which kind of principal signed is recorded rather than assumed.",
+          "enum": ["person", "organisation", "service"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "authority_basis": {
+      "description": "Why this principal may speak for this repository. The kind gates granting; only the statement says why, and an unstated why cannot be checked by the person who has to rely on it.",
+      "type": "object",
+      "required": ["kind", "statement"],
+      "properties": {
+        "kind": {
+          "description": "`owner_declared` is the only basis that can grant a use; every other basis can only restrict, so that a consumer cannot authorise itself.",
+          "enum": ["owner_declared", "operator_pilot_overlay", "inherited", "unknown"]
+        },
+        "statement": {
+          "description": "The concrete, checkable reason. Not a restatement of the kind.",
+          "type": "string",
+          "minLength": 1
+        },
+        "contributor_identities": {
+          "description": "Every distinct author and committer identity in the repository's history at the effective revision. The evidence behind an ownership claim: a repository carrying an identity the principal does not account for is one the principal cannot speak for alone.",
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "repository": {
+      "description": "Which repository, unambiguously, and at which revision. A directory name is ambiguous the moment two checkouts share it, so the origin remote and the root commit are bound alongside it.",
+      "type": "object",
+      "required": [
+        "name",
+        "origin",
+        "root_commit",
+        "effective_from_revision",
+        "declaration_location"
+      ],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "origin": {
+          "description": "The `origin` remote URL, or an explicit null when the repository has none. Null is an answer; an absent key is not.",
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "root_commit": {
+          "description": "The repository's first commit, in full. The only identity that survives renaming the directory, moving it, changing the remote, and having no remote at all. Forty hex digits for a SHA-1 object format and sixty-four for SHA-256; abbreviated ids are refused because an abbreviation is only unique within one repository, which is the ambiguity this field exists to remove.",
+          "type": "string",
+          "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+        },
+        "effective_from_revision": {
+          "description": "The revision this declaration is bound to. A declaration says nothing about revisions before it.",
+          "type": "string",
+          "minLength": 7
+        },
+        "declaration_location": {
+          "description": "Where the declaration is held. `repository` is the destination state: the owner declares in place, in .ats/corpus.json. `pilot_overlay` is an operator-authored declaration held outside the repository while onboarding is in progress. The loader refuses a declaration whose stated location differs from where it was actually found, because an overlay presented as repository-owned authority is exactly the confusion this field prevents.",
+          "enum": ["repository", "pilot_overlay"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "uses": {
+      "description": "Authority per use. Uses are separated because they are not substitutes: reading metadata is not reading text, reading text is not labelling it, and labelling it is not training on it.",
+      "type": "object",
+      "required": [
+        "inventory",
+        "candidate_mining",
+        "human_annotation",
+        "deterministic_mutation",
+        "evaluation",
+        "model_training",
+        "model_distillation",
+        "external_model_submission",
+        "publication",
+        "cross_repository_derivatives"
+      ],
+      "properties": {
+        "inventory": { "$ref": "#/$defs/authority_value" },
+        "candidate_mining": { "$ref": "#/$defs/authority_value" },
+        "human_annotation": { "$ref": "#/$defs/authority_value" },
+        "deterministic_mutation": { "$ref": "#/$defs/authority_value" },
+        "evaluation": { "$ref": "#/$defs/authority_value" },
+        "model_training": { "$ref": "#/$defs/authority_value" },
+        "model_distillation": { "$ref": "#/$defs/authority_value" },
+        "external_model_submission": { "$ref": "#/$defs/authority_value" },
+        "publication": { "$ref": "#/$defs/authority_value" },
+        "cross_repository_derivatives": { "$ref": "#/$defs/authority_value" }
+      },
+      "additionalProperties": false
+    },
+    "content": {
+      "description": "Path scoping inside the repository. Required, and required to say something: an unscoped declaration silently covers whatever happens to be in the tree, including material the principal did not write. A declaration covering everything says so with `include: [\"*\"]`.",
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "include": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+        "exclude": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 }
+      },
+      "additionalProperties": false
+    },
+    "issued_at": {
+      "description": "When this declaration was issued. A declaration with no date cannot be ordered against the events it governs.",
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "review_after": {
+      "description": "When this declaration must be revisited. It is required because a declaration that never expires quietly becomes permanent governance nobody re-consented to; this is especially true of a pilot overlay, which exists only until the repository declares in place. Resolution caps a lapsed declaration at `unknown` -- not `deny`, because nobody refused anything, the authority simply ran out.",
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "superseded_by": {
+      "description": "The `authority_id` of the declaration that replaced this one, or an explicit null while nothing has. Null says nothing has replaced it; an absent key says nobody checked, and the two must not read alike.",
+      "type": ["string", "null"],
+      "minLength": 1
+    },
+    "path_overrides": {
+      "description": "Per-path authority, intersected with the repository-level values. An override can only restrict: granting a use here that the repository withholds would let a subtree out-declare its own repository.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pattern", "uses"],
+        "properties": {
+          "pattern": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string" },
+          "uses": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/authority_value" }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "handling": {
+      "type": "object",
+      "required": ["classification", "export_raw_text"],
+      "properties": {
+        "classification": { "enum": ["public", "internal", "private", "restricted"] },
+        "store_source_text": { "type": "boolean" },
+        "store_context_bundles": { "type": "boolean" },
+        "store_derived_features": { "type": "boolean" },
+        "retain_deleted_revisions": { "type": "boolean" },
+        "export_raw_text": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["authorship", "model_authorship_inference"],
+      "properties": {
+        "authorship": {
+          "description": "How authorship is resolved. `unknown_unless_explicit` is the only honest default: the absence of a declaration is not evidence of human authorship.",
+          "enum": ["unknown_unless_explicit", "declared"]
+        },
+        "model_authorship_inference": {
+          "description": "Whether model authorship may be guessed from prose style, commit size, author identity, timestamps, or the presence of agent configuration files. Prohibited means the corpus records `unknown` instead of guessing.",
+          "enum": ["prohibited", "permitted"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "authority_value": {
+      "description": "`allow` grants the use. `deny` forbids it. `defer` is an explicit refusal to decide, and behaves as deny until decided -- it is recorded separately so an undecided use is distinguishable from a refused one. `allow_private` grants the use but forbids any result leaving the local environment. `unknown` is the absence of a declaration and behaves as deny.",
+      "enum": ["allow", "allow_private", "defer", "deny", "unknown"]
+    }
+  }
+}

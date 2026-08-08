@@ -1,0 +1,60 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-close-001-inherited-actor",
+  "source": {
+    "content_sha256": "0364820ae25763e58723dede51b57893d38a85c8395ae8cf47bbe601c75e3605",
+    "normalized_sha256": "0364820ae25763e58723dede51b57893d38a85c8395ae8cf47bbe601c75e3605",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-close-001-inherited-actor.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-close-001-inherited-actor",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C1-3",
+          "role": "requirement",
+          "proposition": "The ledger MUST record every transition before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C1-3",
+            "actor": " ",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "every transition",
+            "source_authority": "Arq acceptance kernel"
+          },
+          "extensions": {
+            "inherited_actor": {
+              "from": "enclosing_scope",
+              "scope_ref": "s1"
+            }
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": [],
+      "extensions": {
+        "enclosing_scope": {
+          "actor": "verifier",
+          "declared": true,
+          "section_id": "s1"
+        }
+      }
+    }
+  ],
+  "extraction_status": "complete"
+}

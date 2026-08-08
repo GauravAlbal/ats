@@ -1,0 +1,65 @@
+{
+  "schema_version": "ats.fleet_policy.v1",
+  "policy_id": "9b5b340440e705a169f46e7572c2f80fbb9c51b1a84e20f76a49fb7c556ea246",
+  "created_at": "2026-08-07T00:00:00Z",
+  "text_policy": {
+    "standard": "ATS-1",
+    "version": "1.0.0-draft.2",
+    "required_for": [
+      "architecture",
+      "technical_proposal",
+      "rfc",
+      "implementation_spec",
+      "capability_program",
+      "implementation_plan",
+      "postmortem",
+      "diagnostic",
+      "forensic_analysis",
+      "technical_assessment",
+      "acceptance_record",
+      "change_control_record"
+    ],
+    "enforcement": {
+      "ir_schema": "required",
+      "deterministic_ir_lint": "required",
+      "output_trace": "required",
+      "deterministic_output_lint": "required",
+      "semantic_review": "advisory",
+      "p0_preservation": "required",
+      "stable_coordinate_preservation": "required"
+    },
+    "failure_policy": {
+      "unknown_nonblocking": "preserve",
+      "inferred_material_semantics": "review_required",
+      "deterministic_integrity_failure": "block"
+    },
+    "applicability_basis": "artifact intent and policy classification, recorded per artifact entry"
+  },
+  "default_exclusions": [
+    "exploratory_chat",
+    "scratch_notes",
+    "brainstorming",
+    "blog_posts",
+    "marketing_copy",
+    "README_marketing",
+    "ordinary_issue_comments",
+    "casual_explanation",
+    "social_copy"
+  ],
+  "repository_overrides": [
+    {
+      "repository": "arq",
+      "required_for_additions": [
+        "design_note"
+      ],
+      "required_for_removals": [
+        "forensic_analysis"
+      ],
+      "enforcement_overrides": {
+        "semantic_review": "required"
+      },
+      "receipt_binding": "receipts in arq bind policy_id and the resolved enforcement set",
+      "applicability_basis": "repository-level override recorded in the fleet policy registry"
+    }
+  ]
+}

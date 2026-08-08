@@ -1,0 +1,15 @@
+=== document 1: operator brief ===
+
+Build an edge cache in front of the gateway service. Cold-start reads must
+feel instant to tenants; the target is a 50ms cold-start latency budget.
+Cache invalidation must trigger when blobs are written to storage. Prefer the
+simplest architecture that meets the budget; cache-aside and write-through
+are both on the table.
+
+=== document 2: repository fact sheet ===
+
+The gateway is a FastAPI service at services/gateway. Storage exposes an
+append-only blob API; blobs are content-addressed and versioned. No cache
+layer exists in the current codebase. The team measured gateway p95 latency
+at 120ms in staging. No measurement of a cache layer's cold-start latency
+exists; the 50ms budget is a product target, not a measured capability.

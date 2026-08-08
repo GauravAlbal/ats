@@ -1,0 +1,351 @@
+{
+  "schema_version": "ats.output_lint_report.v1",
+  "report_id": "outlint:fixture-assess-rust-kernel:ba83a30249d616a3",
+  "artifact_id": "fixture-assess-rust-kernel",
+  "output_sha256": "ba83a30249d616a39adbaaf5d9833f61290b48448294aad5475863bf3c08a8fb",
+  "trace_sha256": "dd2552df639d89a3c4e7db17905dc5b75e9c9da435892de0677347226147c0d0",
+  "ir_sha256": "f0994c8b259133af321c9b10e875e7810f3fc8a5c0393c60a342ff56522c03e2",
+  "policy_snapshot_id": "policy-example-assess",
+  "policy_sha256": "7d2503c20bd94a1f76770575575f35d757b1ecce42adb5d37c87677cc3d6128c",
+  "spec_version": "1.0.0-draft.1",
+  "profiles": [
+    "ASSESS"
+  ],
+  "implementation": {
+    "name": "ats",
+    "version": "0.5.0",
+    "rule_registry_version": "1.0.0-draft.1",
+    "lexicon_version": "1.0.0-draft.1",
+    "parser_version": "markdown-it-py/commonmark@4.2.0"
+  },
+  "checks": [
+    {
+      "check_id": "OUT-BYTES",
+      "title": "Output and IR hashes match the trace",
+      "status": "PASS",
+      "required": true,
+      "detail": "1786 byte(s) hash to ba83a30249d616a39adbaaf5d9833f61290b48448294aad5475863bf3c08a8fb",
+      "spec_ref": "ATS-1 14.2, 14.13, Appendix C"
+    },
+    {
+      "check_id": "OUT-MARKDOWN-PARSE",
+      "title": "The document parses with a real Markdown parser",
+      "status": "PASS",
+      "required": true,
+      "detail": "21 top-level block(s) parsed by markdown-it-py/commonmark@4.2.0",
+      "spec_ref": "ATS-1 14.4, 16.3"
+    },
+    {
+      "check_id": "OUT-CONSTRUCTS",
+      "title": "Unsupported Markdown constructs are identified",
+      "status": "PASS",
+      "required": true,
+      "detail": "every construct present is evaluated; 7 of the constructs Section 16.3 names are absent from this document (ordered_list, table, fence, blockquote, code_inline, link, footnote)",
+      "spec_ref": "ATS-1 16.3"
+    },
+    {
+      "check_id": "OUT-MARKERS",
+      "title": "Source-map markers are intact and unique",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 marker(s) match the trace exactly",
+      "spec_ref": "ATS-1 14.4"
+    },
+    {
+      "check_id": "OUT-TRACE-SCHEMA",
+      "title": "The trace validates and binds the same policy and IR",
+      "status": "PASS",
+      "required": true,
+      "detail": "trace dd2552df639d89a3… binds policy 'policy-example-assess' and 10 block(s)",
+      "spec_ref": "ATS-1 6.6, 14.13"
+    },
+    {
+      "check_id": "OUT-BLOCK-HASHES",
+      "title": "Each block's declared hash matches its rendered bytes",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block hash(es) reproduce from the document bytes",
+      "spec_ref": "ATS-1 14.2, 16.2"
+    },
+    {
+      "check_id": "OUT-IR-REFS",
+      "title": "Every block reference resolves to an IR object of the right kind",
+      "status": "PASS",
+      "required": true,
+      "detail": "15 referenced object(s) resolve",
+      "spec_ref": "ATS-1 14.4"
+    },
+    {
+      "check_id": "OUT-MATERIAL-COVERAGE",
+      "title": "Every material IR object is mapped or authorized as omitted",
+      "status": "PASS",
+      "required": true,
+      "detail": "14 of 14 material object(s) are mapped; 0 carry an authorized omission",
+      "spec_ref": "ATS-1 11.7, 11.8"
+    },
+    {
+      "check_id": "OUT-UNKNOWN-REFS",
+      "title": "No block references an object absent from the IR",
+      "status": "PASS",
+      "required": true,
+      "detail": "every referenced identifier exists in the IR",
+      "spec_ref": "ATS-1 11.7"
+    },
+    {
+      "check_id": "OUT-BLOCK-ORDER",
+      "title": "Block ordering is dense, ascending, and matches the document",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) in stable document order",
+      "spec_ref": "ATS-1 14.4, 16.2"
+    },
+    {
+      "check_id": "OUT-PROFILE-SECTIONS",
+      "title": "Profile-required sections are rendered",
+      "status": "PASS",
+      "required": true,
+      "detail": "ASSESS structural obligations are satisfied by 10 display role(s)",
+      "spec_ref": "ATS-1 9.2.12, 9.3.5"
+    },
+    {
+      "check_id": "OUT-WEP-CANONICAL",
+      "title": "Canonical WEP phrases only",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 8.3"
+    },
+    {
+      "check_id": "OUT-WEP-INLINE-RANGE",
+      "title": "First material WEP use shows its range",
+      "status": "FAIL",
+      "required": true,
+      "detail": "assess-key-judgment: the first material use of 'likely' in section 'assessment' does not show its numeric range '55–80%' inline",
+      "spec_ref": "ATS-1 8.4"
+    },
+    {
+      "check_id": "OUT-DEONTIC-KEYWORDS",
+      "title": "Deontic keywords are canonical and uppercase",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 8.16, 1.3"
+    },
+    {
+      "check_id": "OUT-ACRONYMS",
+      "title": "Acronyms are expanded or permitted",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 10.5"
+    },
+    {
+      "check_id": "OUT-UNITS",
+      "title": "Rendered P0 numbers carry units",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 10.9, 9.3.8"
+    },
+    {
+      "check_id": "OUT-RELATIVE-TIME",
+      "title": "Relative time is anchored",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 10.11"
+    },
+    {
+      "check_id": "OUT-TERMINOLOGY",
+      "title": "Terminology, intensifier, and timing constraints",
+      "status": "PASS",
+      "required": true,
+      "detail": "10 block(s) inspected",
+      "spec_ref": "ATS-1 10.2, 10.20, 10.21, 9.3.7"
+    },
+    {
+      "check_id": "OUT-HEADINGS-LISTS",
+      "title": "Heading and list mechanics",
+      "status": "PASS",
+      "required": true,
+      "detail": "12 block(s) inspected",
+      "spec_ref": "ATS-1 10.17, 10.18"
+    },
+    {
+      "check_id": "OUT-P0-EXACT",
+      "title": "Declared P0 values render exactly",
+      "status": "FAIL",
+      "required": true,
+      "detail": "the IR value at /sections/0/claims/2/proposition is 'The assessment does not apply to the policy-fluid orchestration plane.' but the block declares it rendered as 'The assessment also covers the policy-fluid orchestration plane.'",
+      "spec_ref": "ATS-1 11.3.1, 11.6"
+    },
+    {
+      "check_id": "OUT-P1-DECLARED",
+      "title": "Material P1 relations are declared by a rendered block",
+      "status": "REVIEW_REQUIRED",
+      "required": true,
+      "detail": "6 material relation(s) are declared by a rendered block. Declaration establishes that the block claims the relation, not that the prose realizes it with the same force and direction; that remains a semantic judgement (spec 11.3.2).",
+      "spec_ref": "ATS-1 11.3.2"
+    },
+    {
+      "check_id": "OUT-COORD-PRESERVED",
+      "title": "Stable semantic coordinates survive into the rendering",
+      "status": "NOT_APPLICABLE",
+      "required": false,
+      "detail": "the IR declares no stable_coordinates block, so there is no coordinate to preserve (draft.2 D-C, spec 7.17)",
+      "spec_ref": "ATS-1 4.23, 7.17, 11.3.1"
+    },
+    {
+      "check_id": "OUT-BASIS-NOT-STRENGTHENED",
+      "title": "Rendered semantic force does not exceed the declared basis",
+      "status": "NOT_APPLICABLE",
+      "required": false,
+      "detail": "TRANSFORM is not among the active profiles, so this rendering is not evaluated as a source-to-output transformation (spec 15.4)",
+      "spec_ref": "ATS-1 4.25, 7.19, 15.4"
+    },
+    {
+      "check_id": "OUT-POLICY-EXCEPTIONS",
+      "title": "No unrecorded or invalid policy exception is in play",
+      "status": "PASS",
+      "required": true,
+      "detail": "0 exception(s) in the snapshot are active and correctly scoped",
+      "spec_ref": "ATS-1 6.3"
+    },
+    {
+      "check_id": "OUT-FINDING-DISPOSITIONS",
+      "title": "Every surfaced finding carries a disposition",
+      "status": "UNAVAILABLE",
+      "required": true,
+      "detail": "no receipt was supplied, so no disposition record exists to check (spec 15.3)",
+      "spec_ref": "ATS-1 13.6, 15.3"
+    },
+    {
+      "check_id": "OUT-CONFORMANCE-VECTOR",
+      "title": "The conformance vector is computed per dimension without aggregation",
+      "status": "PASS",
+      "required": true,
+      "detail": "mechanical=FAIL, profile=PASS, semantic_review=UNAVAILABLE, preservation=NOT_APPLICABLE, forecast_calibration=INSUFFICIENT_EVIDENCE; no dimension is averaged into another (spec 5.2, 15.6)",
+      "spec_ref": "ATS-1 5.2, 15.6, 15.7"
+    },
+    {
+      "check_id": "OUT-RECEIPT",
+      "title": "The candidate receipt is well formed and binds this bundle",
+      "status": "NOT_APPLICABLE",
+      "required": true,
+      "detail": "no receipt was supplied to this run",
+      "spec_ref": "ATS-1 14.13, 16.12"
+    }
+  ],
+  "rule_results": [],
+  "findings": [],
+  "block_coverage": {
+    "blocks_declared": 10,
+    "material_ir_objects": 14,
+    "material_ir_objects_mapped": 14,
+    "unmapped_material_ir_objects": [],
+    "authorized_omissions": [],
+    "unknown_ir_references": [],
+    "blocks_found": 10
+  },
+  "p0_checks": [
+    {
+      "field_ref": "c1.force.likelihood.term",
+      "block_id": "assess-key-judgment",
+      "rendered_value": "likely",
+      "source_value": "likely",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "c1.force.assessment_confidence.level",
+      "block_id": "assess-confidence",
+      "rendered_value": "moderate",
+      "source_value": "moderate",
+      "status": "preserved"
+    },
+    {
+      "field_ref": "b1.proposition",
+      "block_id": "assess-boundary",
+      "rendered_value": "The assessment also covers the policy-fluid orchestration plane.",
+      "source_value": "The assessment does not apply to the policy-fluid orchestration plane.",
+      "status": "changed_unauthorized",
+      "detail": "the IR value at /sections/0/claims/2/proposition is 'The assessment does not apply to the policy-fluid orchestration plane.' but the block declares it rendered as 'The assessment also covers the policy-fluid orchestration plane.'"
+    }
+  ],
+  "p1_checks": [
+    {
+      "relation_id": "rel1",
+      "status": "declared",
+      "block_ids": [
+        "assess-evidence-1"
+      ]
+    },
+    {
+      "relation_id": "rel2",
+      "status": "declared",
+      "block_ids": [
+        "assess-evidence-1"
+      ]
+    },
+    {
+      "relation_id": "rel3",
+      "status": "declared",
+      "block_ids": [
+        "assess-assumption"
+      ]
+    },
+    {
+      "relation_id": "rel4",
+      "status": "declared",
+      "block_ids": [
+        "assess-boundary"
+      ]
+    },
+    {
+      "relation_id": "rel5",
+      "status": "declared",
+      "block_ids": [
+        "assess-contrary"
+      ]
+    },
+    {
+      "relation_id": "rel6",
+      "status": "declared",
+      "block_ids": [
+        "assess-alternative"
+      ]
+    }
+  ],
+  "finding_dispositions": {
+    "surfaced": 0,
+    "dispositioned": 0,
+    "undispositioned": []
+  },
+  "summary": {
+    "checks_total": 27,
+    "by_status": {
+      "PASS": 20,
+      "FAIL": 2,
+      "UNAVAILABLE": 1,
+      "NOT_APPLICABLE": 3,
+      "REVIEW_REQUIRED": 1
+    },
+    "required_failed": 2,
+    "required_unavailable": 1
+  },
+  "conformance": {
+    "mechanical": "FAIL",
+    "profile": "PASS",
+    "semantic_review": "UNAVAILABLE",
+    "preservation": "NOT_APPLICABLE",
+    "forecast_calibration": "INSUFFICIENT_EVIDENCE"
+  },
+  "conformance_rationale": {
+    "mechanical": "required deterministic checks failed: OUT-P0-EXACT, OUT-WEP-INLINE-RANGE",
+    "profile": "ASSESS structural obligations are satisfied by 10 display role(s); 14 of 14 material object(s) are mapped; 0 carry an authorized omission. Structural obligations are satisfied at the rendering level; the IR linter owns semantic slot completeness.",
+    "semantic_review": "Mapping a block to an IR object establishes that the renderer declared the object, not that the prose realizes it with the same meaning and force. Section 15.3 requires every surfaced finding to be dispositioned by an authorized human or a promoted detector, and Section 14.11 assigns final semantic acceptance to an external authority. This implementation holds neither, so semantic_review is never PASS here.",
+    "preservation": "TRANSFORM is not among the active profiles, so this rendering is not evaluated as a source-to-output transformation (spec 15.4)",
+    "forecast_calibration": "0 forecast claim(s) rendered. Section 15.5 requires a declared cohort, resolved outcomes, a scoring rule, reliability analysis, uncertainty estimates, and a pre-declared evidence threshold; none is implemented."
+  },
+  "created_at": "2026-08-03T00:00:00Z",
+  "report_sha256": "b1ffa8c996acf8d5893a086bff9a3d04c5f41ff78e54a560e2db78dc4c86209f"
+}

@@ -1,0 +1,103 @@
+{
+  "artifact_id": "fixture-mutation-source-specify",
+  "audience": {
+    "audience_id": "arq-implementers",
+    "expertise": "expert"
+  },
+  "extraction_status": "complete",
+  "glossary": [
+    {
+      "audience": "expert",
+      "canonical_term": "policy_sha256",
+      "concept_id": "policy-sha256",
+      "definition": "The SHA-256 digest of the JCS-canonical resolved policy snapshot.",
+      "scope": "Arq receipt schema"
+    }
+  ],
+  "language": "en",
+  "policy_snapshot_id": "policy-fixture-specify",
+  "schema_version": "ats.text_ir.v1",
+  "sections": [
+    {
+      "claims": [
+        {
+          "claim_id": "REQ-POLICY-017",
+          "force": {
+            "deontic": "MUST"
+          },
+          "material": true,
+          "polarity": "positive",
+          "proposition": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt within 500 milliseconds.",
+          "quantifier": {
+            "kind": "maximum",
+            "unit": "milliseconds",
+            "value": 500
+          },
+          "requirement": {
+            "acceptance_criterion": "A stale-policy fixture returns refused_stale_policy and records both policy hashes.",
+            "action": "reject",
+            "actor": "verifier",
+            "condition": "receipt policy_sha256 differs from the current resolved policy snapshot",
+            "constraints": [
+              "The 500 millisecond boundary is inclusive."
+            ],
+            "deontic": "MUST",
+            "exceptions": [],
+            "object": "acceptance receipt",
+            "rationale": "A receipt proves conformance only under the policy used to evaluate it.",
+            "requirement_id": "REQ-POLICY-017",
+            "source_authority": "Arq acceptance-policy kernel",
+            "timing": "within 500 milliseconds",
+            "trigger": "executor presents an acceptance receipt"
+          },
+          "role": "requirement",
+          "scope": {
+            "authority_domain": "Arq acceptance-policy kernel",
+            "system": "Arq verifier"
+          },
+          "status": "asserted"
+        },
+        {
+          "claim_id": "REQ-POLICY-018",
+          "force": {
+            "deontic": "SHOULD"
+          },
+          "material": true,
+          "polarity": "positive",
+          "proposition": "The verifier SHOULD retain both policy hashes in the refusal record.",
+          "requirement": {
+            "acceptance_criterion": "The refusal record carries both hashes unless redaction applies.",
+            "action": "retain",
+            "actor": "verifier",
+            "deontic": "SHOULD",
+            "exceptions": [
+              "A redaction policy withholds the resolved snapshot hash."
+            ],
+            "object": "both policy hashes",
+            "requirement_id": "REQ-POLICY-018",
+            "source_authority": "Arq acceptance-policy kernel"
+          },
+          "role": "requirement",
+          "scope": {
+            "authority_domain": "Arq acceptance-policy kernel",
+            "system": "Arq verifier"
+          },
+          "status": "asserted"
+        }
+      ],
+      "evidence": [],
+      "heading": "Stale-policy rejection",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "relations": [],
+      "section_id": "requirements",
+      "update_indicators": []
+    }
+  ],
+  "source": {
+    "content_sha256": "4ad25be77c198e748184e4e5179c7f5588898bca53ec8f60ce87dc04bfa12c0b",
+    "locator": "fixtures/mutations/sources/specify_mutation_source.json",
+    "media_type": "text/plain"
+  }
+}

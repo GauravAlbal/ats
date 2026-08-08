@@ -1,0 +1,63 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-002-inferred-stays-inferred",
+  "source": {
+    "content_sha256": "bb93cb56c364d08107a0a6640d26b778cf7ee92639653a5987d75bf39e61abd3",
+    "normalized_sha256": "bb93cb56c364d08107a0a6640d26b778cf7ee92639653a5987d75bf39e61abd3",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-002-inferred-stays-inferred.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-002-inferred-stays-inferred",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "OUT-B2-1",
+          "role": "judgment",
+          "proposition": "The acceptance kernel is likely to reject stale-policy transitions (55-80%).",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "INFERRED",
+            "rationale": "The source states the failure pattern but not the band; the band is inferred."
+          },
+          "source_refs": [
+            "EV-B2-1"
+          ],
+          "extensions": {
+            "source_basis": {
+              "EV-B2-1": "INFERRED"
+            }
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "EV-B2-1",
+          "proposition": "Audit entries show rejections clustering around stale-policy transitions.",
+          "source": {
+            "source_id": "src-EV-B2-1",
+            "source_type": "synthetic_fixture",
+            "availability": "present",
+            "locator": "fixtures/ir/sources/EV-B2-1.txt"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

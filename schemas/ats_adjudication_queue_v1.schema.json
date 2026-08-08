@@ -1,0 +1,327 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_adjudication_queue_v1.schema.json",
+  "title": "ATS AdjudicationQueueV1",
+  "description": "The Stage 2B operator adjudication queue: which units the operator adjudicates, why each is in scope, and the blinding contract for the two-pass protocol. The committed record carries no source prose -- each unit binds its private payload by content hash, so the payload can be verified without being published.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "queue_id",
+    "record_sha256",
+    "generated_at",
+    "round",
+    "reconnaissance",
+    "frame",
+    "policy",
+    "blinding",
+    "adjudicator_contract",
+    "scope_summary",
+    "units"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ats.adjudication_queue.v1"
+    },
+    "queue_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "record_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "generated_at": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "round": {
+      "type": "object",
+      "required": [
+        "round_id",
+        "record_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "round_id": {
+          "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+        },
+        "record_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "reconnaissance": {
+      "type": "object",
+      "required": [
+        "report_id",
+        "report_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "report_id": {
+          "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+        },
+        "report_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "frame_id",
+        "record_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "frame_id": {
+          "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+        },
+        "record_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": [
+        "seed",
+        "control_target"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "seed": {
+          "type": "integer"
+        },
+        "control_target": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "blinding": {
+      "type": "object",
+      "required": [
+        "withheld_in_source_only",
+        "rationale"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "withheld_in_source_only": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "adjudicator_contract": {
+      "type": "object",
+      "required": [
+        "kind",
+        "statement"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "human"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scope_summary": {
+      "type": "object",
+      "required": [
+        "units",
+        "conformance_units",
+        "profile_units",
+        "control_units",
+        "by_reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "units": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "conformance_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "profile_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "control_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "by_reason": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "units": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "unit_id",
+          "kind",
+          "bundle_id",
+          "rule_id",
+          "repository",
+          "stratum",
+          "split_group",
+          "source_artifact_id",
+          "scope_reasons",
+          "control",
+          "priority_blocks",
+          "judgments",
+          "payload_sha256"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "unit_id": {
+            "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+          },
+          "kind": {
+            "enum": [
+              "conformance",
+              "profile"
+            ]
+          },
+          "bundle_id": {
+            "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+          },
+          "rule_id": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string",
+                "pattern": "^ATS-[A-Z]+-[0-9]{3}$"
+              }
+            ]
+          },
+          "repository": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "stratum": {
+            "type": "string",
+            "minLength": 1
+          },
+          "split_group": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_artifact_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "scope_reasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "enum": [
+                "applicable_by_at_least_one_pass",
+                "probe_applicability_disagreement",
+                "specify_verdict_evidence",
+                "context_sufficiency_disagreement",
+                "cited_as_observation_evidence",
+                "control_apparent_agreement"
+              ]
+            }
+          },
+          "control": {
+            "type": "boolean"
+          },
+          "priority_blocks": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "ats_num_002",
+                "specify_form"
+              ]
+            }
+          },
+          "judgments": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": "object",
+              "required": [
+                "kind"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "judged",
+                    "declined",
+                    "classified"
+                  ]
+                }
+              }
+            }
+          },
+          "payload_sha256": {
+            "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "conformance"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "rule_id": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "profile"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "rule_id": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

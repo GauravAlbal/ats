@@ -1,0 +1,46 @@
+{
+  "schema_version": "ats.policy_snapshot.v1",
+  "snapshot_id": "policy-fixture-expired-exception",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "created_at": "2026-08-03T00:00:00Z",
+  "profiles": [
+    "ASSESS"
+  ],
+  "audience": {
+    "expertise": "expert",
+    "audience_id": "arq-engineering",
+    "locale": "en-US"
+  },
+  "glossary_refs": [
+    "arq-core-v1"
+  ],
+  "lexicon_refs": [
+    "ats_force_lexicon_v1"
+  ],
+  "rule_overrides": {},
+  "exceptions": [
+    {
+      "schema_version": "ats.policy_exception.v1",
+      "exception_id": "exc-epi-002-expired",
+      "rule_id": "ATS-EPI-002",
+      "from_state": "required",
+      "to_state": "advisory",
+      "scope": {
+        "artifact_id": "fixture-assess-rust-kernel"
+      },
+      "rationale": "Superseded interface assumption, retained to exercise expiry.",
+      "authorized_by": "arq-acceptance-policy-owner",
+      "created_at": "2025-01-01T00:00:00Z",
+      "expires_at": "2025-06-01T00:00:00Z",
+      "sha256": "d81667ae3b95a46fee039316e4a3572accf4a95feb14e6221a77c993897d1620"
+    }
+  ],
+  "finding_budget": {
+    "guardrail": "all_critical",
+    "coach": 5
+  },
+  "model_artifacts": [],
+  "fallback_policy": "fail_closed",
+  "snapshot_sha256": "3675ab809fbdfc9f97248cac78570ac314bfd5270173096d6ad0e4114b705131"
+}

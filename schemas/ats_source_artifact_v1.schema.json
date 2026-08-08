@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_source_artifact_v1.schema.json",
+  "title": "ATS Source Artifact V1",
+  "description": "A content-addressed repository document at an exact revision. Corpus mining never labels text whose source revision is not pinned here.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "artifact_id",
+    "repository",
+    "repository_group",
+    "path",
+    "revision",
+    "content_sha256",
+    "normalized_sha256",
+    "media_type",
+    "review_state",
+    "use_authority",
+    "handling_policy",
+    "ingested_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.source_artifact.v1" },
+    "artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "repository": { "type": "string", "minLength": 1 },
+    "repository_group": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Leakage grouping key: repositories sharing a template or owner share a group."
+    },
+    "path": { "type": "string", "minLength": 1 },
+    "revision": { "type": "string", "minLength": 1 },
+    "content_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "normalized_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "bytes": { "type": "integer", "minimum": 0 },
+    "media_type": { "type": "string", "minLength": 1 },
+    "author_provenance": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "author": { "type": "string" },
+        "authored_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+        "committer": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "model_provenance": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "model": { "$ref": "ats_common_v1.schema.json#/$defs/model_artifact" },
+        "evidence": { "type": "string" },
+        "authorship": {
+          "type": "object",
+          "description": "Who authored the text, per spec Section 17.4. No commit in the pilot corpus declares model authorship, and the absence of a declaration is not evidence of human authorship, so 'unknown' is the default and the only value reachable without an explicit declaration.",
+          "required": ["value", "perspective", "inference_policy", "searched", "evidence"],
+          "properties": {
+            "value": {
+              "enum": ["human", "model", "mixed", "unknown"],
+              "description": "'mixed' means human and model authorship were both declared for this document; it is a distinct state, not a hedge."
+            },
+            "perspective": {
+              "enum": ["retrospective", "prospective"],
+              "description": "'retrospective' read an existing document's own declarations; 'prospective' was declared by the producer of an artifact this system authored. The forward-looking policy is never projected onto documents that predate it."
+            },
+            "inference_policy": {
+              "type": "string",
+              "description": "Whether authorship inference was permitted, and whether it was performed. This implementation never infers, including where a declaration permits it."
+            },
+            "searched": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string" },
+              "description": "Every evidence source consulted and what it yielded, so 'unknown' is distinguishable from 'never looked'. Never empty."
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["kind", "value", "locator", "detail"],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "commit_trailer",
+                      "artifact_receipt",
+                      "agent_run_manifest",
+                      "document_front_matter",
+                      "execution_trace"
+                    ],
+                    "description": "The kind of deliberate record that declared authorship. Prose style, commit size, author identity, timestamps, phrase reuse, and repository agent configuration are not evidence kinds and never move the value."
+                  },
+                  "value": { "enum": ["human", "model", "mixed"] },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Where the declaration can be checked. An uncitable claim is not evidence."
+                  },
+                  "detail": { "type": "string" },
+                  "model": { "$ref": "ats_common_v1.schema.json#/$defs/model_artifact" }
+                },
+                "additionalProperties": false
+              },
+              "description": "Empty exactly when the value is 'unknown'."
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "review_state": {
+      "enum": ["accepted", "rejected", "superseded", "reverted", "draft", "unknown"],
+      "description": "Kept distinct per spec Section 17.4; merged prose is not assumed conforming."
+    },
+    "acceptance_evidence": {
+      "type": "object",
+      "required": ["availability"],
+      "properties": {
+        "availability": { "$ref": "ats_common_v1.schema.json#/$defs/availability" },
+        "locator": { "type": "string" },
+        "reviewers": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "use_authority": {
+      "enum": [
+        "internal_only",
+        "internal_training_permitted",
+        "external_training_permitted",
+        "unknown",
+        "prohibited"
+      ]
+    },
+    "handling_policy": {
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "template_family": { "type": "string" },
+    "near_duplicate_cluster": { "type": "string" },
+    "domain": { "type": "string" },
+    "profile_hypotheses": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "ats_common_v1.schema.json#/$defs/profile" }
+    },
+    "heading_paths": {
+      "type": "array",
+      "items": { "type": "array", "items": { "type": "string" } }
+    },
+    "ingested_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "extensions": { "type": "object" }
+  },
+  "additionalProperties": false
+}

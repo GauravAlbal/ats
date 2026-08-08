@@ -1,0 +1,267 @@
+{
+  "schema_version": "ats.output_trace.v1",
+  "artifact_id": "fixture-assess-rust-kernel",
+  "ir_sha256": "f0994c8b259133af321c9b10e875e7810f3fc8a5c0393c60a342ff56522c03e2",
+  "output_sha256": "ba83a30249d616a39adbaaf5d9833f61290b48448294aad5475863bf3c08a8fb",
+  "policy_snapshot_id": "policy-example-assess",
+  "policy_sha256": "7d2503c20bd94a1f76770575575f35d757b1ecce42adb5d37c87677cc3d6128c",
+  "profiles": [
+    "ASSESS"
+  ],
+  "renderer": {
+    "name": "ats-assess-output",
+    "version": "0.5.0",
+    "skill_id": "skills/ats-assess-output"
+  },
+  "marker_scheme": {
+    "kind": "html_comment",
+    "pattern": "<!-- ats:block {block_id} -->",
+    "end_pattern": "<!-- /ats:block {block_id} -->"
+  },
+  "created_at": "2026-08-03T00:00:00Z",
+  "blocks": [
+    {
+      "block_id": "assess-question",
+      "marker": "<!-- ats:block assess-question -->",
+      "ordinal": 0,
+      "text_sha256": "614515111c5c12138fb2913095445e737433e63e86bba5f23924553f3268b00b",
+      "material": false,
+      "display_role": "question",
+      "section_id": "assessment",
+      "claim_ids": [],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS"
+    },
+    {
+      "block_id": "assess-key-judgment",
+      "marker": "<!-- ats:block assess-key-judgment -->",
+      "ordinal": 1,
+      "text_sha256": "5dee59f24bc8f2457fd0f2182905e88e14590f30edb43160ffad301093f40533",
+      "material": true,
+      "display_role": "key_judgment",
+      "section_id": "assessment",
+      "claim_ids": [
+        "c1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p0_fields": [
+        {
+          "field_ref": "c1.force.likelihood.term",
+          "ir_pointer": "/sections/0/claims/0/force/likelihood/term",
+          "rendered": "likely"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-confidence",
+      "marker": "<!-- ats:block assess-confidence -->",
+      "ordinal": 2,
+      "text_sha256": "480658a1abf607c251aacbdbdf47e6abd353a89614a2a91bf97ddd889661357c",
+      "material": true,
+      "display_role": "confidence",
+      "section_id": "assessment",
+      "claim_ids": [
+        "c1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p0_fields": [
+        {
+          "field_ref": "c1.force.assessment_confidence.level",
+          "ir_pointer": "/sections/0/claims/0/force/assessment_confidence/level",
+          "rendered": "moderate"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-evidence-1",
+      "marker": "<!-- ats:block assess-evidence-1 -->",
+      "ordinal": 3,
+      "text_sha256": "6f342b3638741048d4219929af9dc96911e6e7b2074a4d03f6f77dde9f31e400",
+      "material": true,
+      "display_role": "supporting_evidence",
+      "section_id": "assessment",
+      "claim_ids": [],
+      "evidence_ids": [
+        "e1",
+        "e2"
+      ],
+      "relation_ids": [
+        "rel1",
+        "rel2"
+      ],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p1_relations": [
+        {
+          "relation_id": "rel1",
+          "type": "supports",
+          "direction": "source_to_target"
+        },
+        {
+          "relation_id": "rel2",
+          "type": "supports",
+          "direction": "source_to_target"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-contrary",
+      "marker": "<!-- ats:block assess-contrary -->",
+      "ordinal": 4,
+      "text_sha256": "f7c1cb8eb4a87ed2f780eef9b7265ce9a0a51be5a078f83e795354d81e98c5a4",
+      "material": true,
+      "display_role": "contrary_evidence",
+      "section_id": "assessment",
+      "claim_ids": [],
+      "evidence_ids": [
+        "e3"
+      ],
+      "relation_ids": [
+        "rel5"
+      ],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p1_relations": [
+        {
+          "relation_id": "rel5",
+          "type": "qualifies",
+          "direction": "source_to_target"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-alternative",
+      "marker": "<!-- ats:block assess-alternative -->",
+      "ordinal": 5,
+      "text_sha256": "37202a2c1bc97b2ddbbf15509f58bcbf23ecf3f26b03da2398c2b5d9eb5f3523",
+      "material": true,
+      "display_role": "alternatives",
+      "section_id": "assessment",
+      "claim_ids": [
+        "alt1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [
+        "rel6"
+      ],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p1_relations": [
+        {
+          "relation_id": "rel6",
+          "type": "alternative_to",
+          "direction": "source_to_target"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-assumption",
+      "marker": "<!-- ats:block assess-assumption -->",
+      "ordinal": 6,
+      "text_sha256": "f8cdb1da39b50afb55469a266bff0b3d586edaa280b787561faaad4f675bae7b",
+      "material": true,
+      "display_role": "assumption",
+      "section_id": "assessment",
+      "claim_ids": [
+        "a1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [
+        "rel3"
+      ],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p1_relations": [
+        {
+          "relation_id": "rel3",
+          "type": "condition_for",
+          "direction": "source_to_target"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-boundary",
+      "marker": "<!-- ats:block assess-boundary -->",
+      "ordinal": 7,
+      "text_sha256": "55573800a6ef972e72546b743236868a2473e8ea791206b00b646db63f7261d8",
+      "material": true,
+      "display_role": "boundary",
+      "section_id": "assessment",
+      "claim_ids": [
+        "b1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [
+        "rel4"
+      ],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS",
+      "p0_fields": [
+        {
+          "field_ref": "b1.proposition",
+          "ir_pointer": "/sections/0/claims/2/proposition",
+          "rendered": "The assessment also covers the policy-fluid orchestration plane."
+        }
+      ],
+      "p1_relations": [
+        {
+          "relation_id": "rel4",
+          "type": "qualifies",
+          "direction": "source_to_target"
+        }
+      ]
+    },
+    {
+      "block_id": "assess-update-indicator",
+      "marker": "<!-- ats:block assess-update-indicator -->",
+      "ordinal": 8,
+      "text_sha256": "b8c43943f892de9a4799ac6a1a20f454a6add1bd9d55ac9f4419f1209c7fa243",
+      "material": true,
+      "display_role": "update_indicator",
+      "section_id": "assessment",
+      "claim_ids": [],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "update_indicator_ids": [
+        "u1"
+      ],
+      "profile": "ASSESS"
+    },
+    {
+      "block_id": "assess-recommendation",
+      "marker": "<!-- ats:block assess-recommendation -->",
+      "ordinal": 9,
+      "text_sha256": "49190abea8f3279eb9eaaf26c4c9fc816d89eade7bd0fc345b771cbdaa6d9f2a",
+      "material": true,
+      "display_role": "recommendation",
+      "section_id": "assessment",
+      "claim_ids": [
+        "r1"
+      ],
+      "evidence_ids": [],
+      "relation_ids": [],
+      "requirement_ids": [],
+      "forecast_ids": [],
+      "profile": "ASSESS"
+    }
+  ],
+  "trace_sha256": "dd2552df639d89a3c4e7db17905dc5b75e9c9da435892de0677347226147c0d0"
+}

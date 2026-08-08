@@ -1,0 +1,36 @@
+[project]
+name = "ats"
+version = "0.5.0"
+description = "Deterministic v0 implementation of ATS-1: Arq Text Standard"
+requires-python = ">=3.12"
+license = { file = "LICENSE.md" }
+dependencies = [
+    "jsonschema>=4.18,<5",
+    "referencing>=0.30",
+    "PyYAML>=6,<7",
+    "markdown-it-py>=3,<5",
+    "rfc8785>=0.1.4,<0.2",
+]
+
+[project.scripts]
+ats = "ats.cli:main"
+
+
+[project.urls]
+Homepage = "https://github.com/gauravalbal/ats"
+Repository = "https://github.com/gauravalbal/ats"
+Issues = "https://github.com/gauravalbal/ats/issues"
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling==1.31.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ats"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["error"]

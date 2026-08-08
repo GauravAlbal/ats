@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_profile_hypothesis_v1.schema.json",
+  "title": "ATS Profile Hypothesis V1",
+  "description": "A corpus-layer hypothesis about which ATS-1 profile governs one section of one source document. 99.6% of the pilot corpus declares no profile because it predates ATS, so profile is an annotation target rather than a property the pipeline resolves (spec Section 14.1 makes profile resolution stage 2, and a stage that cannot execute reports its unavailability rather than a value). This object exists so that a scope, the structural and lexical evidence found in it, and the profiles that evidence is consistent with can be recorded WITHOUT any of them being read as a determination. The record is scoped to a section or context bundle, never to a whole document, because Section 9.4 permits an artifact to compose profiles at section level. `decision.state` is `REVIEW_REQUIRED` on every generated record; only an identified annotator may move it, and no generator may move it for them (Section 13.7).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "hypothesis_id",
+    "record_sha256",
+    "source_artifact_id",
+    "path",
+    "revision",
+    "scope",
+    "candidate_profiles",
+    "decision",
+    "generator"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.profile_hypothesis.v1" },
+    "hypothesis_id": {
+      "description": "Content address of the record body, so two runs over the same bytes produce the same identifier and a changed hypothesis is a different record.",
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "source_artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "context_bundle_id": {
+      "description": "The context bundle this hypothesis was scoped to, when it was built from one rather than directly from a section of the source document.",
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "repository_group": {
+      "description": "Leakage-control grouping key, carried so a hypothesis can be excluded from a split without re-reading the source artifact.",
+      "type": "string",
+      "minLength": 1
+    },
+    "path": {
+      "description": "Repository-relative path of the document. Present so an annotator can find the scope; it is NOT admissible as evidence for a profile.",
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "description": "The revision the scope's line numbers are valid at. Line numbers without a revision point at nothing.",
+      "type": "string",
+      "minLength": 7
+    },
+    "scope": {
+      "description": "The section this hypothesis is about. Section 9.4 permits profile composition at section level, so a document-wide hypothesis would erase a distinction the standard makes.",
+      "type": "object",
+      "required": ["heading_path", "start_line", "end_line"],
+      "properties": {
+        "heading_path": {
+          "description": "The heading stack governing the scope, outermost first. Empty for a document with no headings, or for text preceding the first heading; empty is a real answer, not a missing one.",
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "start_line": { "type": "integer", "minimum": 1 },
+        "end_line": { "type": "integer", "minimum": 1 },
+        "span": { "$ref": "ats_common_v1.schema.json#/$defs/span" },
+        "source_sha256": {
+          "description": "Content hash of the whole document the lines are cut from, so a scope whose source has changed is detectable.",
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        }
+      },
+      "additionalProperties": false
+    },
+    "candidate_profiles": {
+      "description": "Every profile the evidence in this scope is consistent with. Two or more entries is the normal case for a mixed artifact and MUST NOT be collapsed to one. An empty array means no admissible evidence was found, which is not the same as having found evidence for no profile.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidate_profile" },
+      "uniqueItems": true
+    },
+    "decision": { "$ref": "#/$defs/decision" },
+    "authority": {
+      "description": "The resolved corpus authority under which this scope's text was read. Recorded because a hypothesis derived from text nobody authorised reading is not usable, and the resolution names which input permitted or blocked it. `declaration_location` is required alongside the value: an operator overlay and a repository's own declaration can resolve identically, and a hypothesis that recorded only the permission would read as though the repository owner had authorised it.",
+      "type": "object",
+      "required": ["use", "value", "permitted", "basis", "declaration_location"],
+      "properties": {
+        "use": { "type": "string", "minLength": 1 },
+        "value": { "enum": ["allow", "allow_private", "defer", "deny", "unknown"] },
+        "permitted": { "type": "boolean" },
+        "basis": { "type": "array", "items": { "type": "string" } },
+        "declaration_location": {
+          "oneOf": [
+            { "enum": ["repository", "pilot_overlay"] },
+            { "type": "null" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "generator": {
+      "description": "What produced the record and from which vocabularies, so a reviewer can tell an evidence set apart from a guess.",
+      "type": "object",
+      "required": [
+        "generator_id",
+        "spec_version",
+        "lexicon_version",
+        "evidence_sources",
+        "refusals"
+      ],
+      "properties": {
+        "generator_id": { "type": "string", "minLength": 1 },
+        "spec_version": { "type": "string", "minLength": 1 },
+        "lexicon_version": { "type": "string", "minLength": 1 },
+        "evidence_sources": {
+          "description": "Every vocabulary the generator was allowed to match against. A term outside these is not evidence, because a vocabulary invented at the corpus layer would create profile labels the standard does not recognise.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "refusals": {
+          "description": "The inferences this generator declines to make, restated on every record so a reviewer reading one record sees them.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["refusal_id", "question", "answer", "spec_ref"],
+            "properties": {
+              "refusal_id": { "type": "string", "minLength": 1 },
+              "question": { "type": "string", "minLength": 1 },
+              "answer": { "type": "string", "minLength": 1 },
+              "spec_ref": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "candidate_profile": {
+      "type": "object",
+      "required": ["profile", "basis", "status", "conformance_claim_permitted"],
+      "properties": {
+        "profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+        "basis": {
+          "description": "The evidence that raised this candidate, one entry per distinct observation. A candidate with no basis is a guess, so at least one is required. A filename, a path, or a repository is never a basis: nothing about where a document sits establishes what reader job its prose performs.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/basis" },
+          "uniqueItems": true
+        },
+        "status": {
+          "description": "`hypothesis` is the only state a generator emits: ranking candidates by cue count would reintroduce the guess this object exists to avoid. `alternative` and `rejected` are annotator states, recorded here so a reviewer's narrowing survives in the same object rather than in a side channel.",
+          "enum": ["hypothesis", "alternative", "rejected"]
+        },
+        "conformance_claim_permitted": {
+          "description": "Whether this identifier may carry a core ATS-1 conformance claim. False for every extension-namespaced profile: Section 3.3 permits experimenting with a reserved profile under a namespace but forbids claiming core ATS-1 profile conformance for it, and Section 9.5 requires the identifier be preserved and reported as unsupported rather than mapped to ASSESS or SPECIFY by similarity.",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "basis": {
+      "type": "object",
+      "required": ["kind", "detail", "spec_ref", "vocabulary_source"],
+      "properties": {
+        "kind": {
+          "description": "The class of observation. Every kind is structural or lexical evidence read out of the scope's own text; there is deliberately no kind for filename, path, repository, or sibling-document convention.",
+          "enum": [
+            "declared_profile_marker",
+            "deontic_surface",
+            "requirement_slot_label",
+            "claim_role_label",
+            "heading_role_term",
+            "likelihood_term",
+            "assessment_confidence_term",
+            "evidential_force_term"
+          ]
+        },
+        "detail": {
+          "description": "The exact surface that was observed, so a reviewer can check the observation rather than trust it.",
+          "type": "string",
+          "minLength": 1
+        },
+        "spec_ref": { "type": "string", "minLength": 1 },
+        "vocabulary_source": {
+          "description": "Where the matched term is defined. Only the imported force lexicon, a vocabulary enumerated in a normative schema, and the document's own explicit declaration qualify.",
+          "type": "string",
+          "minLength": 1
+        },
+        "occurrences": {
+          "description": "How many times the surface appears in the scope. Volume is context for a reviewer, never a score: one MUST and forty MUSTs raise exactly one candidate.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "first_line": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "description": "Who decided the profile, and whether anyone has. Section 13.7 forbids a component from becoming the authoritative adjudicator for its own output, so a generated record is always REVIEW_REQUIRED and a RESOLVED record must name a decider that is not the generator.",
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": {
+          "description": "`REVIEW_REQUIRED` is the generated state and the default. `RESOLVED` means an identified annotator selected a profile. `REFUSED` means an identified annotator looked and determined that the evidence supports no profile for this scope — which is a decision, unlike the silence of REVIEW_REQUIRED.",
+          "enum": ["REVIEW_REQUIRED", "RESOLVED", "REFUSED"]
+        },
+        "resolved_profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+        "decided_by": {
+          "description": "The identity of the annotator who moved the state. A generator identity here would be self-adjudication.",
+          "type": "string",
+          "minLength": 1
+        },
+        "decided_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "state": { "const": "RESOLVED" } }, "required": ["state"] },
+          "then": {
+            "required": ["state", "resolved_profile", "decided_by", "decided_at", "rationale"]
+          }
+        },
+        {
+          "if": { "properties": { "state": { "const": "REFUSED" } }, "required": ["state"] },
+          "then": { "required": ["state", "decided_by", "decided_at", "rationale"] }
+        },
+        {
+          "if": { "properties": { "state": { "const": "REVIEW_REQUIRED" } }, "required": ["state"] },
+          "then": {
+            "not": {
+              "anyOf": [{ "required": ["resolved_profile"] }, { "required": ["decided_by"] }]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

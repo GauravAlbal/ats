@@ -1,0 +1,5 @@
+Operator notes
+
+The migration decision is not settled. Recently the team recorded that the
+kernel is robust under the current load, which is a very large claim without a
+threshold.

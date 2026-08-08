@@ -1,0 +1,1393 @@
+{
+  "schema_version": "ats.rule_capability.v1",
+  "implementation_name": "ats",
+  "implementation_version": "0.5.0",
+  "ats_version": "1.0.0-draft.1",
+  "rules": [
+    {
+      "rule_id": "ATS-DEON-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "force_lexicon"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "force_lexicon"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no requirement claims and no material propositions presents no normative statement to check."
+      ],
+      "known_limits": [
+        "Section 1.3 makes the deontic keywords normative only in uppercase, so a lowercase 'must' in ordinary prose is correctly not flagged here. Whether a lowercase modal is smuggling normative force is a semantic question ATS-DEON-003 addresses for `should`."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "requirement-without-deontic-force",
+          "decides": true,
+          "spec_ref": "ATS-1 8.16, 9.3.2",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml deontic_force.terms",
+          "description": "A claim with role `requirement` declares no deontic force field."
+        },
+        {
+          "subcheck_id": "deontic-surface-absent-from-proposition",
+          "decides": true,
+          "spec_ref": "ATS-1 8.16, 1.3",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml deontic_force.terms[].surface",
+          "description": "A requirement declares a deontic force whose uppercase surface form does not appear in its proposition, so the obligation strength is not carried by the normative text."
+        },
+        {
+          "subcheck_id": "noncanonical-modal-in-material-claim",
+          "decides": true,
+          "spec_ref": "ATS-1 8.16",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml deontic_force.noncanonical",
+          "description": "A material claim uses a modal the lexicon marks noncanonical (SHALL, SHALL NOT), which carries hidden normative meaning."
+        },
+        {
+          "subcheck_id": "required-by-without-authority",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.15",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml deontic_force.terms",
+          "description": "A claim whose deontic force is REQUIRED_BY names no external authority, so an obligation imposed elsewhere reads as if it originated locally."
+        }
+      ],
+      "detector_name": "ats-ir-ats-deon-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-DEON-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no MAY force presents no permission to check."
+      ],
+      "known_limits": [
+        "The collision between permission, capability, and probability is visible here only when the IR represents both forces. A prose `may` that never became a typed force is invisible to this surface, so a clean run is REVIEW_REQUIRED."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "may-carrying-probability",
+          "decides": false,
+          "spec_ref": "ATS-1 8.17 force-collision-may",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml collision_rules",
+          "description": "A claim with MAY force also carries a likelihood, collapsing permission into probability."
+        },
+        {
+          "subcheck_id": "may-on-non-normative-role",
+          "decides": false,
+          "spec_ref": "ATS-1 8.17, 9.3.12, 9.3.13",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml collision_rules",
+          "description": "A claim with MAY force has a role that is not a requirement, so the statement grants no identifiable permission to an identifiable actor."
+        }
+      ],
+      "detector_name": "ats-ir-ats-deon-002",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-DEON-003",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no SHOULD or SHOULD NOT requirement presents no defeasible recommendation to check."
+      ],
+      "known_limits": [
+        "Section 9.3.11 also forbids using SHOULD merely because the author is uncertain whether the requirement matters. That is a semantic judgement about intent and is not decided here; this subcheck decides only the override-path obligation."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "should-without-override-path",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.11",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml deontic_force.terms",
+          "description": "A SHOULD or SHOULD NOT requirement identifies neither an exception nor a rationale linking to an override policy."
+        }
+      ],
+      "detector_name": "ats-ir-ats-deon-003",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-DISC-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "document_ast",
+        "profile"
+      ],
+      "available_inputs": [
+        "text",
+        "profile"
+      ],
+      "missing_inputs": [
+        "document_ast"
+      ],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "A section with no load-bearing material claim has no operative statement to place."
+      ],
+      "known_limits": [
+        "Section 10.16 qualifies the obligation with 'background that does not alter its interpretation'. Whether the preceding material actually alters interpretation is a semantic judgement, so a clean ordering is REVIEW_REQUIRED, not PASS.",
+        "Claim order in the IR is the authored order. It is not evidence about where a renderer will place the statement; the output linter checks the rendered order."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "load-bearing-statement-not-first",
+          "decides": false,
+          "spec_ref": "ATS-1 10.16, 9.2.3",
+          "vocabulary_source": "claim roles enumerated in ATS-1 7.4",
+          "description": "A section's first material claim is neither load-bearing nor a permitted framing role, so background precedes the operative statement."
+        }
+      ],
+      "detector_name": "ats-ir-ats-disc-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule",
+      "input_substitutions": [
+        {
+          "input": "document_ast",
+          "substituted_by": "TextIR section and claim ordering",
+          "spec_ref": "ATS-1 7.3",
+          "justification": "Section 7.3 gives every section an identifier and an ordered claim list, so 'first use in a section' and 'appears before' are decidable over the IR itself. This substitution covers ordering only; it does not supply paragraph or block structure, which the IR does not represent."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-DISC-002",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "text",
+        "document_ast",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [
+        "document_ast"
+      ],
+      "blocking_inputs": [
+        "document_ast"
+      ],
+      "unavailable_conditions": [
+        "The TextIR models sections and claims, not paragraphs. Section 10.15's unit of analysis does not exist on this surface, and a claim is not a paragraph."
+      ],
+      "known_limits": [
+        "Section 10.15 explicitly prefers conceptual moves over sentence or topic counts, so substituting a claim count would be the arbitrary proxy the rule exists to reject."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "one-conceptual-move-per-paragraph",
+          "decides": false,
+          "spec_ref": "ATS-1 10.15",
+          "vocabulary_source": "none",
+          "description": "Counting the conceptual moves in a paragraph requires the paragraph, which the TextIR does not represent."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-DISC-003",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "text",
+        "document_context",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [
+        "document_context"
+      ],
+      "blocking_inputs": [
+        "document_context"
+      ],
+      "unavailable_conditions": [
+        "`document_context` is not supplied to `ats ir lint`, and two claims with similar propositions may be a legitimate functional repetition rather than a restatement."
+      ],
+      "known_limits": [
+        "String similarity between propositions would flag exactly the functional repetition Section 10.19 permits, so no proxy is implemented."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "restatement-adds-function",
+          "decides": false,
+          "spec_ref": "ATS-1 10.19",
+          "vocabulary_source": "none",
+          "description": "Deciding whether a restatement adds scope, evidence, mechanism, implication, contrast, action, or retrieval value requires the surrounding document context."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-EPI-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "force_lexicon",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "force_lexicon",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "None on this surface: every likelihood object the IR carries is fully inspectable against the lexicon."
+      ],
+      "known_limits": [
+        "This decides the represented likelihood. Whether the author should have attached a likelihood at all is a materiality judgement handled by profile completeness."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "wep-term-not-canonical",
+          "decides": true,
+          "spec_ref": "ATS-1 8.2, 8.3",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml",
+          "description": "A likelihood of kind `wep` names a term absent from the canonical ATS-1 row."
+        },
+        {
+          "subcheck_id": "wep-interval-mismatch",
+          "decides": true,
+          "spec_ref": "ATS-1 8.2",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml",
+          "description": "A likelihood of kind `wep` declares bounds that differ from the lexicon interval for its term, silently redefining the calibrated scale."
+        },
+        {
+          "subcheck_id": "point-probability-unjustified",
+          "decides": true,
+          "spec_ref": "ATS-1 8.5, 8.6",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml",
+          "description": "A numeric point or interval probability carries no rationale, so the precision it claims has no stated justification."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EPI-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "document_ast",
+        "force_lexicon"
+      ],
+      "available_inputs": [
+        "text",
+        "force_lexicon"
+      ],
+      "missing_inputs": [
+        "document_ast"
+      ],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "A section containing no material WEP use has no first use to check."
+      ],
+      "known_limits": [
+        "This decides what the IR declares about the inline range. Whether the rendered Markdown actually shows it is decided by the output linter's OUT-WEP-INLINE-RANGE.",
+        "The lexicon's `first_material_use_must_show_range` flag gates this rule; if a future lexicon sets it false the subchecks report NOT_APPLICABLE."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "first-use-range-not-shown",
+          "decides": true,
+          "spec_ref": "ATS-1 8.4",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml",
+          "description": "The first material WEP use in a section does not declare `range_shown_inline: true`."
+        },
+        {
+          "subcheck_id": "first-use-display-missing-range",
+          "decides": true,
+          "spec_ref": "ATS-1 8.4",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml",
+          "description": "The first material WEP use declares the range shown inline, but its `display` string does not contain the lexicon display range."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-002",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule",
+      "input_substitutions": [
+        {
+          "input": "document_ast",
+          "substituted_by": "TextIR section and claim ordering",
+          "spec_ref": "ATS-1 7.3",
+          "justification": "Section 7.3 gives every section an identifier and an ordered claim list, so 'first use in a section' and 'appears before' are decidable over the IR itself. This substitution covers ordering only; it does not supply paragraph or block structure, which the IR does not represent."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-EPI-003",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "force_lexicon",
+        "policy"
+      ],
+      "available_inputs": [
+        "text",
+        "force_lexicon",
+        "policy"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material claims presents no probability vocabulary to check."
+      ],
+      "known_limits": [
+        "The alias set is exactly the lexicon's `input_aliases`. Section 8.3 permits a noncanonical term inside a quotation or when policy requires it; the IR does not mark quoted regions, so such a case is a hard negative and must be adjudicated. The output linter, which does see content classes, skips quoted blocks."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "noncanonical-wep-synonym",
+          "decides": true,
+          "spec_ref": "ATS-1 8.3",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml likelihood.terms[].input_aliases",
+          "description": "A material claim's proposition uses a noncanonical probability synonym the lexicon maps to a canonical term."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-003",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EPI-004",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "A claim carrying neither a likelihood nor an assessment confidence presents no separation to check."
+      ],
+      "known_limits": [
+        "The schema already keeps likelihood and assessment confidence in distinct fields, so representational separation is structural. What remains is prose-level conflation, which is only partially visible from the IR. A clean run is REVIEW_REQUIRED."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "confidence-word-inside-likelihood",
+          "decides": false,
+          "spec_ref": "ATS-1 8.11, 4.8",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml assessment_confidence.terms",
+          "description": "A likelihood's display string carries an assessment-confidence level, conflating the probability of the event with the robustness of the analysis."
+        },
+        {
+          "subcheck_id": "confidence-substituted-for-likelihood",
+          "decides": false,
+          "spec_ref": "ATS-1 8.11",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml assessment_confidence.terms",
+          "description": "A material judgment whose proposition states a probability word carries an assessment confidence but no likelihood field, so confidence is standing in for likelihood."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-004",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EPI-005",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "A claim with no assessment confidence presents no basis to inspect."
+      ],
+      "known_limits": [
+        "Whether a present rationale is a *good* rationale is a semantic judgement. This decides that an inspectable basis exists and is not wholly unknown, which is what Section 8.9 requires structurally."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "confidence-basis-rationale-blank",
+          "decides": true,
+          "spec_ref": "ATS-1 8.9",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml assessment_confidence.basis_dimensions",
+          "description": "A material confidence label carries a basis whose rationale is blank."
+        },
+        {
+          "subcheck_id": "confidence-basis-wholly-unknown",
+          "decides": true,
+          "spec_ref": "ATS-1 8.9, 8.10",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml assessment_confidence.basis_dimensions",
+          "description": "Every basis dimension of a material confidence label is `unknown`, so the label carries authority with nothing inspectable behind it."
+        },
+        {
+          "subcheck_id": "high-confidence-on-unknown-dimension",
+          "decides": true,
+          "spec_ref": "ATS-1 8.10",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml assessment_confidence.basis_dimensions",
+          "description": "A `high` confidence label rests on a basis with at least one unknown dimension and no robustness argument in its rationale."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-005",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EPI-006",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D3",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": false,
+      "authority": "proposal_only",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material judgment or forecast presents no assessment to make revisable."
+      ],
+      "known_limits": [
+        "Whether an indicator is genuinely observable is a semantic judgement. This decides that an indicator exists and points at the claim, or that the artifact states why none does — which is what Section 7.14 makes checkable.",
+        "The registry lists only D3 and D4 as this rule's detector classes, so a deterministic structural detector has no class of its own to report. It reports D3, whose output is proposal_only in this draft (spec 12.3), and its findings are surfaced for adjudication rather than deciding the rule. See docs/decisions/ADR-0008.",
+        "Appendix E question 1 asks whether this rule should apply to every material judgment or only above a policy-defined materiality threshold. Until that is ratified this implementation applies it to every material judgment and forecast."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "material-assessment-without-update-indicator",
+          "decides": false,
+          "spec_ref": "ATS-1 7.14, 9.2.4",
+          "vocabulary_source": "update_indicator objects and extraction_issues declared in the IR",
+          "description": "A material judgment or forecast is targeted by no update indicator and no extraction issue states why none is available."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-006"
+    },
+    {
+      "rule_id": "ATS-EPI-007",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material claims presents no likelihood expression to check."
+      ],
+      "known_limits": [
+        "The term set is exactly the lexicon's `non_probability_terms`. A claim that is not probabilistic at all may legitimately use these words; the rule fires only when the claim also supplies no calibrated likelihood, which is the condition Section 8.7 names."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "possibility-term-as-only-likelihood",
+          "decides": true,
+          "spec_ref": "ATS-1 8.7",
+          "vocabulary_source": "lexicons/ats_force_lexicon_v1.yaml likelihood.non_probability_terms",
+          "description": "A material claim states a possibility term the lexicon marks as non-probability and carries no likelihood of kind wep, point, or interval."
+        }
+      ],
+      "detector_name": "ats-ir-ats-epi-007",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EVID-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no claims presents no epistemic roles to separate."
+      ],
+      "known_limits": [
+        "The schema gives every claim exactly one primary role, so role separation is structural. What this decides is field compatibility: a role carrying force that belongs to a different role. Whether the author chose the right role for a given sentence is a semantic judgement outside this surface."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "observation-carrying-assessment-force",
+          "decides": true,
+          "spec_ref": "ATS-1 7.4, 9.2.5",
+          "vocabulary_source": "claim roles enumerated in ATS-1 7.4",
+          "description": "A claim whose role reports a first-order observation or a sourced report also carries assessment machinery — a likelihood or an assessment confidence — which belongs to a judgment."
+        },
+        {
+          "subcheck_id": "recommendation-carrying-evidential-force",
+          "decides": true,
+          "spec_ref": "ATS-1 9.2.10",
+          "vocabulary_source": "claim roles enumerated in ATS-1 7.4",
+          "description": "A recommendation carries evidential force, presenting advice as an observed consequence of the evidence."
+        },
+        {
+          "subcheck_id": "assumption-presented-as-established",
+          "decides": true,
+          "spec_ref": "ATS-1 7.12, 9.2.9, 9.2.13",
+          "vocabulary_source": "claim roles enumerated in ATS-1 7.4",
+          "description": "An assumption carries evidential force, presenting a supposition as an evidenced fact."
+        }
+      ],
+      "detector_name": "ats-ir-ats-evid-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-EVID-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D3",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": false,
+      "authority": "proposal_only",
+      "required_inputs": [
+        "text",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material relations asserts no evidential or causal force."
+      ],
+      "known_limits": [
+        "The registry lists only D3 and D4 as this rule's detector classes, so a deterministic structural detector has no class of its own to report. It reports D3, whose output is proposal_only in this draft (spec 12.3), and its findings are surfaced for adjudication rather than deciding the rule. See docs/decisions/ADR-0008.",
+        "Whether a present basis is strong enough for the force asserted is a semantic judgement. This decides that a basis is declared and resolves, which is the structural half of Sections 8.13 and 8.15."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "discriminating-relation-without-basis",
+          "decides": false,
+          "spec_ref": "ATS-1 8.13, 8.15",
+          "vocabulary_source": "relation types enumerated in ats_common_v1#/$defs/relation",
+          "description": "A material relation asserting support or causation declares no basis references, so the wording exceeds any described basis."
+        },
+        {
+          "subcheck_id": "basis-reference-unresolved",
+          "decides": false,
+          "spec_ref": "ATS-1 8.15",
+          "vocabulary_source": "relation types enumerated in ats_common_v1#/$defs/relation",
+          "description": "A relation's basis reference does not resolve to an object in the artifact."
+        },
+        {
+          "subcheck_id": "model-output-as-independent-evidence",
+          "decides": false,
+          "spec_ref": "ATS-1 9.2.6",
+          "vocabulary_source": "source types enumerated in ats_common_v1#/$defs/source_ref",
+          "description": "An evidence object sourced from model output supports a claim as if it were an independent evidence line; Section 9.2.6 makes a model's analysis an inference."
+        }
+      ],
+      "detector_name": "ats-ir-ats-evid-002"
+    },
+    {
+      "rule_id": "ATS-EVID-003",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D3",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": false,
+      "authority": "proposal_only",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger",
+        "evidence"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material judgments presents no assessment to calibrate."
+      ],
+      "known_limits": [
+        "The registry lists only D3 and D4 as this rule's detector classes, so a deterministic structural detector has no class of its own to report. It reports D3, whose output is proposal_only in this draft (spec 12.3), and its findings are surfaced for adjudication rather than deciding the rule. See docs/decisions/ADR-0008.",
+        "Whether the contrary evidence actually cited is the relevant contrary evidence is a semantic judgement. This decides that the artifact states one of the exact availability positions Section 9.2.7 enumerates rather than leaving the reader unable to tell a bounded search from no search."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "judgment-without-contrary-evidence-state",
+          "decides": false,
+          "spec_ref": "ATS-1 9.2.7, 9.2.8",
+          "vocabulary_source": "relation types in ats_common_v1 plus the contrary_evidence states in lexicons/ats_force_lexicon_v1.yaml",
+          "description": "A material judgment is neither opposed by a contrary or alternative relation nor accompanied by an exact contrary-evidence search state."
+        }
+      ],
+      "detector_name": "ats-ir-ats-evid-003"
+    },
+    {
+      "rule_id": "ATS-NUM-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "None on this surface: every quantifier the IR carries is inspectable, and a claim with no quantifier object states no material number to check."
+      ],
+      "known_limits": [
+        "A material number written into a proposition string but never represented as a quantifier object is invisible here. Structural check IR-QUANT-UNITS reports that representation gap separately so it is not silently absorbed into this PASS."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "magnitude-without-unit",
+          "decides": true,
+          "spec_ref": "ATS-1 10.9",
+          "vocabulary_source": "quantifier kinds enumerated in ATS-1 7.7",
+          "description": "A material claim carrying a magnitude quantifier declares neither a unit nor an explicit dimensionless status."
+        },
+        {
+          "subcheck_id": "proportion-without-denominator",
+          "decides": true,
+          "spec_ref": "ATS-1 10.9",
+          "vocabulary_source": "quantifier kinds enumerated in ATS-1 7.7",
+          "description": "A material proportion declares no denominator, so its count basis is unknown."
+        }
+      ],
+      "detector_name": "ats-ir-ats-num-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-NUM-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "A claim with no range or threshold quantifier states no boundary to check."
+      ],
+      "known_limits": [
+        "Inverted bounds are decidable; whether ordinary language leaves a boundary ambiguous is not. A run with no inverted bound and no missing comparator is REVIEW_REQUIRED.",
+        "Comparator detection reads the requirement's own slots. A comparator expressed only in surrounding prose is not visible to the IR surface."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "range-bounds-inverted",
+          "decides": true,
+          "spec_ref": "ATS-1 10.10",
+          "vocabulary_source": "quantifier kinds enumerated in ATS-1 7.7",
+          "description": "A range quantifier's lower bound exceeds its upper bound."
+        },
+        {
+          "subcheck_id": "threshold-without-boundary-semantics",
+          "decides": false,
+          "spec_ref": "ATS-1 10.10, 9.3.8",
+          "vocabulary_source": "comparator words enumerated in ATS-1 9.3.8 and 10.10",
+          "description": "A material threshold on a requirement declares no comparator or inclusivity anywhere in its constraints, action, or condition slots."
+        }
+      ],
+      "detector_name": "ats-ir-ats-num-002",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-PRES-001",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "available_inputs": [],
+      "missing_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "blocking_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "unavailable_conditions": [
+        "`ats ir lint` evaluates one artifact. Preservation compares a source artifact against an output artifact under a retention contract, and no v0 command constructs that pair."
+      ],
+      "known_limits": [
+        "Section 6.4 makes this rule unwaivable: while it is unavailable, preservation MUST NOT be reported as PASS. The conformance vector reflects that directly.",
+        "The output linter checks that declared P0 values are rendered exactly, which is evidence about one rendering, not about a source-to-output transformation."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "p0-exact-retention",
+          "decides": false,
+          "spec_ref": "ATS-1 11.3.1, 11.11",
+          "vocabulary_source": "none",
+          "description": "Comparing every retained P0 field between source and output requires both artifacts and the authorizations for any intended change."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-PRES-002",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "available_inputs": [],
+      "missing_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "blocking_inputs": [
+        "source_ir",
+        "output_ir",
+        "retention_contract",
+        "authorizations"
+      ],
+      "unavailable_conditions": [
+        "`ats ir lint` evaluates one artifact. Preservation compares a source artifact against an output artifact under a retention contract, and no v0 command constructs that pair."
+      ],
+      "known_limits": [
+        "Section 6.4 makes this rule unwaivable: while it is unavailable, preservation MUST NOT be reported as PASS. The conformance vector reflects that directly.",
+        "The output linter checks that material relations are declared by some rendered block, which establishes declaration, not preservation across a transformation."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "p1-relation-retention",
+          "decides": false,
+          "spec_ref": "ATS-1 11.3.2, 11.11",
+          "vocabulary_source": "none",
+          "description": "Confirming that every retained P1 relation keeps its type, direction, scope, and force requires the source and output meaning ledgers together."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-REF-001",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "text",
+        "syntax",
+        "profile"
+      ],
+      "available_inputs": [
+        "text",
+        "profile"
+      ],
+      "missing_inputs": [
+        "syntax"
+      ],
+      "blocking_inputs": [
+        "syntax"
+      ],
+      "unavailable_conditions": [
+        "The TextIR represents propositions as strings; no syntactic analysis is available, so antecedent candidates cannot be enumerated."
+      ],
+      "known_limits": [
+        "A referential-ambiguity detector belongs on a surface that parses prose. Nothing in the IR distinguishes an unambiguous pronoun from an ambiguous one."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "single-plausible-antecedent",
+          "decides": false,
+          "spec_ref": "ATS-1 10.6",
+          "vocabulary_source": "none",
+          "description": "Counting the plausible antecedents of a pronoun, demonstrative, or elliptical reference requires a syntactic analysis of the sentence."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-REQ-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "requirement_ir"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "requirement_ir"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no requirement objects presents no actor slot to check."
+      ],
+      "known_limits": [
+        "The schema already requires a non-empty actor, so what remains is a concealing actor. Section 9.3.4 permits an actor inherited from a mechanically unambiguous requirement block; the TextIR has no block-inheritance construct, so every requirement must name its own actor here."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "actor-concealed",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.4",
+          "vocabulary_source": "the concealing actor forms quoted from ATS-1 9.3.4 and 21.4",
+          "description": "A requirement's actor slot holds a pronoun or an unresolved generic that conceals which component is responsible."
+        }
+      ],
+      "detector_name": "ats-ir-ats-req-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-REQ-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "syntax",
+        "requirement_ir"
+      ],
+      "available_inputs": [
+        "text",
+        "requirement_ir"
+      ],
+      "missing_inputs": [
+        "syntax"
+      ],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no requirement objects presents no obligation to count."
+      ],
+      "known_limits": [
+        "Coordination is recognised only in the action slot and only through the connective the spec's own nonconforming example uses. Two obligations expressed without a connective are not detected, so a clean run is REVIEW_REQUIRED.",
+        "A coordinated action that is genuinely one indivisible behaviour is a hard negative; declaring `indivisible_actions_justification` suppresses the finding, which is the path Section 9.3.3 provides."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "coordinated-actions-without-indivisibility",
+          "decides": false,
+          "spec_ref": "ATS-1 9.3.3",
+          "vocabulary_source": "the coordination marker in the nonconforming example at ATS-1 9.3.3",
+          "description": "A requirement's action slot coordinates two behaviours and declares no indivisibility justification."
+        }
+      ],
+      "detector_name": "ats-ir-ats-req-002",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule",
+      "input_substitutions": [
+        {
+          "input": "syntax",
+          "substituted_by": "the requirement object's structured action slot",
+          "spec_ref": "ATS-1 9.3.2, 9.3.3",
+          "justification": "Section 9.3.2 requires the action to be a slot in its own right, so counting the behaviours a requirement coordinates reads that slot, not a parse of the surrounding sentence. The substitution covers the slot only: two obligations expressed across separate sentences of the proposition remain undetectable, which the rule's known limits record."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-REQ-003",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "decides",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "requirement_ir"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "requirement_ir"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no requirement objects presents no slots to resolve."
+      ],
+      "known_limits": [
+        "Section 9.3.2 permits omitting a slot that is not applicable, so an absent optional slot is not a violation. What is decided here is that an applicable slot marked unknown is reported, that MUST and MUST NOT carry a non-vacuous acceptance criterion, and that source authority is stated.",
+        "Whether a present acceptance criterion is genuinely verifiable is a semantic judgement left to review; only the forms Section 9.3.9 explicitly rejects are detected mechanically."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "must-without-acceptance-criterion",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.9, 9.3.10",
+          "vocabulary_source": "requirement slots defined in ats_common_v1#/$defs/requirement_slots",
+          "description": "A MUST or MUST NOT requirement carries no acceptance criterion, or carries one of the forms Section 9.3.9 names as not being an acceptance criterion."
+        },
+        {
+          "subcheck_id": "applicable-slot-marked-unknown",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.2",
+          "vocabulary_source": "the literal marker Section 9.3.2 requires for an unknown slot",
+          "description": "A requirement slot is marked unknown. Section 9.3.2 requires the marking and makes it prevent profile conformance."
+        },
+        {
+          "subcheck_id": "requirement-without-source-authority",
+          "decides": true,
+          "spec_ref": "ATS-1 9.3.15",
+          "vocabulary_source": "requirement slots defined in ats_common_v1#/$defs/requirement_slots",
+          "description": "A requirement's source authority is blank, so the obligation's origin is unstated."
+        }
+      ],
+      "detector_name": "ats-ir-ats-req-003",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-SCOPE-001",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "text",
+        "syntax",
+        "meaning_ledger",
+        "profile"
+      ],
+      "available_inputs": [
+        "text",
+        "meaning_ledger",
+        "profile"
+      ],
+      "missing_inputs": [
+        "syntax"
+      ],
+      "blocking_inputs": [
+        "syntax"
+      ],
+      "unavailable_conditions": [
+        "Scope ambiguity is a property of how operators nest in the sentence. The TextIR records the scope an author declared, not the scope the prose admits, so the two cannot be compared without `syntax`."
+      ],
+      "known_limits": [
+        "The IR-level scope obligations that ARE decidable are checked as structural checks IR-POLARITY-QUANTIFIER and IR-QUANT-UNITS, not folded into this rule's result."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "one-action-relevant-interpretation",
+          "decides": false,
+          "spec_ref": "ATS-1 7.6, 10.6",
+          "vocabulary_source": "none",
+          "description": "Deciding whether quantifier, negation, condition, and exclusion scope admit exactly one action-relevant reading requires syntactic nesting."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-TERM-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "glossary"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "glossary"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "The artifact declares no glossary, so no canonical term is available to compare against."
+      ],
+      "known_limits": [
+        "Only synonym drift the glossary already names is detectable. Two undeclared terms for one concept require semantic judgement and are never reported here.",
+        "Absence of a declared alias is reported as REVIEW_REQUIRED, never as conformance."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "deprecated-alias-in-material-claim",
+          "decides": false,
+          "spec_ref": "ATS-1 10.2, 10.3",
+          "vocabulary_source": "the artifact's own glossary `deprecated_aliases`",
+          "description": "A material claim uses a term the artifact's glossary lists as a deprecated alias of a declared canonical term."
+        },
+        {
+          "subcheck_id": "two-entries-one-canonical-term",
+          "decides": false,
+          "spec_ref": "ATS-1 10.2",
+          "vocabulary_source": "the artifact's own glossary",
+          "description": "Two glossary concepts declare the same canonical term within one scope."
+        }
+      ],
+      "detector_name": "ats-ir-ats-term-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-TERM-002",
+      "implemented": false,
+      "surfaces": [],
+      "detector_class": "none",
+      "decision_power": "undecidable",
+      "produces_conformance_evidence": false,
+      "authority": "none",
+      "required_inputs": [
+        "text",
+        "profile",
+        "glossary",
+        "source_text"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "glossary"
+      ],
+      "missing_inputs": [
+        "source_text"
+      ],
+      "blocking_inputs": [
+        "source_text"
+      ],
+      "unavailable_conditions": [
+        "`ats ir lint` receives one TextIR document and no source text, so there is nothing to compare the current wording against."
+      ],
+      "known_limits": [
+        "This rule is decidable only on a transformation surface holding both source and output. The v0 commands never construct that pair."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "substitution-changes-meaning",
+          "decides": false,
+          "spec_ref": "ATS-1 10.4",
+          "vocabulary_source": "none",
+          "description": "Deciding whether a domain term was replaced requires the source text the output was derived from."
+        }
+      ]
+    },
+    {
+      "rule_id": "ATS-TERM-003",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D1",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "audience",
+        "glossary"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "audience",
+        "glossary"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "The artifact declares no audience expertise, so audience policy cannot be consulted."
+      ],
+      "known_limits": [
+        "Expansion is recognised only in the canonical `Expansion (ACR)` form. An expansion carried in prose elsewhere in the document is not detected, so a clean run is REVIEW_REQUIRED rather than PASS.",
+        "Uppercase deontic surfaces (MUST, MAY, CAN) and canonical protected labels (P0, P1, P2) are excluded because ATS-1 defines them; they are not audience acronyms."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "acronym-unexpanded-at-first-material-use",
+          "decides": false,
+          "spec_ref": "ATS-1 10.5",
+          "vocabulary_source": "acronym shape `[A-Z][A-Z0-9]{1,}` plus the artifact's glossary `approved_abbreviations` and `audience.assumed_glossary_refs`",
+          "description": "An acronym's first material use is neither expanded in place as `Expansion (ACR)` nor permitted by the glossary or audience policy."
+        }
+      ],
+      "detector_name": "ats-ir-ats-term-003",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-TIME-001",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "available_inputs": [
+        "text",
+        "profile",
+        "meaning_ledger"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material forecast and no probabilistic judgment states nothing temporally bounded to check."
+      ],
+      "known_limits": [
+        "Whether a non-probabilistic judgment is temporally bounded is a semantic question. Only judgments that carry a likelihood are checked for a horizon, so a clean run is REVIEW_REQUIRED rather than PASS."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "forecast-without-resolution",
+          "decides": true,
+          "spec_ref": "ATS-1 9.2.11",
+          "vocabulary_source": "forecast slots defined in ats_common_v1#/$defs/forecast_slots",
+          "description": "A material forecast declares no resolvable outcome, resolution event, or resolution source, so its probability is not a stable proposition."
+        },
+        {
+          "subcheck_id": "probabilistic-judgment-without-horizon",
+          "decides": false,
+          "spec_ref": "ATS-1 9.2.4",
+          "vocabulary_source": "scope fields defined in ats_common_v1#/$defs/scope",
+          "description": "A material judgment carrying a likelihood declares no time horizon, so the reader cannot tell over what period the probability holds."
+        }
+      ],
+      "detector_name": "ats-ir-ats-time-001",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    },
+    {
+      "rule_id": "ATS-TIME-002",
+      "implemented": true,
+      "surfaces": [
+        "ir"
+      ],
+      "detector_class": "D0",
+      "decision_power": "detects_violations",
+      "produces_conformance_evidence": true,
+      "authority": "conformance_evidence",
+      "required_inputs": [
+        "text",
+        "metadata",
+        "policy"
+      ],
+      "available_inputs": [
+        "text",
+        "metadata",
+        "policy"
+      ],
+      "missing_inputs": [],
+      "blocking_inputs": [],
+      "unavailable_conditions": [
+        "An artifact with no material claims presents no relative-time expression to anchor."
+      ],
+      "known_limits": [
+        "Only the seven expressions Section 10.11 enumerates are matched. A relative reference phrased differently is not detected, so a clean run is REVIEW_REQUIRED.",
+        "An anchor supplied by surrounding document metadata rather than by the claim's own scope is not visible on this surface; Section 10.11 permits such an anchor, so a finding here may be a hard negative and must be adjudicated, not auto-repaired."
+      ],
+      "subchecks": [
+        {
+          "subcheck_id": "unanchored-relative-time",
+          "decides": false,
+          "spec_ref": "ATS-1 10.11",
+          "vocabulary_source": "the relative expressions enumerated verbatim in ATS-1 10.11",
+          "description": "A material claim uses a relative-time expression the specification names while its scope declares no date, event, version, or evidence window to anchor it."
+        }
+      ],
+      "detector_name": "ats-ir-ats-time-002",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
+    }
+  ]
+}

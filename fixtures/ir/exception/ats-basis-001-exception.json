@@ -1,0 +1,62 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-basis-001-exception",
+  "source": {
+    "content_sha256": "b82a247aa4a5b1c2693845729b513b30b7efbc6c766bf5624d3efcc7bcb3139c",
+    "normalized_sha256": "b82a247aa4a5b1c2693845729b513b30b7efbc6c766bf5624d3efcc7bcb3139c",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-basis-001-exception.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-basis-001-exception",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-B1-6",
+          "role": "judgment",
+          "proposition": "The migration will reduce invalid-state defects without changing the acceptance surface.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "basis_policy": {
+    "default_basis": "DERIVED",
+    "declared": true
+  },
+  "extensions": {
+    "policy_exceptions": [
+      {
+        "schema_version": "ats.policy_exception.v1",
+        "exception_id": "EX-DRAFT2-003",
+        "sha256": "33efbd9da75c4dd7f1d81b704922d1a673eddbc0e2281f330dd4d04721101965",
+        "rule_id": "ATS-BASIS-001",
+        "from_state": "required",
+        "to_state": "advisory",
+        "scope": {
+          "artifact_id": "fixture-basis-001-exception"
+        },
+        "rationale": "The judgement is a scoped design recommendation whose basis would duplicate the enclosing rationale; the basis requirement is waived to advisory for this artifact.",
+        "authorized_by": "draft2-fixture-authority",
+        "created_at": "2026-08-07T00:00:00Z"
+      }
+    ]
+  }
+}

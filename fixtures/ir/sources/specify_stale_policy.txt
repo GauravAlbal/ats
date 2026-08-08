@@ -1,0 +1,13 @@
+Requirement ID: REQ-POLICY-017
+
+Statement
+When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt before the acceptance transition.
+
+Acceptance criterion
+Given a receipt with a stale policy_sha256, the verifier returns refused_stale_policy, emits no accepted-change transition, and records the current and presented policy hashes in the rejection receipt.
+
+Authority
+Arq acceptance-policy kernel.
+
+Exception
+None.

@@ -1,0 +1,117 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-pres-003-realized",
+  "source": {
+    "content_sha256": "29060e0b1dc960fd88df4a86dc2bc279033e6497378d2753e55853486272852c",
+    "normalized_sha256": "29060e0b1dc960fd88df4a86dc2bc279033e6497378d2753e55853486272852c",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-pres-003-realized.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-pres-003-realized",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "C-P3-1",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-1",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        },
+        {
+          "claim_id": "C-P3-2",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "C-P3-2",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [
+        {
+          "relation_id": "REL-P3-1",
+          "source_id": "C-P3-1",
+          "type": "depends_on",
+          "target_id": "C-P3-2",
+          "material": true,
+          "dependency_target": "C-P3-2"
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "extensions": {
+    "output_trace": {
+      "schema_version": "ats.output_trace.v1",
+      "artifact_id": "fixture-pres-003-realized",
+      "ir_sha256": "c0672658052034b269c5cd8f076078a745e22933b9628fb63fd526e7450c12fb",
+      "output_sha256": "9797dabd9153bea7e5d80a68112093ccc145b3c0f3a87917b86d407e35f627f4",
+      "policy_snapshot_id": "policy-fixture-draft2",
+      "policy_sha256": "d19949912c13d0dcd296767d09ab084cfacfef7c5175a1947e7384dbec3dfc57",
+      "profiles": [
+        "TRANSFORM"
+      ],
+      "marker_scheme": {
+        "kind": "html_comment",
+        "pattern": "<!-- ats:block {block_id} -->"
+      },
+      "blocks": [
+        {
+          "block_id": "b1",
+          "marker": "<!-- ats:block b1 -->",
+          "ordinal": 0,
+          "text_sha256": "7dc96f776c8423e57a2785489a3f9c43fb6e756876d6ad9a9cac4aa4e72ec193",
+          "material": true,
+          "display_role": "requirement",
+          "section_id": "s1",
+          "claim_ids": [
+            "C-P3-1",
+            "C-P3-2"
+          ],
+          "evidence_ids": [],
+          "relation_ids": [
+            "REL-P3-1"
+          ],
+          "requirement_ids": [],
+          "forecast_ids": [],
+          "p1_relations": [
+            {
+              "relation_id": "REL-P3-1",
+              "type": "depends_on",
+              "direction": "source_to_target"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

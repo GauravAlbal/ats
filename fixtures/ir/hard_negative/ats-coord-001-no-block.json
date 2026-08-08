@@ -1,0 +1,48 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-001-no-block",
+  "source": {
+    "content_sha256": "e3fe16173015588d355f768718da25bb54f7b2ab6dd37a8a3da7d01f11ad3a4c",
+    "normalized_sha256": "e3fe16173015588d355f768718da25bb54f7b2ab6dd37a8a3da7d01f11ad3a4c",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-001-no-block.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-001-no-block",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C001-7",
+          "role": "requirement",
+          "proposition": "The verifier MUST record every accepted transition in the ledger.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C001-7",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "every accepted transition",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete"
+}

@@ -1,0 +1,259 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-composed-profiles",
+  "source": {
+    "content_sha256": "1c4098e4305c49849065f1c430dfdffbbf5df654b20e48377efe7b72cc4aa7d5",
+    "normalized_sha256": "1c4098e4305c49849065f1c430dfdffbbf5df654b20e48377efe7b72cc4aa7d5",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/assess_rust_kernel.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-composed",
+  "language": "en",
+  "audience": {
+    "audience_id": "arq-engineering",
+    "expertise": "expert",
+    "assumed_glossary_refs": [
+      "arq-core-v1"
+    ]
+  },
+  "sections": [
+    {
+      "section_id": "assessment",
+      "heading": "Acceptance-kernel language assessment",
+      "profiles": [
+        "ASSESS"
+      ],
+      "claims": [
+        {
+          "claim_id": "c1",
+          "role": "judgment",
+          "proposition": "A Rust migration is likely (55–80%) to reduce invalid-state defects in the acceptance kernel after the transition model is stable.",
+          "subject": "Rust migration",
+          "material": true,
+          "materiality_rationale": "Could authorize a major migration.",
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq acceptance kernel",
+            "condition": "after the transition model is stable",
+            "time_horizon": "post-stabilization"
+          },
+          "force": {
+            "likelihood": {
+              "kind": "wep",
+              "term": "likely",
+              "display": "likely (55–80%)",
+              "lower": 0.55,
+              "upper": 0.8,
+              "range_shown_inline": true
+            },
+            "assessment_confidence": {
+              "level": "moderate",
+              "basis": {
+                "basis_type": "mixed",
+                "evidence_quality": "mixed",
+                "evidence_coverage": "partial",
+                "source_independence": "partially_independent",
+                "directness": "mixed",
+                "consistency": "convergent",
+                "assumption_sensitivity": "moderate",
+                "environmental_stability": "mixed",
+                "contrary_evidence": "addressed",
+                "rationale": "The type-system argument is direct, but no controlled migration ablation exists."
+              }
+            }
+          },
+          "source_refs": [
+            "e1",
+            "e2"
+          ],
+          "assumption_refs": [
+            "a1"
+          ],
+          "boundary_refs": [
+            "b1"
+          ],
+          "status": "asserted"
+        },
+        {
+          "claim_id": "a1",
+          "role": "assumption",
+          "proposition": "The transition model will remain substantially stable during the migration; if it does not, the port could encode uncertainty rather than remove it.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "b1",
+          "role": "boundary",
+          "proposition": "The assessment does not apply to the policy-fluid orchestration plane.",
+          "material": true,
+          "polarity": "negative",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "alt1",
+          "role": "open_question",
+          "proposition": "Whether a smaller typed Python kernel or generated transition layer captures enough of the benefit at lower migration cost remains unresolved.",
+          "material": true,
+          "polarity": "positive",
+          "status": "unresolved"
+        },
+        {
+          "claim_id": "r1",
+          "role": "recommendation",
+          "proposition": "Prototype one closed transition family before authorizing a broad migration.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e1",
+          "proposition": "Current acceptance failures cluster around illegal intermediate states and stale-policy transitions.",
+          "source": {
+            "source_id": "repo-audit",
+            "source_type": "repository_artifact",
+            "availability": "present",
+            "locator": "audit:acceptance-state"
+          },
+          "availability": "present"
+        },
+        {
+          "evidence_id": "e2",
+          "proposition": "Existing Rust components prevent construction of several invalid states that remain runtime checks in Python.",
+          "source": {
+            "source_id": "rust-components",
+            "source_type": "repository_artifact",
+            "availability": "present",
+            "locator": "repo:rust-kernels"
+          },
+          "availability": "present"
+        },
+        {
+          "evidence_id": "e3",
+          "proposition": "The Python implementation currently supports faster iteration and mature integration coverage.",
+          "source": {
+            "source_id": "python-implementation-history",
+            "source_type": "repository_artifact",
+            "availability": "present",
+            "locator": "repo:python-acceptance-history"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [
+        {
+          "relation_id": "rel1",
+          "source_id": "e1",
+          "type": "supports",
+          "target_id": "c1",
+          "material": true
+        },
+        {
+          "relation_id": "rel2",
+          "source_id": "e2",
+          "type": "supports",
+          "target_id": "c1",
+          "material": true
+        },
+        {
+          "relation_id": "rel3",
+          "source_id": "a1",
+          "type": "condition_for",
+          "target_id": "c1",
+          "material": true
+        },
+        {
+          "relation_id": "rel4",
+          "source_id": "b1",
+          "type": "qualifies",
+          "target_id": "c1",
+          "material": true
+        },
+        {
+          "relation_id": "rel5",
+          "source_id": "e3",
+          "type": "qualifies",
+          "target_id": "c1",
+          "material": true
+        },
+        {
+          "relation_id": "rel6",
+          "source_id": "alt1",
+          "type": "alternative_to",
+          "target_id": "r1",
+          "material": true
+        }
+      ],
+      "update_indicators": [
+        {
+          "indicator_id": "u1",
+          "text": "Downgrade the assessment if the prototype doubles change lead time or requires frequent unsafe escape hatches.",
+          "target_claim_refs": [
+            "c1"
+          ],
+          "effect": "decrease_likelihood"
+        }
+      ]
+    },
+    {
+      "section_id": "adoption-requirement",
+      "heading": "Stale-policy rejection",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-POLICY-017",
+          "role": "requirement",
+          "proposition": "When the executor presents an acceptance receipt whose policy_sha256 differs from the current resolved policy snapshot, the verifier MUST reject the receipt before the acceptance transition.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-POLICY-017",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "acceptance receipt",
+            "trigger": "executor presents an acceptance receipt",
+            "condition": "receipt policy_sha256 differs from the current resolved policy snapshot",
+            "timing": "before the acceptance transition",
+            "exceptions": [],
+            "acceptance_criterion": "A stale-policy fixture returns refused_stale_policy, emits no accepted transition, and records both policy hashes.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "A receipt proves conformance only under the policy used to evaluate it."
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [],
+      "update_indicators": []
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "acceptance-kernel",
+      "canonical_term": "acceptance kernel",
+      "definition": "The closed state-transition component that determines whether evidence authorizes an accepted change.",
+      "scope": "Arq",
+      "audience": "expert"
+    },
+    {
+      "concept_id": "policy-sha256",
+      "canonical_term": "policy_sha256",
+      "definition": "The SHA-256 digest of the JCS-canonical resolved policy snapshot.",
+      "scope": "Arq receipt schema",
+      "audience": "expert"
+    }
+  ],
+  "extraction_status": "complete"
+}

@@ -1,0 +1,27 @@
+Question
+Should Arq move the acceptance kernel from Python to Rust after the state model stabilizes?
+
+Key judgment
+A Rust migration is likely (55-80%) to reduce invalid-state defects in the acceptance kernel after the transition model is stable.
+
+Confidence
+Moderate. Rust can encode closed transitions and construction invariants directly, but the current evidence is architectural and observational rather than a controlled migration ablation.
+
+Supporting evidence
+1. Current acceptance failures cluster around illegal intermediate states and stale-policy transitions.
+2. Existing Rust components have prevented several construction-time invalid states that remain runtime checks in Python.
+
+Contrary evidence and alternatives
+The Python implementation has fast iteration and mature integration coverage.
+
+Assumptions
+The state model will remain substantially stable after the current envelope-expansion work.
+
+Boundary
+This assessment applies to the acceptance kernel.
+
+Update indicators
+Downgrade the likelihood if the prototype doubles iteration time over three representative changes.
+
+Recommendation
+Prototype one closed transition family in Rust before authorizing a broad migration.

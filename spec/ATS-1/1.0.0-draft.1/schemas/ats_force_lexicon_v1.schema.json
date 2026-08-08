@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_force_lexicon_v1.schema.json",
+  "title": "ATS Calibrated Force Lexicon V1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "standard",
+    "spec_version",
+    "likelihood",
+    "assessment_confidence",
+    "evidential_force",
+    "causal_force",
+    "deontic_force"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.force_lexicon.v1"
+    },
+    "standard": {
+      "const": "ATS-1"
+    },
+    "spec_version": {
+      "type": "string"
+    },
+    "likelihood": {
+      "type": "object"
+    },
+    "assessment_confidence": {
+      "type": "object"
+    },
+    "evidential_force": {
+      "type": "object"
+    },
+    "causal_force": {
+      "type": "object"
+    },
+    "deontic_force": {
+      "type": "object"
+    },
+    "collision_rules": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,1160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_instrument_validity_v1.schema.json",
+  "title": "ATS Instrument Validity Report V1",
+  "description": "Each annotation instrument scored against operator-authored Stage 2B gold. Reproducibility (two model passes agreeing) and validity (a pass agreeing with the operator) are different quantities, so `measurements` names all three kinds structurally and says which document establishes each: the two `instrument_*_reproducibility` kinds are cross-referenced to the Stage 2A agreement report by content address and are NOT established here. The two instruments are never pooled. There is no property at any level where a combined, averaged, or overall instrument figure could be written, and `additionalProperties` is false throughout, so adding one is a visible schema change rather than a convenience -- exactly as the agreement report has no field for an overall agreement score. Every metric carries the `n` it was computed over and every ratio carries its numerator and denominator, so a report generated with --allow-partial cannot be read as covering units the operator has not adjudicated (ADR-0002: an absent quantity carries a code and a reason, never a substitute number).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_sha256",
+    "generated_at",
+    "spec_version",
+    "implementation",
+    "measurements",
+    "queue",
+    "gold",
+    "coverage",
+    "exposure",
+    "vocabularies",
+    "instruments",
+    "profile_instruments",
+    "findings",
+    "assessment"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "ats.instrument_validity.v1"
+    },
+    "report_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256",
+      "description": "Content address over this document with this field removed."
+    },
+    "generated_at": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "spec_version": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "implementation": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "measurements": {
+      "type": "array",
+      "description": "What each named quantity is, and which document establishes it. Mandatory and structural: a reader who sees a validity figure must not be able to read it as a reproducibility figure.",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "role",
+          "established_by",
+          "separable_by_instrument",
+          "statement",
+          "cross_reference"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "instrument_a_reproducibility",
+              "instrument_b_reproducibility",
+              "instrument_to_operator_validity"
+            ]
+          },
+          "role": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "enum": [
+                  "a",
+                  "b"
+                ]
+              }
+            ],
+            "description": "The instrument this kind is about, or null when the kind is about the comparison rather than one instrument."
+          },
+          "established_by": {
+            "enum": [
+              "this_report",
+              "cross_reference"
+            ],
+            "description": "`cross_reference` means the quantity is named here so it cannot be confused with a validity figure, and measured elsewhere."
+          },
+          "separable_by_instrument": {
+            "type": "boolean",
+            "description": "False for the reproducibility kinds: the Stage 2A report compares a against b, so it bounds the pair jointly and neither instrument's reproducibility is separable from the other's."
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cross_reference": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/cross_reference"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "queue": {
+      "type": "object",
+      "description": "The sealed adjudication queue naming the units. Gold records that do not point at a queue unit are refused on load, so the queue is the provenance of every figure here.",
+      "required": [
+        "path",
+        "queue_id",
+        "record_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "queue_id": {
+          "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+        },
+        "record_sha256": {
+          "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+        }
+      }
+    },
+    "gold": {
+      "type": "object",
+      "description": "The operator-authored gold file this report is measured against. Operator-authored is structural: ats.corpus.gold.validate_record refuses an adjudicator whose kind is not human.",
+      "required": [
+        "path",
+        "available",
+        "file_sha256",
+        "records",
+        "unavailable_reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "file_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+            }
+          ]
+        },
+        "records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unavailable_reason": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/unavailability"
+            }
+          ]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Adjudicated against required, per unit kind, at the top level. There is no mode in which the report narrows silently: a partial report says so here, and every metric below carries its own n.",
+      "required": [
+        "partial",
+        "allow_partial",
+        "adjudicated",
+        "required",
+        "by_unit_kind",
+        "statement"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "partial": {
+          "type": "boolean"
+        },
+        "allow_partial": {
+          "type": "boolean"
+        },
+        "adjudicated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "by_unit_kind": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "unit_kind",
+              "required",
+              "adjudicated",
+              "source_only_awaiting_review",
+              "unstarted",
+              "excluded_by_operator",
+              "scored",
+              "complete"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "unit_kind": {
+                "enum": [
+                  "conformance",
+                  "profile"
+                ]
+              },
+              "required": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "adjudicated": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_only_awaiting_review": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "unstarted": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "excluded_by_operator": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "scored": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "complete": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "vocabularies": {
+      "type": "object",
+      "description": "Every closed vocabulary the figures are expressed in, plus the two mappings that decide which denominator a claim is charged against. Published rather than applied silently.",
+      "required": [
+        "instrument_labels",
+        "gold_dispositions",
+        "profile_dispositions",
+        "applicability_classes",
+        "confidence_bins",
+        "gold_applicability_map",
+        "label_equivalence",
+        "unavailability_codes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "instrument_labels": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "gold_dispositions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "profile_dispositions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "applicability_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "applicable",
+              "not_applicable",
+              "undetermined"
+            ]
+          }
+        },
+        "confidence_bins": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "low",
+              "moderate",
+              "high"
+            ]
+          }
+        },
+        "gold_applicability_map": {
+          "type": "array",
+          "description": "Gold disposition to applicability class. `hard_negative` reads as applicable here and as not_applicable in the agreement report's label fallback; the two answer different questions and both are published.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "gold_disposition",
+              "applicability_class"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "gold_disposition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "applicability_class": {
+                "enum": [
+                  "applicable",
+                  "not_applicable",
+                  "undetermined"
+                ]
+              }
+            }
+          }
+        },
+        "label_equivalence": {
+          "type": "array",
+          "description": "Instrument label to the gold disposition making the same claim.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "instrument_label",
+              "gold_disposition"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "instrument_label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gold_disposition": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "unavailability_codes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "code",
+              "meaning"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "$ref": "#/$defs/unavailability_code"
+              },
+              "meaning": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "instruments": {
+      "type": "array",
+      "description": "One block per conformance instrument, in fixed role order. Exactly two, and nothing outside these blocks summarises them: an average over two instruments that Stage 2A showed do not reproduce each other would describe neither.",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/instrument_block"
+      }
+    },
+    "profile_instruments": {
+      "type": "array",
+      "description": "One block per reconnaissance instrument, scored against the six-value profile vocabulary. Separate from the conformance blocks because a profile classification and a conformance label are different decisions.",
+      "items": {
+        "$ref": "#/$defs/profile_block"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "severity",
+          "subject",
+          "detail"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "enum": [
+              "blocking",
+              "concern"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "detail": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "required": [
+        "status",
+        "reasons",
+        "pooled_refusal"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "insufficient_evidence",
+            "blocking_concerns",
+            "concerns_present",
+            "no_concerns_detected"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "pooled_refusal": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this document reports no combined instrument figure. Required so that adding one later is a visible schema change rather than a convenience."
+        }
+      }
+    },
+    "exposure": {
+      "description": "Blinding breaches joined from the exposure log beside the gold file, keyed by unit. The log is the authority: a gold row recorded before its breach was logged carries no prior_exposure field, so a consumer that trusts the row field scores a breached unit as clean. This block is what downstream weighting and filtering reads.",
+      "type": "object",
+      "required": [
+        "log_available",
+        "log_path",
+        "exposed_units",
+        "exposed_in_scored_set",
+        "note"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "log_available": {
+          "type": "boolean"
+        },
+        "log_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "exposed_units": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "unit_id",
+              "code"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "unit_id": {
+                "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "exposed_in_scored_set": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "unavailability_code": {
+      "enum": [
+        "gold_partial",
+        "no_unit_satisfied_condition",
+        "zero_denominator",
+        "confidence_bin_empty",
+        "instrument_never_judged",
+        "no_operator_evidence",
+        "no_spans_comparable",
+        "agreement_report_absent",
+        "rounds_absent"
+      ]
+    },
+    "unavailability": {
+      "type": "object",
+      "description": "Why a quantity could not be computed. A code from the closed vocabulary plus the specific detail; never a substitute number.",
+      "required": [
+        "code",
+        "detail"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/unavailability_code"
+        },
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "cross_reference": {
+      "type": "object",
+      "description": "A measurement established by another document, bound by content address so the reader can verify which one.",
+      "required": [
+        "path",
+        "available",
+        "schema_version",
+        "report_sha256",
+        "unavailable_reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "schema_version": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "report_sha256": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+            }
+          ]
+        },
+        "unavailable_reason": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/unavailability"
+            }
+          ]
+        }
+      }
+    },
+    "ratio": {
+      "type": "object",
+      "description": "One rate with the two counts it was computed from. A zero denominator yields an unavailability, never 0.0.",
+      "required": [
+        "name",
+        "numerator",
+        "denominator",
+        "available",
+        "value",
+        "unavailable_reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "numerator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "denominator": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0
+            }
+          ]
+        },
+        "unavailable_reason": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/unavailability"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "available": {
+                "const": true
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "unavailable_reason": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "available": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "null"
+              },
+              "unavailable_reason": {
+                "$ref": "#/$defs/unavailability"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "confusion": {
+      "type": "object",
+      "description": "Instrument against operator gold. The axes are named so the table cannot be read transposed.",
+      "required": [
+        "row_axis",
+        "column_axis",
+        "rows",
+        "columns",
+        "table"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "row_axis": {
+          "const": "instrument"
+        },
+        "column_axis": {
+          "const": "operator_gold"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "table": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "class_row": {
+      "type": "object",
+      "required": [
+        "class",
+        "instrument_count",
+        "gold_count",
+        "agreements",
+        "precision",
+        "recall",
+        "f1"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instrument_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gold_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agreements": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "precision": {
+          "$ref": "#/$defs/ratio"
+        },
+        "recall": {
+          "$ref": "#/$defs/ratio"
+        },
+        "f1": {
+          "$ref": "#/$defs/ratio"
+        }
+      }
+    },
+    "confidence_bin": {
+      "type": "object",
+      "description": "One declared confidence level. A level the instrument never used carries an unavailable accuracy, never 0.0.",
+      "required": [
+        "confidence",
+        "n",
+        "matches",
+        "accuracy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accuracy": {
+          "$ref": "#/$defs/ratio"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "description": "One axis of the validity vector. `n` is required on every metric, including an unavailable one, so no figure can be read without the count it rests on.",
+      "required": [
+        "metric",
+        "question",
+        "unit_of_analysis",
+        "n",
+        "available",
+        "unavailable_reason",
+        "rates",
+        "confusion",
+        "per_class",
+        "bins",
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "enum": [
+            "applicability",
+            "label_accuracy_given_both_applicable",
+            "ambiguity",
+            "context_insufficiency",
+            "evidence_span_token_f1",
+            "confidence_calibration",
+            "profile_classification"
+          ]
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unit_of_analysis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "available": {
+          "type": "boolean"
+        },
+        "unavailable_reason": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/unavailability"
+            }
+          ]
+        },
+        "rates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ratio"
+          }
+        },
+        "confusion": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/confusion"
+            }
+          ]
+        },
+        "per_class": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/class_row"
+          }
+        },
+        "bins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/confidence_bin"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "counts": {
+          "type": "object",
+          "description": "The four cells behind a binary claim's precision and recall.",
+          "required": [
+            "true_positive",
+            "false_positive",
+            "false_negative",
+            "true_negative"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "true_positive": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "false_positive": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "false_negative": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "true_negative": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "operator_evidence": {
+          "type": "object",
+          "description": "How many units carried operator offsets, and which stage supplied them. The disagreement review is authority-bearing; an offset cited only in the source-only pass was never withdrawn, so it is used and counted separately.",
+          "required": [
+            "units_with_operator_offsets",
+            "from_disagreement_review",
+            "from_source_only"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "units_with_operator_offsets": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "from_disagreement_review": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "from_source_only": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "reason",
+              "count",
+              "detail"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "detail": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "macro_token_f1": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0
+            }
+          ],
+          "description": "Unweighted mean of the per-unit F1 scores, reported beside the micro figure rather than instead of it."
+        },
+        "declined_without_confidence": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "In-scope units the instrument declined. They carry no confidence and are outside every bin rather than being counted in the weakest one."
+        }
+      }
+    },
+    "rule_error_row": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "n",
+        "matches",
+        "mismatches",
+        "mismatch_rate",
+        "by_outcome_pair"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "matches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mismatches": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mismatch_rate": {
+          "$ref": "#/$defs/ratio"
+        },
+        "by_outcome_pair": {
+          "type": "array",
+          "description": "Mismatches by (instrument outcome, gold disposition). A declined unit reports `declined_<applicability>`, keeping a refusal to judge separable from a wrong label.",
+          "items": {
+            "type": "object",
+            "required": [
+              "instrument",
+              "gold",
+              "count"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "instrument": {
+                "type": "string",
+                "minLength": 1
+              },
+              "gold": {
+                "type": "string",
+                "minLength": 1
+              },
+              "count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "instrument_block": {
+      "type": "object",
+      "required": [
+        "role",
+        "annotator_id",
+        "units_scored",
+        "metrics",
+        "error_type_by_rule"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "a",
+            "b"
+          ]
+        },
+        "annotator_id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "units_scored": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {
+            "$ref": "#/$defs/metric"
+          }
+        },
+        "error_type_by_rule": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rule_error_row"
+          }
+        }
+      }
+    },
+    "profile_block": {
+      "type": "object",
+      "required": [
+        "annotator_id",
+        "units_scored",
+        "metrics"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "annotator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "units_scored": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "metrics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/metric"
+          }
+        }
+      }
+    }
+  }
+}

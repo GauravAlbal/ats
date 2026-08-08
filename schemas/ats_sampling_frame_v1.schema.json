@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_sampling_frame_v1.schema.json",
+  "title": "ATS Sampling Frame V1",
+  "description": "The selection of context bundles for a governed annotation round, with the mechanism that selected each one. Balancing is on sampling mechanism and candidate source, never on a presumed conformance outcome: a frame balanced by expected label would decide the question the annotation exists to answer. A constraint that cannot be met is reported unmet rather than quietly relaxed (spec Sections 17.5, 17.7).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "frame_id",
+    "generated_at",
+    "policy",
+    "authority",
+    "strata",
+    "selection",
+    "constraints",
+    "blinding"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.sampling_frame.v1" },
+    "frame_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "generated_at": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "corpus_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "policy": {
+      "type": "object",
+      "required": ["seed", "target_size"],
+      "properties": {
+        "seed": {
+          "description": "Selection is deterministic given the corpus and this seed, so a frame can be rebuilt and disputed.",
+          "type": "integer"
+        },
+        "target_size": { "type": "integer", "minimum": 1 },
+        "double_annotation_target": {
+          "description": "How many of the selected bundles receive two independent judgments.",
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "authority": {
+      "description": "Which repositories were authorised for annotation, and under what declaration. A bundle drawn from an unauthorised repository is a governance failure, not a sampling choice.",
+      "type": "object",
+      "required": ["authorised_repositories", "required_uses"],
+      "properties": {
+        "authorised_repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "One authorised repository, with the provenance of the declaration that authorised it. The permission alone is not enough: an operator overlay and a repository's own declaration can authorise identically, and a frame that recorded only the permission would read as though the repository owner had declared in place. `repository_owned` is derived from where the declaration was found, never from the basis it claims.",
+            "required": [
+              "repository",
+              "revision",
+              "declaration_location",
+              "repository_owned",
+              "principal",
+              "authority_basis",
+              "issued_at",
+              "review_after",
+              "review_status",
+              "superseded_by"
+            ],
+            "properties": {
+              "repository": { "type": "string", "minLength": 1 },
+              "revision": { "type": "string", "minLength": 7 },
+              "declaration_location": { "enum": ["repository", "pilot_overlay"] },
+              "repository_owned": {
+                "description": "True only for a declaration read from the repository's own .ats/corpus.json. An overlay is false here even when its basis is `owner_declared`, because the basis is a claim and the location is an observation.",
+                "type": "boolean"
+              },
+              "principal": { "type": ["string", "null"], "minLength": 1 },
+              "authority_basis": { "type": "string", "minLength": 1 },
+              "issued_at": { "type": ["string", "null"] },
+              "review_after": {
+                "description": "When the declaration must be revisited. An overlay that never expires is permanent governance nobody re-consented to, so the frame records the date it comes due.",
+                "type": ["string", "null"]
+              },
+              "review_status": {
+                "enum": ["current", "overdue", "unchecked", "not_applicable"]
+              },
+              "superseded_by": { "type": ["string", "null"], "minLength": 1 },
+              "declaration_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required_uses": {
+          "description": "The uses every selected bundle had to have been authorised for.",
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "excluded_repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["repository", "reason"],
+            "properties": {
+              "repository": { "type": "string" },
+              "reason": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "strata": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["stratum", "target", "selected", "rationale"],
+        "properties": {
+          "stratum": {
+            "description": "The mechanism that produced the candidate. `low_signal_random_control` is not filler: without it there is no way to estimate how enriched mining is relative to ordinary prose.",
+            "enum": [
+              "natural_rule_candidate",
+              "surface_cue_hard_negative",
+              "low_signal_random_control",
+              "revision_derived_candidate",
+              "zero_candidate_rule_probe"
+            ]
+          },
+          "target": { "type": "integer", "minimum": 0 },
+          "selected": { "type": "integer", "minimum": 0 },
+          "shortfall_reason": {
+            "description": "Required whenever selected is below target. A stratum that could not be filled says why rather than appearing complete.",
+            "type": "string"
+          },
+          "rationale": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "selection": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "bundle_id",
+          "source_artifact_id",
+          "repository",
+          "stratum",
+          "candidate_source",
+          "split_group"
+        ],
+        "properties": {
+          "bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+          "source_artifact_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+          "repository": { "type": "string", "minLength": 1 },
+          "document_family": { "type": "string" },
+          "domain": { "type": "string" },
+          "stratum": { "type": "string", "minLength": 1 },
+          "candidate_source": {
+            "description": "What surfaced this span. Recorded so agreement can be read per mechanism rather than pooled.",
+            "type": "string",
+            "minLength": 1
+          },
+          "candidate_rule_ids": {
+            "description": "Rules a detector flagged as possibly applicable. A candidate is not a finding and not a label.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "profile_hypotheses": { "type": "array", "items": { "type": "string" } },
+          "split_group": {
+            "description": "The leakage-closure component this bundle belongs to, so a frame cannot place two members of one component on opposite sides of a later split.",
+            "type": "string",
+            "minLength": 1
+          },
+          "content_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+          "near_duplicate_cluster": { "type": "string" },
+          "template_family": { "type": "string" },
+          "review_state": { "type": "string" },
+          "double_annotated": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "description": "Every distribution constraint, met or not. An unmet constraint is a finding about the corpus and stays visible.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["constraint", "satisfied", "detail"],
+        "properties": {
+          "constraint": { "type": "string", "minLength": 1 },
+          "target": { "type": "string" },
+          "observed": { "type": "string" },
+          "satisfied": { "type": "boolean" },
+          "unsatisfiable": {
+            "description": "True when the corpus cannot satisfy the constraint at any sample size, as opposed to this draw having missed it.",
+            "type": "boolean"
+          },
+          "expectation_withdrawn": {
+            "description": "Present only on a row demoted from a requirement to an observation. Records the expectation this row no longer asserts, who withdrew it, and why, so a satisfied observation cannot be mistaken for a requirement that was met. A row carrying this key MUST NOT carry 'unsatisfiable': there is no longer a constraint for the corpus to be unable to satisfy.",
+            "type": "object",
+            "required": ["expectation", "withdrawn_by", "reason", "reference"],
+            "properties": {
+              "expectation": { "type": "string", "minLength": 1 },
+              "withdrawn_by": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 },
+              "reference": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          },
+          "detail": { "type": "string", "minLength": 1 }
+        },
+        "dependentSchemas": {
+          "expectation_withdrawn": { "not": { "required": ["unsatisfiable"] } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "blinding": {
+      "description": "What is withheld from annotators. A miner prediction is not a gold label, and showing it would anchor the judgment it is supposed to be tested against.",
+      "type": "object",
+      "required": ["withheld_from_annotator"],
+      "properties": {
+        "withheld_from_annotator": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "rationale": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

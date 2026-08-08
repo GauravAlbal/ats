@@ -1,0 +1,46 @@
+{
+  "schema_version": "ats.policy_snapshot.v1",
+  "snapshot_id": "policy-fixture-scoped-exception",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "created_at": "2026-08-03T00:00:00Z",
+  "profiles": [
+    "ASSESS"
+  ],
+  "audience": {
+    "expertise": "expert",
+    "audience_id": "arq-engineering",
+    "locale": "en-US"
+  },
+  "glossary_refs": [
+    "arq-core-v1"
+  ],
+  "lexicon_refs": [
+    "ats_force_lexicon_v1"
+  ],
+  "rule_overrides": {},
+  "exceptions": [
+    {
+      "schema_version": "ats.policy_exception.v1",
+      "exception_id": "exc-epi-002-fixture",
+      "rule_id": "ATS-EPI-002",
+      "from_state": "required",
+      "to_state": "advisory",
+      "scope": {
+        "artifact_id": "fixture-assess-rust-kernel"
+      },
+      "rationale": "The persistent probability scale is visible in the reviewing interface for this artifact, which is the condition Appendix E question 2 leaves open.",
+      "authorized_by": "arq-acceptance-policy-owner",
+      "created_at": "2026-08-03T00:00:00Z",
+      "expires_at": "2027-08-03T00:00:00Z",
+      "sha256": "0b941d0ac8dc7674a6ea0ea1856a794333c8ef39e63606372e86b8ec7171c339"
+    }
+  ],
+  "finding_budget": {
+    "guardrail": "all_critical",
+    "coach": 5
+  },
+  "model_artifacts": [],
+  "fallback_policy": "fail_closed",
+  "snapshot_sha256": "c5d0b01c661f082e35e3bc9ca8266f593e7b51fab8514a48064909213d1831e2"
+}

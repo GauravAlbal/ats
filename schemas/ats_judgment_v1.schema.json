@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_judgment_v1.schema.json",
+  "title": "ATS Corpus Judgment V1",
+  "description": "One independent annotator judgment about one example under one rule. Append-only. `annotation_confidence` is confidence in the label; it is NOT ATS assessment confidence and MUST NOT be rendered as such (spec Sections 4.8, 4.9, 13.5).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "judgment_id",
+    "example_id",
+    "annotator_id",
+    "rule_id",
+    "rule_version",
+    "profile",
+    "label",
+    "rationale",
+    "evidence_spans",
+    "protected_impact",
+    "annotation_confidence",
+    "requested_additional_context",
+    "ambiguity_category",
+    "timestamp",
+    "tool_version"
+  ],
+  "properties": {
+    "schema_version": { "const": "ats.judgment.v1" },
+    "judgment_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "record_sha256": { "$ref": "ats_common_v1.schema.json#/$defs/sha256" },
+    "example_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "context_bundle_id": { "$ref": "ats_common_v1.schema.json#/$defs/identifier" },
+    "annotator_id": { "type": "string", "minLength": 1 },
+    "rule_id": { "type": "string", "pattern": "^ATS-[A-Z]+-[0-9]{3}$" },
+    "rule_version": { "type": "string", "minLength": 1 },
+    "profile": { "$ref": "ats_common_v1.schema.json#/$defs/profile" },
+    "label": {
+      "enum": [
+        "conforming",
+        "violation",
+        "near_miss",
+        "hard_negative",
+        "exception",
+        "ambiguous",
+        "insufficient_context"
+      ]
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "MUST be tied to the normative rule text, not to personal style preference."
+    },
+    "normative_statement_quoted": { "type": "string" },
+    "evidence_spans": {
+      "type": "array",
+      "items": { "$ref": "ats_common_v1.schema.json#/$defs/span" }
+    },
+    "protected_impact": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["P0", "P1", "P2"] }
+    },
+    "annotation_confidence": {
+      "enum": ["low", "moderate", "high"],
+      "description": "Confidence in the label. Not ATS assessment confidence."
+    },
+    "requested_additional_context": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "ambiguity_category": {
+      "enum": [
+        "none",
+        "source_ambiguity",
+        "standard_ambiguity",
+        "profile_ambiguity",
+        "policy_ambiguity",
+        "rule_boundary",
+        "multiple_valid_interpretations"
+      ]
+    },
+    "blind": {
+      "type": "boolean",
+      "description": "True when the annotator had no access to another annotator's label at submission."
+    },
+    "timestamp": { "$ref": "ats_common_v1.schema.json#/$defs/timestamp" },
+    "tool_version": { "type": "string", "minLength": 1 },
+    "extensions": { "type": "object" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "label": { "const": "insufficient_context" } }, "required": ["label"] },
+      "then": {
+        "properties": { "requested_additional_context": { "minItems": 1 } },
+        "description": "An insufficient-context label MUST name what is missing."
+      }
+    },
+    {
+      "if": { "properties": { "label": { "const": "ambiguous" } }, "required": ["label"] },
+      "then": {
+        "properties": { "ambiguity_category": { "not": { "const": "none" } } }
+      }
+    },
+    {
+      "if": { "properties": { "label": { "const": "violation" } }, "required": ["label"] },
+      "then": { "properties": { "evidence_spans": { "minItems": 1 } } }
+    }
+  ],
+  "additionalProperties": false
+}

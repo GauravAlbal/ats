@@ -1,0 +1,76 @@
+{
+  "schema_version": "ats.preservation_report.v1",
+  "report_id": "preservation-selector-summary",
+  "source_artifact_id": "selector-assessment",
+  "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "output_artifact_id": "selector-summary",
+  "output_sha256": "4444444444444444444444444444444444444444444444444444444444444444",
+  "policy_snapshot_id": "policy-example-assess",
+  "retention_contract_id": "retention-selector-summary",
+  "transformation_class": "summarize",
+  "p0_checks": [
+    {
+      "field_ref": "C1.likelihood",
+      "status": "preserved",
+      "source_value": "likely",
+      "output_value": "likely"
+    },
+    {
+      "field_ref": "C1.scope",
+      "status": "preserved",
+      "source_value": "multi-topic conceptual queries",
+      "output_value": "multi-topic conceptual queries"
+    }
+  ],
+  "p1_checks": [
+    {
+      "relation_ref": "C2-qualifies-C1",
+      "status": "preserved",
+      "notes": "Rendered with “but”."
+    }
+  ],
+  "semantic_deltas": [
+    {
+      "delta_id": "d1",
+      "type": "omitted",
+      "material": false,
+      "source_ref": "C3",
+      "notes": "Authorized by retention contract."
+    },
+    {
+      "delta_id": "d2",
+      "type": "preserved",
+      "material": true,
+      "source_ref": "C1",
+      "output_ref": "S1"
+    }
+  ],
+  "unsupported_material_additions": [],
+  "question_results": [
+    {
+      "question": "Can the selector recover missing lexical candidates?",
+      "source_answerable": true,
+      "output_answerable": true,
+      "status": "pass"
+    },
+    {
+      "question": "What test should run next?",
+      "source_answerable": true,
+      "output_answerable": true,
+      "status": "pass"
+    }
+  ],
+  "status": "PASS",
+  "verified_by": [
+    {
+      "name": "arqtext-delta",
+      "version": "0.1.0",
+      "class": "D4",
+      "detector_status": "probabilistic",
+      "detector_confidence": 0.97,
+      "run_id": "run-delta-example",
+      "authority": "conformance_evidence",
+      "authority_basis_ref": "validation:ats-draft1-preservation-suite"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "fixture-coord-002-unique",
+  "source": {
+    "content_sha256": "6f2928418d3255d07e4f1bfcd891420f875c1010f3f83132b6a45d5a37d67519",
+    "normalized_sha256": "6f2928418d3255d07e4f1bfcd891420f875c1010f3f83132b6a45d5a37d67519",
+    "media_type": "text/plain",
+    "locator": "fixtures/ir/sources/fixture-coord-002-unique.txt"
+  },
+  "policy_snapshot_id": "policy-fixture-draft2",
+  "language": "en",
+  "audience": {
+    "audience_id": "draft2-fixture-audience",
+    "expertise": "expert"
+  },
+  "sections": [
+    {
+      "section_id": "s1",
+      "heading": "fixture-coord-002-unique",
+      "profiles": [
+        "SPECIFY",
+        "TRANSFORM"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-C002-1",
+          "role": "requirement",
+          "proposition": "The verifier MUST reject a stale acceptance receipt before the transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-1",
+            "deontic": "MUST",
+            "action": "reject",
+            "object": "stale acceptance receipt",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "verifier",
+            "acceptance_criterion_id": "AC-C002-1"
+          }
+        },
+        {
+          "claim_id": "REQ-C002-2",
+          "role": "requirement",
+          "proposition": "The executor MUST archive the audit trail before settlement.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-C002-2",
+            "deontic": "MUST",
+            "action": "archive",
+            "object": "the audit trail",
+            "source_authority": "Arq acceptance kernel",
+            "actor": "executor"
+          }
+        }
+      ],
+      "evidence": [],
+      "relations": [
+        {
+          "relation_id": "REL-C002-1",
+          "source_id": "REQ-C002-1",
+          "type": "depends_on",
+          "target_id": "REQ-C002-2",
+          "material": true,
+          "dependency_target": "REQ-C002-2"
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "extraction_status": "complete",
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-1",
+      "source_pointer": "#/sections/0/claims/0"
+    },
+    {
+      "kind": "requirement_id",
+      "id": "REQ-C002-2",
+      "source_pointer": "#/sections/0/claims/1"
+    },
+    {
+      "kind": "acceptance_criterion_id",
+      "id": "AC-C002-1",
+      "source_pointer": "#/sections/0/claims/0/requirement/acceptance_criterion_id"
+    }
+  ]
+}

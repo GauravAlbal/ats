@@ -1,0 +1,39 @@
+{
+  "schema_version": "ats.retention_contract.v1",
+  "contract_id": "retention-selector-summary",
+  "source_artifact_id": "selector-assessment",
+  "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+  "reader_task": "decide_next_test",
+  "transformation_class": "summarize",
+  "target_length": 75,
+  "mandatory_claims": [
+    "C1",
+    "C2",
+    "C4"
+  ],
+  "mandatory_fields": {
+    "C1": [
+      "scope",
+      "likelihood"
+    ]
+  },
+  "mandatory_relations": [
+    {
+      "source_id": "C2",
+      "type": "qualifies",
+      "target_id": "C1"
+    }
+  ],
+  "allowed_omissions": [
+    "C3"
+  ],
+  "required_caveats": [
+    "The selector cannot recover candidates absent from lexical retrieval."
+  ],
+  "required_questions": [
+    "Can the selector recover missing lexical candidates?",
+    "What test should run next?"
+  ],
+  "created_by": "example-author",
+  "created_at": "2026-08-02T22:00:00Z"
+}
