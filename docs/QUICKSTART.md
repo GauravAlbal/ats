@@ -3,10 +3,10 @@
 This path uses only a clean clone, Python 3.12 or newer, and the files in this
 repository. It does not require a private repository, hosted service,
 credential, sibling checkout, or developer-specific environment variable.
-This checkout carries the `0.1.2` skill-pack candidate; released `0.1.1`
-remains available under `v0.1.1-skill-pack`. Canonical source comes first:
-update the public skills and recipes, then generate and verify the host forms;
-do not hand-edit `dist/skill-pack/`.
+This checkout carries the current `0.1.2` skill-pack release under
+`v0.1.2-skill-pack`; release `0.1.1` remains available as the previous release.
+Canonical source comes first: update the public skills and recipes, then
+generate and verify the host forms; do not hand-edit `dist/skill-pack/`.
 
 ## 1. Clone and install
 

@@ -182,7 +182,7 @@ them rather than restating the full 36-rule registry. Their public contract is
 |---|---|---|
 | ATS-1 standard | `1.0.0-draft.2` (new authoring) / `1.0.0-draft.1` (legacy interpretation) | The normative edition an artifact is judged against. |
 | ATS implementation | `0.5.0` | The runtime/CLI that validates, lints, renders, and receipts. |
-| ATS skill pack | `0.1.2` candidate | The public skill surface and its packaging. |
+| ATS skill pack | `0.1.2` | The released public skill surface and its packaging. |
 
 The three answer different questions and change on different cadences: the
 standard moves when the normative text moves, the implementation moves when
@@ -194,10 +194,9 @@ including older editions it can safely review or transform, rather than being
 pinned to one. The pack version is a dedicated constant
 (`SKILL_PACK_VERSION`) stamped in the pack manifest and in every generated
 host package, so an installed pack's identity is always verifiable.
-Release `0.1.1` remains published under `v0.1.1-skill-pack`. Candidate `0.1.2`
-repairs portable recipe lookup and receives a distinct signed tag only after
-its gates pass. Canonical source comes first: complete the public skills and
-recipes, generate the host forms, and verify their manifest.
+Release `0.1.2` is published under `v0.1.2-skill-pack`; release `0.1.1` remains
+available as the previous release. Canonical source comes first: complete the
+public skills and recipes, generate the host forms, and verify their manifest.
 
 ## Authority precedence
 

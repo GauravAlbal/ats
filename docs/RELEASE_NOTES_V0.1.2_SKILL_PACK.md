@@ -1,8 +1,8 @@
 # ATS Skill Pack 0.1.2
 
-**Status:** release candidate. A distinct SSH-signed annotated tag
-`v0.1.2-skill-pack` is created only after the exact generated candidate passes
-hosted CI and the fresh-clone publication gate.
+**Status:** released 2026-08-08 under the SSH-signed annotated tag
+`v0.1.2-skill-pack`, targeting generated commit
+`5329397b1ce5725616e9e6261fe29307967434b2`.
 
 ## Why this patch exists
 
@@ -89,9 +89,9 @@ is not registered with the account as a signing key. The repository-bound
 `.github/allowed_signers` file is the public trust anchor; the project does not
 claim a provider-verified badge.
 
-## Candidate gate
+## Publication receipt
 
-Before `v0.1.2-skill-pack` is created, the exact generated candidate must pass:
+Before `v0.1.2-skill-pack` was created, the exact generated candidate passed:
 
 - repository validation;
 - the complete test suite and standalone isolated-pack capstone;
@@ -101,7 +101,7 @@ Before `v0.1.2-skill-pack` is created, the exact generated candidate must pass:
 - hosted `public-gate`; and
 - a fresh-clone repetition of the full publication gate.
 
-After those checks, the release will carry a new source archive, standalone
-skill-pack archive, and `SHA256SUMS`. The tag will point to the generated-pack
-commit. GitHub ruleset `Immutable release tags` permits its initial creation
+The release carries a new source archive, standalone skill-pack archive, and
+`SHA256SUMS`. The tag points to the generated-pack commit. GitHub ruleset
+`Immutable release tags` permits its initial creation
 and blocks later updates or deletion for `refs/tags/v*`.

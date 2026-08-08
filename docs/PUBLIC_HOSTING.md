@@ -10,8 +10,8 @@ The selected licensing split is recorded in
 implementation, public skills, repository-local schemas and machine-readable
 assets, tools, tests, and generated assets; CC-BY-4.0 covers ATS-1 normative
 text/package material and repository-authored documentation. Skill-pack version
-`0.1.2` is the current release candidate; published release `0.1.1` remains
-under the SSH-signed annotated tag `v0.1.1-skill-pack`.
+`0.1.2` is the current release under the SSH-signed annotated tag
+`v0.1.2-skill-pack`; release `0.1.1` remains available as the previous release.
 
 ## Current release facts
 
@@ -19,8 +19,8 @@ These facts are recorded from the repository and hosting provider:
 
 - The default branch is `master`.
 - The Python implementation version is `0.5.0` (`pyproject.toml`).
-- The public skill-pack candidate is `0.1.2`; its generated manifest must record
-  canonical source commit and tree hash.
+- The current public skill-pack release is `0.1.2`; its generated manifest
+  records canonical source commit and tree hash.
 - Canonical source is committed before generated `dist/skill-pack/` output.
 - New durable authoring uses ATS-1 `1.0.0-draft.2`; historical unlabeled material remains ATS-1 `1.0.0-draft.1` unless explicitly migrated.
 - The public workflow at `.github/workflows/public-ci.yml` is named `Public
@@ -99,8 +99,8 @@ identities:
 - ATS-1 standard: `1.0.0-draft.2` for new authoring and
   `1.0.0-draft.1` for legacy interpretation;
 - implementation: `0.5.0`; and
-- skill pack: `0.1.2` candidate; current release `0.1.1` is
-  `v0.1.1-skill-pack`.
+- skill pack: current release `0.1.2` is `v0.1.2-skill-pack`; previous release
+  `0.1.1` remains available as `v0.1.1-skill-pack`.
 
 The release tag targets the generated-pack commit. The release carries a source
 archive, a standalone `dist/skill-pack/` archive, and `SHA256SUMS`. The pack
@@ -126,20 +126,28 @@ The configured topics are:
 Topics are discoverability metadata, not compatibility claims. They do not
 imply a hosted service, private integration, or support guarantee.
 
-## `0.1.2` candidate gate
+## `0.1.2` publication completion record
 
-The `v0.1.2-skill-pack` tag MUST NOT be created or published until:
+The `v0.1.2-skill-pack` cutover completed in this order:
 
-- canonical source carrying the portable host-recipe mapping and
-  `RECIPE-STANDALONE` verifier is committed;
-- regenerated `dist/skill-pack/` output binds that source commit and is the only
-  content added by the generation commit;
-- every host's recipe target resolves from an isolated extracted pack rather
-  than falling back to repository-only paths;
-- the exact generated candidate passes hosted `public-gate`;
-- a fresh clone passes the full local publication gate; and
-- only then is a new signed annotated tag created with new source, standalone,
-  and checksum assets. The `v0.1.1-skill-pack` tag is not moved.
+1. P0 `b22d168013b5d287eaced9fb502f84ab6bce6b61` committed the canonical
+   portable host-recipe mapping, verifier hardening, and release documentation.
+2. P1 `5329397b1ce5725616e9e6261fe29307967434b2` changed only generated
+   `dist/skill-pack/` files. Its manifest binds P0 and canonical source hash
+   `32e91bf969f8a401fcdb18679e542e7a79de842850374a81c173f33f91d65d47`.
+3. The exact P1 candidate passed pull-request `public-gate` run
+   [`31275270984`](https://github.com/GauravAlbal/ats/actions/runs/31275270984)
+   and master-push run
+   [`31275426278`](https://github.com/GauravAlbal/ats/actions/runs/31275426278).
+4. Before tagging, a fresh clone at P1 passed `uv sync --frozen`, the complete
+   test suite, repository and CLI validation, both normative package
+   validators, `ats skills verify`, and the isolated standalone-pack capstone.
+5. Independent code and security reviews found no remaining BLOCK or
+   REVIEW_REQUIRED issue on exact P1.
+6. The SSH-signed annotated tag was created at P1. The GitHub release carries a
+   source archive, standalone pack archive, and `SHA256SUMS`; downloaded asset
+   checksums and standalone verification passed. The `v0.1.1-skill-pack` tag
+   was not moved.
 
 ## Previous publication completion record (`0.1.1`)
 
@@ -163,7 +171,7 @@ The public signer binding is `.github/allowed_signers`:
 
 ```bash
 git -c gpg.ssh.allowedSignersFile=.github/allowed_signers \
-  tag -v v0.1.1-skill-pack
+  tag -v v0.1.2-skill-pack
 ```
 
 That command reports a good ED25519 signature for

@@ -12,15 +12,15 @@ ATS has three version identities. They must not be substituted for one another:
 |---|---|---|
 | ATS-1 normative edition | `1.0.0-draft.2` for new durable authoring | Rules, force semantics, schemas, and other normative meaning |
 | ATS implementation | `0.5.0` | The local runtime and CLI that validate, lint, resolve, and receipt artifacts |
-| ATS skill pack | `0.1.2` candidate | The `ats`, `ats-spec`, `ats-assess`, and `ats-review` skills, recipes, and host packaging |
+| ATS skill pack | `0.1.2` | The released `ats`, `ats-spec`, `ats-assess`, and `ats-review` skills, recipes, and host packaging |
 
 A skill-pack release can support an ATS-1 edition without being that edition.
 Likewise, an implementation release can expose a package finding without
 silently changing normative meaning.
-Release `0.1.1` remains published under `v0.1.1-skill-pack`. Candidate `0.1.2`
-is a skill-pack patch for portable recipe lookup; it does not change the ATS-1
-standard or implementation version. Canonical source precedes deterministic
-generation and verification.
+Release `0.1.2` under `v0.1.2-skill-pack` is a skill-pack patch for portable
+recipe lookup; it does not change the ATS-1 standard or implementation version.
+Release `0.1.1` remains available as the previous release. Canonical source
+precedes deterministic generation and verification.
 
 ## Draft status
 

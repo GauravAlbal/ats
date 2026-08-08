@@ -90,17 +90,16 @@ Three version strings stay distinct, on purpose:
 |---|---|---|
 | ATS-1 standard | `1.0.0-draft.2` (new authoring) / `1.0.0-draft.1` (legacy interpretation) | The normative edition your artifacts are judged against. New durable authoring uses draft.2; historical material stays draft.1 unless you explicitly migrate it. |
 | ATS implementation | `0.5.0` | The runtime behind the skills: validation, linting, receipts, policy resolution. |
-| ATS skill pack | `0.1.2` candidate | The skills, recipes, and packaging with portable host-local recipe lookup. |
+| ATS skill pack | `0.1.2` | The released skills, recipes, and packaging with portable host-local recipe lookup. |
 
 The pack declares which standard editions it supports; it is not the standard
 itself. If the standard moves, the pack follows by regeneration — it never
 pretends to be the new standard, and a pack update never pretends to be a
 standard change.
-Release `0.1.1` remains published under the signed annotated tag
-`v0.1.1-skill-pack`. Candidate `0.1.2` repairs standalone recipe lookup and
-receives a distinct tag only after its own publication gates pass. Canonical
-source comes first: generated forms are never hand-maintained, and the public
-manifest binds them to the source commit used for generation.
+Release `0.1.2` is published under the signed annotated tag
+`v0.1.2-skill-pack`; release `0.1.1` remains available as the previous release.
+Canonical source comes first: generated forms are never hand-maintained, and
+the public manifest binds them to the source commit used for generation.
 
 ## Upgrading
 

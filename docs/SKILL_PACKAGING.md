@@ -143,10 +143,10 @@ Three version strings, never collapsed (§38):
 - **ATS skill pack**: `0.1.2` (`SKILL_PACK_VERSION` in `src/ats/__init__.py`),
   stamped in the manifest and in the agent-plugins `plugin.json`.
 
-Release `0.1.1` remains published under `v0.1.1-skill-pack`. Candidate `0.1.2`
-repairs portable recipe lookup and receives a new signed annotated tag only
-after its own gates pass. The manifest's `source_commit` identifies the canonical
-source commit used before generation.
+Release `0.1.2` is published under the signed annotated tag
+`v0.1.2-skill-pack`; release `0.1.1` remains available as the previous release.
+The manifest's `source_commit` identifies the canonical source commit used
+before generation.
 
 ## 5. The canonical tree hash
 
