@@ -160,4 +160,7 @@ The release tag is immutable. This post-release documentation commit does not
 move it. Branch protection requires the observed `public-gate` context, linear
 history, and resolved conversations; force pushes and branch deletion are
 disabled. Private vulnerability reporting, secret scanning, push protection,
-and Dependabot security updates are enabled.
+Dependabot security updates, and GitHub CodeQL default scanning for Python and
+Actions are enabled. The initial CodeQL run
+[`31271232453`](https://github.com/GauravAlbal/ats/actions/runs/31271232453)
+completed successfully.
