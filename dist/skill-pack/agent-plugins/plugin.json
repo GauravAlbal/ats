@@ -1,0 +1,15 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "description": "ATS-1 public skills: author, transform, or review durable technical artifacts with a preserved semantic handoff.",
+  "keywords": [
+    "ats",
+    "technical-writing",
+    "specification",
+    "semantic-preservation",
+    "artifact",
+    "review"
+  ],
+  "license": "Apache-2.0 AND CC-BY-4.0",
+  "name": "ats-skill-pack",
+  "version": "0.1.1"
+}
