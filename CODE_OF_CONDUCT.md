@@ -23,9 +23,10 @@ It also applies when someone represents the project in a public venue.
 
 For ordinary conduct concerns, contact a repository maintainer through the
 least-sensitive available project channel. Do not include private or dangerous
-material in a public report. The repository does not currently advertise an
-unverified private contact route; publication remains blocked until the
-operator enables and tests one as described in [`SECURITY.md`](SECURITY.md).
+material in a public report. If a conduct report requires confidentiality, use
+a public issue only to request a private maintainer contact and include no
+sensitive details. The vulnerability-reporting route in `SECURITY.md` is for
+security defects, not general conduct disputes.
 
 Maintainers may edit or remove contributions, limit participation, or exclude a
 participant when necessary to protect contributors and the project. Enforcement

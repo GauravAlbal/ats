@@ -10,18 +10,17 @@ The selected licensing split is recorded in
 implementation, public skills, repository-local schemas and machine-readable
 assets, tools, tests, and generated assets; CC-BY-4.0 covers ATS-1 normative
 text/package material and repository-authored documentation. Skill-pack version
-`0.1.1` is the release candidate; the gate below MUST pass before the signed
-annotated tag `v0.1.1-skill-pack` is created.
+`0.1.1` is published under the SSH-signed annotated tag
+`v0.1.1-skill-pack`.
 
-## Candidate facts
+## Current release facts
 
-These facts are recorded from the repository rather than inferred from a
-hosting provider:
+These facts are recorded from the repository and hosting provider:
 
 - The default branch is `master`.
 - The Python implementation version is `0.5.0` (`pyproject.toml`).
-- The public skill-pack version is `0.1.1`; its generated manifest MUST record
-  the canonical source commit and tree hash.
+- The public skill-pack version is `0.1.1`; its generated manifest records the
+  canonical source commit and tree hash.
 - Canonical source is committed before generated `dist/skill-pack/` output.
 - New durable authoring uses ATS-1 `1.0.0-draft.2`; historical unlabeled material remains ATS-1 `1.0.0-draft.1` unless explicitly migrated.
 - The public workflow at `.github/workflows/public-ci.yml` is named `Public
@@ -126,30 +125,39 @@ The configured topics are:
 Topics are discoverability metadata, not compatibility claims. They do not
 imply a hosted service, private integration, or support guarantee.
 
-## Release gate
+## Publication completion record
 
-The `v0.1.1-skill-pack` tag and release MUST follow, not precede, all of these
-checks:
+The corrected `v0.1.1-skill-pack` cutover completed in this order:
 
-- reachable history begins at a history-free P0 source root whose public Git
-  metadata passes the disclosure scan;
-- P1 adds only the generated `dist/skill-pack/` tree, whose manifest binds P0;
-- the exact P1 candidate passes hosted `public-gate`;
-- a fresh clone at P1 passes `uv sync --frozen`, the complete
-  `python -m pytest -q` suite, `tools/validate_repo.py`, `tools/smoke_cli.py`,
-  both normative package validators, and `ats skills verify`;
-- private vulnerability reporting and the documented contribution surfaces are
-  enabled; and
-- only then is a signed annotated tag created and the source, standalone pack,
-  and `SHA256SUMS` release assets published.
+1. P0 `a6bea8d2fe2f0d686821142f030596e99024476a` created the history-free
+   source root with public author/committer metadata and the repository-bound
+   `.github/allowed_signers` trust record.
+2. P1 `41fce2b24b812ab7614bf06b51fddf75464237fa` added only the 66 generated
+   `dist/skill-pack/` files. Its manifest binds P0 and canonical source hash
+   `eafb79e32131321f8e23d6b54ffdbb3d9e05d9a708f91d361c4ba957cb4a2524`.
+3. The exact P1 candidate passed hosted `public-gate` run
+   [`31270694983`](https://github.com/GauravAlbal/ats/actions/runs/31270694983).
+4. Before tagging, a fresh clone at P1 passed `uv sync --frozen`, the complete
+   `python -m pytest -q` suite, `tools/validate_repo.py`, `tools/smoke_cli.py`,
+   both normative package validators, and `ats skills verify`.
+5. The SSH-signed annotated tag was then created at P1 and the source archive,
+   standalone pack archive, and `SHA256SUMS` were published.
 
-The public signer binding is `.github/allowed_signers`. Consumers can verify the
-release independently of provider badges:
+The public signer binding is `.github/allowed_signers`:
 
 ```bash
 git -c gpg.ssh.allowedSignersFile=.github/allowed_signers \
   tag -v v0.1.1-skill-pack
 ```
 
-The release tag is immutable after publication. Post-release hosting controls
-or documentation changes belong in a child commit and do not move the tag.
+That command reports a good ED25519 signature for
+`157336828+GauravAlbal@users.noreply.github.com`. GitHub currently reports
+`unknown_key` for provider-side attribution because this SSH key is not
+registered with the account as a signing key; the release does not claim a
+provider-verified badge.
+
+The release tag is immutable. This post-release documentation commit does not
+move it. Branch protection requires the observed `public-gate` context, linear
+history, and resolved conversations; force pushes and branch deletion are
+disabled. Private vulnerability reporting, secret scanning, push protection,
+and Dependabot security updates are enabled.

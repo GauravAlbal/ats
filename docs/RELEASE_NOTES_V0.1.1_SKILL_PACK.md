@@ -1,9 +1,11 @@
 # ATS Skill Pack 0.1.1
 
-**Status:** release candidate. The signed annotated tag
-`v0.1.1-skill-pack` is created only after the exact candidate passes hosted CI.
+**Status:** released as SSH-signed annotated tag `v0.1.1-skill-pack`.
 
-These notes describe the public `0.1.1` skill-pack candidate.
+These notes describe the public `0.1.1` skill-pack release. The exact tagged
+candidate passed hosted `public-gate` run
+[`31270694983`](https://github.com/GauravAlbal/ats/actions/runs/31270694983)
+and the fresh-clone full gate before the tag was created.
 
 ## Purpose
 
@@ -144,6 +146,18 @@ responsibility of the consuming agent environment.
 Release `0.1.1` is published from the verified public source state under
 `v0.1.1-skill-pack`. The release assets include source and standalone
 skill-pack archives plus SHA-256 checksums.
+
+Verify the SSH signature with the repository-bound signer record:
+
+```bash
+git -c gpg.ssh.allowedSignersFile=.github/allowed_signers \
+  tag -v v0.1.1-skill-pack
+```
+
+GitHub currently reports `unknown_key` for provider-side attribution because
+the SSH key is not registered with the account as a signing key. The committed
+allowed-signers record, not the provider badge, is this release's public trust
+anchor.
 
 See `docs/OSS_SKILL_PACK.md`, `docs/SKILL_PACKAGING.md`, and `docs/STABILITY.md`
 for the standalone walkthrough, regeneration contract, and version rules.
