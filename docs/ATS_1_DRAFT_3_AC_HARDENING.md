@@ -16,7 +16,7 @@ Draft.3 SHOULD make one narrow semantic correction to `SPECIFY`:
 
 The existing `REQ` / `acceptance_criterion` structure is retained. No evidence-planning ontology, failure-mechanism field, test mapping, assurance provider, or additional authoring artifact is added to ATS-1.
 
-This delta exists to prevent a common category error:
+The category error to prevent is:
 
 ```text
 REQ
@@ -24,7 +24,7 @@ REQ
 → green
 ```
 
-The required semantic relationship is:
+The required relationship is:
 
 ```text
 REQ
@@ -40,7 +40,7 @@ Evidence may be a test, property, live probe, proof, receipt, review, or another
 
 ### 2.1 Requirement-object definition
 
-In §9.3.2, replace the current `acceptance_criterion` definition:
+In §9.3.2, replace:
 
 ```text
 acceptance_criterion — observable evidence that determines satisfaction
@@ -53,7 +53,7 @@ acceptance_criterion — the canonical falsifiable behavioral proposition by whi
 satisfaction or violation of this requirement can be determined
 ```
 
-No schema change is required. The existing `acceptance_criterion` field remains the canonical field.
+No schema change is required. The existing `acceptance_criterion` field remains canonical.
 
 ### 2.2 Replace §9.3.9 — Acceptance criteria
 
@@ -71,9 +71,11 @@ The section SHOULD read:
 >
 > **Load-bearing rule:** if a materially broken implementation that violates the requirement could plausibly satisfy the acceptance criterion as written, the acceptance criterion is nonconforming. The criterion MUST be strengthened or the requirement MUST be decomposed.
 >
-> Evidence instruments, providers, fixtures, environments, and thresholds MAY be referenced separately when useful. They MUST NOT redefine the canonical acceptance criterion unless the requirement itself normatively constrains them.
+> **Scope-fidelity rule:** an acceptance criterion MUST NOT add an independently meaningful obligation, broaden the governed scope, or strengthen the deontic force of its requirement. If the desired acceptance proposition requires additional normative behavior, that behavior MUST be specified as a separate requirement or as an explicitly indivisible part of the existing requirement.
+>
+> Evidence instruments, providers, fixtures, environments, and instrument-specific execution configuration MAY be referenced separately when useful. A threshold or boundary that defines normative satisfaction remains part of the requirement or its acceptance criterion. Evidence details MUST NOT redefine the canonical acceptance criterion unless the requirement itself normatively constrains them.
 
-The phrase “materially broken” is scoped to the behavior, invariant, authority boundary, or product property governed by the requirement. The rule does not require authors to enumerate every hypothetical defect.
+“Materially broken” is scoped to the behavior, invariant, authority boundary, or product property governed by the requirement. The rule does not require enumeration of every hypothetical defect.
 
 ### 2.3 Amend §9.3.10 — Verifiability
 
@@ -95,7 +97,7 @@ with:
 
 ```text
 each MUST and MUST NOT has exactly one canonical, falsifiable,
-load-bearing acceptance criterion
+load-bearing acceptance criterion that does not widen its requirement
 ```
 
 No other `SPECIFY` completeness requirement changes.
@@ -116,18 +118,19 @@ category: requirements
 normative_statement: >-
   Every material MUST or MUST NOT requirement MUST map to exactly one canonical,
   falsifiable behavioral acceptance criterion. A canonical acceptance criterion
-  MUST NOT be shared across normative requirements and MUST NOT consist solely of
-  an evidence instrument or its result. If a materially broken implementation can
-  plausibly satisfy the criterion while violating its requirement, the criterion
-  MUST be strengthened or the requirement decomposed.
+  MUST NOT be shared across normative requirements, MUST NOT consist solely of an
+  evidence instrument or its result, and MUST NOT add an independently meaningful
+  obligation or strengthen the requirement it adjudicates. If a materially broken
+  implementation can plausibly satisfy the criterion while violating its requirement,
+  the criterion MUST be strengthened or the requirement decomposed.
 rationale: >-
-  Test-shaped acceptance criteria can pass while the behavior the requirement
-  exists to protect remains materially broken. Separating the normative
-  falsification proposition from its evidence instrument preserves requirement
-  meaning across implementations, test suites, and verification providers.
+  Test-shaped or scope-widening acceptance criteria can respectively pass while the
+  protected behavior remains broken or create hidden requirements. Keeping the
+  normative falsification proposition distinct from its evidence instrument preserves
+  requirement meaning across implementations, test suites, and verification providers.
 default_states:
   ASSESS: disabled
-  SPECIFY: required
+  SPECIFY: advisory
   TRANSFORM: advisory
 severity: critical
 detector_classes:
@@ -145,7 +148,11 @@ waivable: true
 exceptions: []
 ```
 
-`D1` MAY detect structural pathologies such as absent, duplicated, shared, or obviously test-shaped criteria. The load-bearing judgment is semantic and belongs to `D3` or an authorized semantic review. Draft.3 MUST NOT introduce a new mandatory model call or lint phase solely for this rule.
+The rule is deliberately **advisory at the automated rule layer in draft.3**. The semantic requirement remains normative in §9.3, but the current implementation has no complete D3 decision procedure for the load-bearing question. ATS-1's never-PASS-by-absence law would otherwise turn a SPECIFY-required `ATS-REQ-004` into `REVIEW_REQUIRED` or `UNAVAILABLE` on ordinary authoring and thereby create a new mandatory semantic-review/model pass.
+
+`D1` MAY detect structural pathologies such as absent, duplicated, shared-by-reference, or obviously test-shaped criteria. It MUST NOT establish the load-bearing semantic judgment merely because no structural pathology was found. The load-bearing judgment belongs to `D3` or an authorized semantic review.
+
+A policy MAY strengthen `ATS-REQ-004` to `required` only when the active toolchain provides a qualified decision/review path at the required cadence. Draft.3 MUST NOT introduce a new mandatory model call or lint phase solely for this rule.
 
 ---
 
@@ -167,7 +174,7 @@ resolved policy snapshot, the verifier returns refused_stale_policy and emits
 no accepted-change transition.
 ```
 
-The acceptance criterion describes the governed behavior. A fixture or test that demonstrates it is evidence for the criterion, not the criterion itself.
+The criterion describes exactly the governed behavior. A fixture or test that demonstrates it is evidence for the criterion, not the criterion itself.
 
 ### 4.2 Nonconforming: evidence substituted for criterion
 
@@ -176,31 +183,40 @@ Acceptance criterion
 TestStalePolicyRejection passes.
 ```
 
-Nonconforming because the text names an evidence instrument rather than the behavioral proposition being adjudicated.
+The text names an evidence instrument rather than the behavioral proposition being adjudicated.
 
 ### 4.3 Nonconforming: non-load-bearing criterion
 
 ```text
 Requirement
-Only VX MUST determine next-ready work.
+VX MUST be the only authority that determines next-ready work.
 
 Acceptance criterion
 The executor returns success when given W1.
 ```
 
-Nonconforming because an executor could still select or advance unauthorized work while satisfying the criterion.
+An executor could still select or advance unauthorized work while satisfying the criterion.
 
-A load-bearing criterion would instead describe the prohibited authority transition and the observable canonical-state consequence.
+### 4.4 Nonconforming: AC silently widens the REQ
+
+```text
+Requirement
+The verifier MUST reject a receipt whose policy hash is stale.
+
+Acceptance criterion
+Given a stale receipt, the verifier rejects it and records both policy hashes
+in an audit log retained for 30 days.
+```
+
+The audit-log and retention behavior are independently meaningful obligations absent from the requirement. They require their own REQ/AC pair unless the requirement is explicitly and justifiably indivisible.
 
 ---
 
 ## 5. Relationship to requirement atomicity
 
-Draft.3 does not add another atomicity mechanism. It sharpens the existing §9.3.3 / `ATS-REQ-002` rule.
+Draft.3 adds no new atomicity mechanism. It sharpens §9.3.3 / `ATS-REQ-002`.
 
-If one requirement needs multiple independently meaningful falsification propositions, the author SHOULD treat that as evidence that the requirement contains multiple obligations. The remedy is ordinarily to decompose the requirement, not to preserve a cosmetic 1:1 mapping by joining several independent criteria into one paragraph.
-
-The intended invariant is:
+If one requirement needs multiple independently meaningful falsification propositions, that is evidence that the requirement contains multiple obligations. The ordinary remedy is decomposition, not preserving cosmetic 1:1 structure by joining several independent criteria into one paragraph.
 
 ```text
 one coherent normative obligation
@@ -214,9 +230,7 @@ one canonical falsification proposition
 
 This delta deliberately does **not** standardize evidence planning.
 
-ATS-1 may preserve evidence references when supplied by the source artifact, but core `SPECIFY` does not choose testing frameworks, mutation tools, live probes, proof systems, provider implementations, or assurance portfolios.
-
-The portable distinction is only:
+ATS-1 may preserve evidence references supplied by a source artifact, but core `SPECIFY` does not choose testing frameworks, mutation tools, live probes, proof systems, provider implementations, or assurance portfolios.
 
 ```text
 REQ      = what must be true
@@ -237,13 +251,13 @@ For prospective draft.3 authoring:
 1. existing `REQ` and `acceptance_criterion` fields are reused;
 2. no historical field backfill is required;
 3. no schema migration is required;
-4. already behavioral, load-bearing acceptance criteria require no rewrite;
-5. test-shaped or non-load-bearing acceptance criteria must be rewritten when an artifact is explicitly authored or revalidated under draft.3.
+4. already behavioral, load-bearing, scope-faithful acceptance criteria require no rewrite;
+5. test-shaped, non-load-bearing, or scope-widening acceptance criteria must be rewritten when an artifact is explicitly authored or revalidated under draft.3.
 
 When rewriting an acceptance criterion:
 
 - if the new wording only makes the already-intended behavioral proposition explicit, the change MAY be classified as a compatible clarification;
-- if the new wording changes which implementations satisfy the requirement, the change MUST be recorded as a changed acceptance criterion under the existing requirement-identity and supersession law.
+- if the new wording changes which implementations satisfy the requirement, the change MUST be recorded as a changed acceptance criterion under existing requirement-identity and supersession law.
 
 No draft.2 receipt acquires draft.3 conformance merely because draft.3 exists.
 
@@ -251,7 +265,7 @@ No draft.2 receipt acquires draft.3 conformance merely because draft.3 exists.
 
 ## 8. Explicit non-goals
 
-D-G MUST NOT require any of the following in ATS core:
+D-G MUST NOT require in ATS core:
 
 - `failure_mechanism` on every requirement;
 - `most_consequential_falsifier` fields;
@@ -263,19 +277,20 @@ D-G MUST NOT require any of the following in ATS core:
 - another mandatory semantic-review pass;
 - a repo-wide rewrite of historical ATS artifacts.
 
-Those may exist in downstream systems. They are not necessary to correct the `REQ` / AC semantic boundary.
+Those may exist downstream. They are not necessary to correct the `REQ` / AC boundary.
 
 ---
 
 ## 9. Promotion criterion
 
-D-G is ready for inclusion in a sealed draft.3 package when the package change can demonstrate, at minimum:
+D-G is ready for a sealed draft.3 package when the package change demonstrates, at minimum:
 
 1. one conforming behavioral-AC fixture;
 2. one test-shaped negative fixture;
 3. one non-load-bearing negative fixture;
-4. `ATS-REQ-004` is represented consistently in the normative prose and rule registry;
-5. draft.1 and draft.2 packages remain byte-identical;
-6. no new schema field or mandatory lint pass has been introduced.
+4. one scope-widening negative fixture;
+5. `ATS-REQ-004` is consistent across normative prose and the rule registry;
+6. draft.1 and draft.2 packages remain byte-identical;
+7. no new schema field or mandatory lint/model pass has been introduced.
 
 Until a sealed `1.0.0-draft.3` package is imported and selected by policy, this document is a prospective normative delta and MUST NOT be cited as draft.3 conformance authority.
