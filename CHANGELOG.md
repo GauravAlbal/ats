@@ -8,6 +8,19 @@ the imported normative package is a separate, receipted import, never an edit in
 
 ## [Unreleased]
 
+### Proposed — draft.3 acceptance-criterion hardening
+
+- Added `docs/ATS_1_DRAFT_3_AC_HARDENING.md`, a prospective normative delta that
+  redefines `SPECIFY` acceptance criteria as canonical falsifiable behavioral
+  propositions rather than test invocations or other evidence instruments.
+- The proposal adds one future rule, `ATS-REQ-004`, with a single load-bearing
+  review question: a criterion is defective if a materially broken
+  implementation can plausibly satisfy it while violating its requirement.
+- The proposal deliberately adds no schema fields, evidence-planning ontology,
+  mandatory lint phase, client-default change, or historical migration. Sealed
+  draft.1 and draft.2 packages remain byte-immutable and authoritative for their
+  existing receipts.
+
 ## [0.1.3-skill-pack] — 2026-08-08
 
 Public naming and README release.
