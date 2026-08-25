@@ -1,6 +1,6 @@
 {
   "canonical_source_sha256": "89c6fdd1debc8121c6d8923366acdb82344ea5aee5714ab9a5c8666df0428696",
-  "generated_at": "2026-08-24T19:45:51-06:00",
+  "generated_at": "2026-08-24T19:50:08-06:00",
   "hosts": [
     {
       "files": [
@@ -317,7 +317,7 @@
       "sha256": "89bcb54ed3d165ca7278c2561d2c913c2ddd0e24a216e24a38bf8eca3f8df6cf"
     }
   ],
-  "source_commit": "1efbce8dba5c733dc198c6be04dd3a03d3ca7b2f",
+  "source_commit": "0c7d2429679d0b40b7b870b5772aaf4b0b7fbe3a",
   "standard_versions_supported": {
     "legacy_interpretation": "1.0.0-draft.1",
     "new_authoring": "1.0.0-draft.3"
