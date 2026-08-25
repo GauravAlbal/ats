@@ -304,7 +304,13 @@ def main() -> int:
 
     spec = (ROOT / "ATS-1_SPEC.md").read_text(encoding="utf-8")
     assert "Draft.3 amendment (D-G)" in spec
-    assert (ROOT / "examples" / "acceptance_criterion_semantics.md").is_file()
+    fixture_path = ROOT / "examples" / "acceptance_criterion_semantics.md"
+    assert fixture_path.is_file()
+    fixture_text = fixture_path.read_text(encoding="utf-8")
+    assert "## Conforming" in fixture_text
+    assert "`TestStalePolicyRejection` passes." in fixture_text
+    assert "## Hard negative — non-load-bearing" in fixture_text
+    assert "seven-year audit record" in fixture_text
     spec_ids = set(re.findall(r"ATS-[A-Z]+-[0-9]{3}", spec))
     assert spec_ids == set(ids), f"spec/registry rule-id drift: spec-only={spec_ids-set(ids)}, registry-only={set(ids)-spec_ids}"
     for rule in rules:

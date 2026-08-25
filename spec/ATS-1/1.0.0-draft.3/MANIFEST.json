@@ -202,8 +202,8 @@
   },
   {
    "path": "tools/validate_package.py",
-   "bytes": 20971,
-   "sha256": "5a04c03be0a7d2c39a87c113195529f5ce4f864f3af9e7afa8d34a3f9f451826"
+   "bytes": 21288,
+   "sha256": "070a665ba40c818f82324bf737eeb07636c2b3f46ddf416e04b96603df9c1b41"
   }
  ]
 }
