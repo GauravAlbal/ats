@@ -1,0 +1,48 @@
+name: Repair draft3 runtime coherence
+on:
+  push:
+    branches: [draft3-seal]
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          ref: draft3-seal
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --disable-pip-version-check uv==0.11.8
+          uv sync --frozen
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+      - name: Repair package capability
+        run: python tools/fix_draft3_runtime.py
+      - name: Validate package and runtime load
+        run: |
+          (cd spec/ATS-1/1.0.0-draft.3 && python tools/validate_package.py)
+          python - <<'PY'
+          import datetime as dt
+          from ats.context import Context
+          c = Context.load(spec_version="1.0.0-draft.3", now=dt.datetime(2026,8,3,tzinfo=dt.UTC))
+          assert c.spec_version == "1.0.0-draft.3"
+          assert len(c.registry.ids()) == 37
+          assert c.capability.coherence_errors() == []
+          r = c.capability.for_rule("ATS-REQ-004")
+          assert r.implemented is False
+          assert r.decision_power == "undecidable"
+          PY
+          python tools/validate_repo.py
+      - name: Preserve prior editions
+        run: git diff --exit-code origin/master -- spec/ATS-1/1.0.0-draft.1 spec/ATS-1/1.0.0-draft.2
+      - name: Commit repaired package bytes
+        run: |
+          git add spec/ATS-1/1.0.0-draft.3
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Repair draft3 capability coherence"
+          git push origin HEAD:draft3-seal
