@@ -1,0 +1,64 @@
+name: Apply draft3 authoring cutover
+on:
+  push:
+    branches: [draft3-authoring-default]
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    env:
+      PIP_CONFIG_FILE: /dev/null
+      PYTHONNOUSERSITE: "1"
+      PYTHONHASHSEED: "0"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          ref: draft3-authoring-default
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - name: Synchronize locked environment
+        run: |
+          python -m pip install --disable-pip-version-check uv==0.11.8
+          uv sync --frozen
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+      - name: Apply canonical authoring-default patch
+        run: python tools/patch_draft3_authoring_default.py
+      - name: Gate authoritative cutover surfaces
+        run: |
+          python - <<'PY'
+          import argparse, json
+          from pathlib import Path
+          from ats.cli import _context
+          from ats.fleet import FleetPolicy
+          from ats.spec_package import AUTHORING_SPEC_VERSION, DEFAULT_SPEC_VERSION
+          assert DEFAULT_SPEC_VERSION == '1.0.0-draft.1'
+          assert AUTHORING_SPEC_VERSION == '1.0.0-draft.3'
+          ctx = _context(argparse.Namespace(now=None, spec_version=None, policy='config/policies/fleet_policy.json'))
+          assert ctx.spec_version == '1.0.0-draft.3'
+          assert len(ctx.registry.ids()) == 37
+          policy = json.loads(Path('config/policies/fleet_policy.json').read_text())
+          fleet = FleetPolicy.from_document(policy, ctx.schemas)
+          assert fleet.spec_version == '1.0.0-draft.3'
+          assert fleet.policy_id == policy['policy_id']
+          PY
+          python -m pytest -q tests/unit/test_cli_spec_defaults.py tests/unit/test_draft3_package.py
+      - name: Commit canonical source cutover
+        run: |
+          git add \
+            CHANGELOG.md README.md \
+            config/policies/fleet_policy.json \
+            src/ats/__init__.py src/ats/spec_package.py src/ats/cli.py src/ats/fleet.py \
+            skills/public/ats/SKILL.md skills/public/ats-spec/SKILL.md \
+            skills/public/ats-assess/SKILL.md skills/public/ats-review/SKILL.md \
+            tests/unit/test_cli_spec_defaults.py
+          if git diff --cached --quiet; then
+            echo 'canonical authoring cutover already current'
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Make ATS-1 draft.3 the new-authoring default"
+          git push origin HEAD:draft3-authoring-default
