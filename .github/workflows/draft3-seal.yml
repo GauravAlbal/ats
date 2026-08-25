@@ -35,7 +35,9 @@ jobs:
           echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Build draft.3 from sealed draft.2
-        run: python tools/build_draft3.py
+        run: |
+          python tools/build_draft3.py
+          python tools/harden_draft3_fixtures.py
 
       - name: Validate sealed packages
         run: |
@@ -54,10 +56,6 @@ jobs:
 
       - name: Commit generated sealed package
         run: |
-          # The builder also stages the future public-gate edit in the worktree so it can
-          # be exercised before cutover. The Actions token deliberately does not own
-          # workflow-file mutation; discard that local edit here and publish only the
-          # sealed normative package. The authorized connector lands the gate edit later.
           git checkout -- .github/workflows/public-ci.yml
           git add spec/ATS-1/1.0.0-draft.3
           if git diff --cached --quiet; then
