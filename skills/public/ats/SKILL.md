@@ -77,8 +77,13 @@ execution surface.
 6. Remove surface material before removing material relations.
 7. Stable semantic coordinates survive transformation.
 8. Prefer local semantic closure for units expected to survive extraction.
-9. Acceptance criteria state falsifiable behavior; tests, probes, proofs, and receipts are evidence used to adjudicate them, not substitutes for the criterion.
+9. Acceptance evidence is not the same discourse role as the requirement it verifies.
 10. Ask only when unresolved meaning blocks the requested action.
+
+Draft.3 `SPECIFY` refinement: an acceptance criterion is the canonical falsifiable
+behavioral proposition for its REQ. Tests, probes, proofs, and receipts are evidence
+used to adjudicate that proposition, not substitutes for it; if a materially broken
+implementation can satisfy the AC, strengthen the AC or decompose the REQ.
 
 ## How to route
 
