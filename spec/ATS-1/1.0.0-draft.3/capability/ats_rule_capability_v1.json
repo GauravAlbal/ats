@@ -1,7 +1,7 @@
 {
   "schema_version": "ats.rule_capability.v1",
   "implementation_name": "ats",
-  "implementation_version": "0.1.0",
+  "implementation_version": "0.5.1",
   "ats_version": "1.0.0-draft.3",
   "rules": [
     {
@@ -1426,35 +1426,51 @@
       "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule"
     },
     {
-      "authority": "proposal_only",
-      "available_inputs": [],
-      "blocking_inputs": [
+      "authority": "conformance_evidence",
+      "authority_basis_ref": "docs/AUTHORITY_MODEL.md#ats-ir-rule",
+      "available_inputs": [
         "text",
         "profile",
         "requirement_ir"
       ],
-      "decision_power": "undecidable",
-      "detector_class": "D3",
-      "implemented": false,
+      "blocking_inputs": [],
+      "decision_power": "detects_violations",
+      "detector_class": "D1",
+      "detector_name": "ats-ir-ats-req-004",
+      "implemented": true,
       "known_limits": [
-        "The package defines ATS-REQ-004 semantics, but ats 0.5.0 does not adjudicate load-bearing or scope-fidelity conformance. Advisory semantic review remains external."
+        "A clean deterministic run does not establish that an AC is load-bearing or fully scope-equivalent; those remain semantic-review questions.",
+        "The D1 detector recognises only whole-criterion test/result substitution and hidden uppercase ATS deontics."
       ],
-      "missing_inputs": [
-        "text",
-        "profile",
-        "requirement_ir"
-      ],
-      "produces_conformance_evidence": false,
+      "missing_inputs": [],
+      "produces_conformance_evidence": true,
       "required_inputs": [
         "text",
         "profile",
         "requirement_ir"
       ],
       "rule_id": "ATS-REQ-004",
-      "subchecks": [],
-      "surfaces": [],
+      "subchecks": [
+        {
+          "subcheck_id": "evidence-substituted-for-behavior",
+          "decides": false,
+          "spec_ref": "ATS-1 9.3.9 (D-G)",
+          "vocabulary_source": "the evidence-instrument examples named by ATS-1 9.3.9 (D-G)",
+          "description": "A canonical acceptance criterion consists only of a test/command result rather than an observable behavioral proposition."
+        },
+        {
+          "subcheck_id": "acceptance-criterion-hidden-obligation",
+          "decides": false,
+          "spec_ref": "ATS-1 9.3.9 (D-G scope-fidelity rule)",
+          "vocabulary_source": "the ATS-1 uppercase deontic vocabulary",
+          "description": "An acceptance criterion contains an uppercase ATS deontic, indicating normative behavior that belongs in the requirement rather than being introduced by the AC."
+        }
+      ],
+      "surfaces": [
+        "ir"
+      ],
       "unavailable_conditions": [
-        "No ATS-REQ-004 D1/D3 detector or qualified semantic-review surface is implemented in ats 0.5.0."
+        "An artifact with no MUST/MUST NOT requirement acceptance criteria presents nothing to inspect."
       ]
     },
     {
