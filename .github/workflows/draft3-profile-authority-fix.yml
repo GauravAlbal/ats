@@ -1,0 +1,102 @@
+name: Correct draft3 profile authority
+on:
+  push:
+    branches: [draft3-seal]
+permissions:
+  contents: write
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    env:
+      PIP_CONFIG_FILE: /dev/null
+      PYTHONNOUSERSITE: "1"
+      PYTHONHASHSEED: "0"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          ref: draft3-seal
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - name: Keep profile completeness structural
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('.')
+          pkg = root / 'spec/ATS-1/1.0.0-draft.3'
+
+          spec = pkg / 'ATS-1_SPEC.md'
+          text = spec.read_text(encoding='utf-8')
+          old = '- each `MUST` and `MUST NOT` has exactly one canonical, falsifiable, load-bearing acceptance criterion that does not widen its requirement;'
+          new = '- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;'
+          if text.count(old) != 1:
+              raise SystemExit(f'draft3 profile bullet anchor count: {text.count(old)}')
+          spec.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          validator = pkg / 'tools/validate_package.py'
+          text = validator.read_text(encoding='utf-8')
+          anchor = '    assert "Draft.3 amendment (D-G)" in spec\n'
+          addition = (
+              anchor
+              + '    assert "- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;" in spec\n'
+              + '    assert "load-bearing acceptance criterion that does not widen its requirement" not in spec\n'
+          )
+          if addition not in text:
+              if text.count(anchor) != 1:
+                  raise SystemExit(f'validator D-G anchor count: {text.count(anchor)}')
+              text = text.replace(anchor, addition, 1)
+              validator.write_text(text, encoding='utf-8')
+
+          proposal = root / 'docs/ATS_1_DRAFT_3_AC_HARDENING.md'
+          text = proposal.read_text(encoding='utf-8')
+          old_block = '''### 2.4 Amend §9.3.20 — `SPECIFY` profile completeness\n\nReplace:\n\n```text\neach MUST and MUST NOT has a verifiable acceptance criterion\n```\n\nwith:\n\n```text\neach MUST and MUST NOT has exactly one canonical, falsifiable,\nload-bearing acceptance criterion that does not widen its requirement\n```\n\nNo other `SPECIFY` completeness requirement changes.'''
+          new_block = '''### 2.4 Keep §9.3.20 profile completeness structural\n\nDraft.3 MUST retain the existing structural profile-completeness condition:\n\n```text\neach MUST and MUST NOT has a verifiable acceptance criterion\n```\n\nLoad-bearingness and scope fidelity remain normative under §9.3.9 / `ATS-REQ-004`, but MUST NOT be smuggled into `profile: PASS`. `profile` answers whether required semantic slots are present; semantic adjudication remains a separate conformance dimension. This preserves ATS-1's non-compensatory conformance vector and avoids granting a structural profile validator authority it does not possess.'''
+          if old_block in text:
+              text = text.replace(old_block, new_block, 1)
+              proposal.write_text(text, encoding='utf-8')
+          elif new_block not in text:
+              raise SystemExit('proposal §2.4 anchor not found')
+
+          test = root / 'tests/unit/test_draft3_package.py'
+          text = test.read_text(encoding='utf-8').replace('from pathlib import Path\n\n', '')
+          marker = '    assert ctx.capability.coherence_errors() == []\n'
+          extra = marker + '''    spec_text = ctx.package.spec_document.read_text(encoding="utf-8")\n    assert "- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;" in spec_text\n    assert "load-bearing acceptance criterion that does not widen its requirement" not in spec_text\n'''
+          if extra not in text:
+              if text.count(marker) != 1:
+                  raise SystemExit(f'test profile anchor count: {text.count(marker)}')
+              text = text.replace(marker, extra, 1)
+          test.write_text(text, encoding='utf-8')
+
+          manifest = pkg / 'MANIFEST.json'
+          doc = json.loads(manifest.read_text(encoding='utf-8'))
+          files = []
+          for path in sorted(x for x in pkg.rglob('*') if x.is_file() and x.name != 'MANIFEST.json' and not x.name.endswith('.zip')):
+              data = path.read_bytes()
+              files.append({'path': path.relative_to(pkg).as_posix(), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()})
+          doc['files'] = files
+          manifest.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + '\n', encoding='utf-8')
+          PY
+      - name: Synchronize locked environment
+        run: |
+          python -m pip install --disable-pip-version-check uv==0.11.8
+          uv sync --frozen
+          echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
+      - name: Gate corrected authority boundary
+        run: |
+          (cd spec/ATS-1/1.0.0-draft.3 && python tools/validate_package.py)
+          python tools/validate_repo.py
+          python -m pytest -q tests/unit/test_draft3_package.py tests/unit/test_capability.py tests/unit/test_publication_gate.py
+          git diff --exit-code origin/master -- spec/ATS-1/1.0.0-draft.1 spec/ATS-1/1.0.0-draft.2
+      - name: Commit correction
+        run: |
+          git add spec/ATS-1/1.0.0-draft.3/ATS-1_SPEC.md spec/ATS-1/1.0.0-draft.3/tools/validate_package.py spec/ATS-1/1.0.0-draft.3/MANIFEST.json docs/ATS_1_DRAFT_3_AC_HARDENING.md tests/unit/test_draft3_package.py
+          if git diff --cached --quiet; then
+            echo 'authority correction already current'
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Keep draft3 profile authority structural"
+          git push origin HEAD:draft3-seal
