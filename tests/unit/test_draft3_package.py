@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 import datetime as dt
-from pathlib import Path
-
 from ats.context import Context
 from ats.rules.deterministic import load_detectors
 from ats.rules.deterministic._support import SPECS
@@ -24,6 +22,9 @@ def test_draft3_package_validates_and_loads_thirty_seven_rules() -> None:
     assert len(ctx.registry.ids()) == 37
     assert "ATS-REQ-004" in ctx.registry.ids()
     assert ctx.capability.coherence_errors() == []
+    spec_text = ctx.package.spec_document.read_text(encoding="utf-8")
+    assert "- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;" in spec_text
+    assert "load-bearing acceptance criterion that does not widen its requirement" not in spec_text
 
 
 def test_req004_is_advisory_and_partial_not_a_semantic_pass() -> None:

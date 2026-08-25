@@ -85,22 +85,15 @@ Replace the first paragraph with:
 
 Retain the existing profile-failure rule for material `MUST` / `MUST NOT` requirements lacking a verifiable acceptance criterion.
 
-### 2.4 Amend §9.3.20 — `SPECIFY` profile completeness
+### 2.4 Keep §9.3.20 profile completeness structural
 
-Replace:
+Draft.3 MUST retain the existing structural profile-completeness condition:
 
 ```text
 each MUST and MUST NOT has a verifiable acceptance criterion
 ```
 
-with:
-
-```text
-each MUST and MUST NOT has exactly one canonical, falsifiable,
-load-bearing acceptance criterion that does not widen its requirement
-```
-
-No other `SPECIFY` completeness requirement changes.
+Load-bearingness and scope fidelity remain normative under §9.3.9 / `ATS-REQ-004`, but MUST NOT be smuggled into `profile: PASS`. `profile` answers whether required semantic slots are present; semantic adjudication remains a separate conformance dimension. This preserves ATS-1's non-compensatory conformance vector and avoids granting a structural profile validator authority it does not possess.
 
 ---
 

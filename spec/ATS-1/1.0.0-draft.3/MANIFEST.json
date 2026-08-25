@@ -7,8 +7,8 @@
  "files": [
   {
    "path": "ATS-1_SPEC.md",
-   "bytes": 138274,
-   "sha256": "47fa35c917d8e077846e1c44cfaa9fec9674e891b03cc80146efacc69a56a45d"
+   "bytes": 138202,
+   "sha256": "8f40867eba01a33950adc099748ffa0a09d68ed16e4555c18d872f78494e3a13"
   },
   {
    "path": "CHANGELOG.md",
@@ -202,8 +202,8 @@
   },
   {
    "path": "tools/validate_package.py",
-   "bytes": 21288,
-   "sha256": "070a665ba40c818f82324bf737eeb07636c2b3f46ddf416e04b96603df9c1b41"
+   "bytes": 21472,
+   "sha256": "7d3e508f54084bb6f6c4560dc68250a07acebf7476cfc2f6b48c14010400817a"
   }
  ]
 }

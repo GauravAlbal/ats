@@ -304,6 +304,8 @@ def main() -> int:
 
     spec = (ROOT / "ATS-1_SPEC.md").read_text(encoding="utf-8")
     assert "Draft.3 amendment (D-G)" in spec
+    assert "- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;" in spec
+    assert "load-bearing acceptance criterion that does not widen its requirement" not in spec
     fixture_path = ROOT / "examples" / "acceptance_criterion_semantics.md"
     assert fixture_path.is_file()
     fixture_text = fixture_path.read_text(encoding="utf-8")

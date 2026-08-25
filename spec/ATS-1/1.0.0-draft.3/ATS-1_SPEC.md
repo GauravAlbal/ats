@@ -1509,7 +1509,7 @@ Set-level checks are semantic unless a closed formal model makes them determinis
 - each has one obligation;
 - actor and deontic force are explicit;
 - applicable trigger, condition, timing, boundary, and exception slots are resolved;
-- each `MUST` and `MUST NOT` has exactly one canonical, falsifiable, load-bearing acceptance criterion that does not widen its requirement;
+- each `MUST` and `MUST NOT` has a verifiable acceptance criterion;
 - rationale is separated; and
 - no unresolved set-level contradiction is known.
 
