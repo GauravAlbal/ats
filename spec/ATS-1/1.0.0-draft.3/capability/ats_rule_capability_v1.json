@@ -1,7 +1,7 @@
 {
   "schema_version": "ats.rule_capability.v1",
   "implementation_name": "ats",
-  "implementation_version": "0.5.1",
+  "implementation_version": "0.5.0",
   "ats_version": "1.0.0-draft.3",
   "rules": [
     {

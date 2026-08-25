@@ -23,7 +23,7 @@
   {
    "path": "capability/ats_rule_capability_v1.json",
    "bytes": 69101,
-   "sha256": "c5af96000afe65cdb2e27729615be6184337064a51c802773a6b1deefffc818a"
+   "sha256": "3829be905a7cbc232ce22e355b6f116c29f5aaf16c0fcb3ad1767d01d6b04c35"
   },
   {
    "path": "examples/acceptance_criterion_semantics.md",
