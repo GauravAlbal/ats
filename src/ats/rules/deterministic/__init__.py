@@ -1,4 +1,4 @@
-"""Deterministic detectors for the thirty ATS-1 rules, evaluated over TextIR.
+"""Deterministic detectors for ATS-1 rules, evaluated over TextIR.
 
 Each module registers detectors through :func:`register`. A detector receives an
 :class:`~ats.ir.model.IrEvaluation` and returns exactly one
@@ -46,8 +46,7 @@ def load_detectors(rule_ids: Iterable[str] | None = None) -> dict[str, IrDetecto
     Every module registers its detectors as a side effect of import. When
     ``rule_ids`` is given, only the detectors whose rule id is in it are
     returned; the lint call site passes the active context's registry ids, so
-    a draft.1 context sees the 30 draft.1 rules and a draft.2 context sees the
-    full 36.
+    each normative edition sees exactly its own rule set.
     """
     from . import (  # noqa: F401
         basis,
@@ -61,6 +60,7 @@ def load_detectors(rule_ids: Iterable[str] | None = None) -> dict[str, IrDetecto
         quantity,
         reference,
         requirements,
+        requirements_draft3,
         terminology,
         time_rules,
     )
