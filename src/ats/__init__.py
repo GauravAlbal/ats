@@ -9,10 +9,10 @@ from __future__ import annotations
 
 __all__ = ["__version__", "SKILL_PACK_VERSION", "IMPLEMENTATION_NAME"]
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 IMPLEMENTATION_NAME = "ats"
 
 #: Version of the public skill surface and its packaging.
 #: Independent of the implementation version above and of the ATS-1 standard
-#: edition (draft.2 new authoring / draft.1 legacy interpretation).
+#: edition. Draft.3 is available; authoring-default selection is policy-owned.
 SKILL_PACK_VERSION = "0.1.3"
