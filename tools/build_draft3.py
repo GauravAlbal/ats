@@ -71,8 +71,17 @@ def main() -> int:
     old_bump = '''    # Only amended or new rules carry the draft.2 rule_version.\n    bumped = {"ATS-DISC-003", "ATS-COORD-001", "ATS-COORD-002", "ATS-BASIS-001",\n              "ATS-BASIS-002", "ATS-PRES-003", "ATS-CLOSE-001"}\n    for rule in rules:\n        if rule["rule_id"] in bumped:\n            assert rule["rule_version"] == SPEC_VERSION, rule["rule_id"]\n        else:\n            assert rule["rule_version"] == "1.0.0-draft.1", rule["rule_id"]'''
     new_bump = '''    draft2_bumped = {"ATS-DISC-003", "ATS-COORD-001", "ATS-COORD-002", "ATS-BASIS-001",\n                     "ATS-BASIS-002", "ATS-PRES-003", "ATS-CLOSE-001"}\n    draft3_bumped = {"ATS-REQ-004"}\n    for rule in rules:\n        if rule["rule_id"] in draft3_bumped:\n            assert rule["rule_version"] == SPEC_VERSION, rule["rule_id"]\n        elif rule["rule_id"] in draft2_bumped:\n            assert rule["rule_version"] == "1.0.0-draft.2", rule["rule_id"]\n        else:\n            assert rule["rule_version"] == "1.0.0-draft.1", rule["rule_id"]'''
     replace_one(validator, old_bump, new_bump)
-    marker = '    spec = (ROOT / "ATS-1_SPEC.md").read_text(encoding="utf-8")\n'
-    replace_one(validator, marker, marker + '    assert "Draft.3 amendment (D-G)" in spec\n    assert (ROOT / "examples" / "acceptance_criterion_semantics.md").is_file()\n')
+    marker = (
+        '    spec = (ROOT / "ATS-1_SPEC.md").read_text(encoding="utf-8")\n'
+        '    spec_ids = set(re.findall(r"ATS-[A-Z]+-[0-9]{3}", spec))\n'
+    )
+    replacement = (
+        '    spec = (ROOT / "ATS-1_SPEC.md").read_text(encoding="utf-8")\n'
+        '    assert "Draft.3 amendment (D-G)" in spec\n'
+        '    assert (ROOT / "examples" / "acceptance_criterion_semantics.md").is_file()\n'
+        '    spec_ids = set(re.findall(r"ATS-[A-Z]+-[0-9]{3}", spec))\n'
+    )
+    replace_one(validator, marker, replacement)
 
     manifest = DST / "MANIFEST.json"
     doc = json.loads(manifest.read_text(encoding="utf-8"))
