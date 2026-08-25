@@ -48,6 +48,11 @@ def main() -> int:
         '    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"',
         '    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.3"',
     )
+    replace_one(
+        tests,
+        '        "New durable authoring** resolves ATS-1 `1.0.0-draft.2`",',
+        '        "New durable authoring** resolves ATS-1 `1.0.0-draft.3`",',
+    )
     durable_test = '''\n\ndef test_two_default_guard_follows_current_new_authoring_edition() -> None:\n    from ats.skill_pack import _stale_draft1_findings\n\n    assert STANDARD_VERSIONS_SUPPORTED == {\n        "new_authoring": "1.0.0-draft.3",\n        "legacy_interpretation": "1.0.0-draft.1",\n    }\n    legitimate = (\n        "New durable authoring resolves ATS-1 1.0.0-draft.3; "\n        "legacy material stays ATS-1 1.0.0-draft.1."\n    )\n    stale = "New durable authoring uses ATS-1 1.0.0-draft.1."\n    assert _stale_draft1_findings(legitimate, "legitimate.md") == []\n    findings = _stale_draft1_findings(stale, "stale.md")\n    assert [finding.code for finding in findings] == ["DRAFT1-DEFAULT"]\n'''
     text = tests.read_text(encoding="utf-8")
     if "def test_two_default_guard_follows_current_new_authoring_edition" not in text:
