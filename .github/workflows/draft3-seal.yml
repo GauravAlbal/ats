@@ -52,12 +52,17 @@ jobs:
 
       - name: Commit generated sealed package
         run: |
-          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard spec/ATS-1/1.0.0-draft.3)" ]; then
+          # The builder also stages the future public-gate edit in the worktree so it can
+          # be exercised before cutover. The Actions token deliberately does not own
+          # workflow-file mutation; discard that local edit here and publish only the
+          # sealed normative package. The authorized connector lands the gate edit later.
+          git checkout -- .github/workflows/public-ci.yml
+          git add spec/ATS-1/1.0.0-draft.3
+          if git diff --cached --quiet; then
             echo "draft.3 already generated and current"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add spec/ATS-1/1.0.0-draft.3 .github/workflows/public-ci.yml
           git commit -m "Seal ATS-1 1.0.0-draft.3"
           git push origin HEAD:draft3-seal
