@@ -1,4 +1,5 @@
 name: Fix draft3 pack contract
+# Rerun after simplifying the legacy-default heuristic to same-line semantics.
 on:
   push:
     branches: [draft3-authoring-default]
