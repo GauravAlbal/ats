@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_preservation_report_v1.schema.json",
+  "title": "ATS TextPreservationReportV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "report_id",
+    "source_artifact_id",
+    "source_sha256",
+    "output_artifact_id",
+    "output_sha256",
+    "policy_snapshot_id",
+    "transformation_class",
+    "p0_checks",
+    "p1_checks",
+    "semantic_deltas",
+    "unsupported_material_additions",
+    "question_results",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.preservation_report.v1"
+    },
+    "report_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "source_artifact_id": {
+      "type": "string"
+    },
+    "source_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "output_artifact_id": {
+      "type": "string"
+    },
+    "output_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "policy_snapshot_id": {
+      "type": "string"
+    },
+    "retention_contract_id": {
+      "type": "string"
+    },
+    "transformation_class": {
+      "enum": [
+        "format_only",
+        "copyedit",
+        "rewrite",
+        "compress",
+        "simplify",
+        "summarize"
+      ]
+    },
+    "p0_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "field_ref",
+          "status"
+        ],
+        "properties": {
+          "field_ref": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "preserved",
+              "changed_authorized",
+              "changed_unauthorized",
+              "unavailable"
+            ]
+          },
+          "source_value": {},
+          "output_value": {},
+          "authorization_ref": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "p1_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "relation_ref",
+          "status"
+        ],
+        "properties": {
+          "relation_ref": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "preserved",
+              "changed_authorized",
+              "changed_unauthorized",
+              "missing",
+              "unavailable"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "semantic_deltas": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/semantic_delta"
+      }
+    },
+    "unsupported_material_additions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "question_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "source_answerable",
+          "output_answerable",
+          "status"
+        ],
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "source_answerable": {
+            "type": "boolean"
+          },
+          "output_answerable": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail",
+              "unavailable"
+            ]
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "$ref": "ats_common_v1.schema.json#/$defs/conformance_status"
+    },
+    "verified_by": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/detector"
+      }
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

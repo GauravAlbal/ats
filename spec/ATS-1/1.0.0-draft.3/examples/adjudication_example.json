@@ -1,0 +1,15 @@
+{
+  "schema_version": "ats.adjudication.v1",
+  "adjudication_id": "adjudication-modal-001",
+  "finding_id": "finding-modal-001",
+  "disposition": "accepted",
+  "adjudicator": "human:example-reviewer",
+  "rationale": "The surrounding requirement creates mandatory stale-policy rejection; the intended force is MUST.",
+  "timestamp": "2026-08-02T22:08:00Z",
+  "selected_interpretation_id": "obligation",
+  "authorized_repair_id": "repair-obligation",
+  "evidence_refs": [
+    "REQ-POLICY-017"
+  ],
+  "policy_snapshot_id": "policy-example-specify"
+}

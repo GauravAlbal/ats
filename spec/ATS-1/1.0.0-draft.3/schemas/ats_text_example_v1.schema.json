@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_text_example_v1.schema.json",
+  "title": "ATS TextExampleV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "example_id",
+    "text",
+    "profile",
+    "rule_id",
+    "label",
+    "rationale",
+    "protected_impact",
+    "provenance",
+    "synthetic",
+    "split_group"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.text_example.v1"
+    },
+    "example_id": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "context": {
+      "type": "string"
+    },
+    "source_artifact": {
+      "type": "string"
+    },
+    "source_span": {
+      "$ref": "ats_common_v1.schema.json#/$defs/span"
+    },
+    "repository_group": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "profile": {
+      "$ref": "ats_common_v1.schema.json#/$defs/profile"
+    },
+    "rule_id": {
+      "type": "string",
+      "pattern": "^ATS-[A-Z]+-[0-9]{3}$"
+    },
+    "label": {
+      "enum": [
+        "conforming",
+        "violation",
+        "near_miss",
+        "hard_negative",
+        "exception",
+        "ambiguous",
+        "insufficient_context"
+      ]
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "protected_impact": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "P0",
+          "P1",
+          "P2"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "adjudicators": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "provenance": {
+      "enum": [
+        "natural",
+        "synthetic_mutation",
+        "human_authored_fixture",
+        "model_authored_fixture"
+      ]
+    },
+    "use_authority": {
+      "type": "string"
+    },
+    "synthetic": {
+      "type": "boolean"
+    },
+    "mutation_operator": {
+      "type": "string"
+    },
+    "split_group": {
+      "type": "string"
+    },
+    "related_finding_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

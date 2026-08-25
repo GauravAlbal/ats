@@ -1,0 +1,53 @@
+{
+  "schema_version": "ats.acceptance_receipt.v1",
+  "receipt_id": "receipt-example-001",
+  "receipt_sha256": "df9481f5bbe26480a09470c51f9c1bc0ed01d1efeda6abc05418c7b546c154a3",
+  "standard": "ATS-1",
+  "spec_version": "1.0.0-draft.1",
+  "source_sha256": "1a28e5286a57b86d4e041f13b5443198b6b38b89a23a6f36b287267cb0d6f770",
+  "policy_snapshot_id": "policy-example-assess",
+  "policy_snapshot_sha256": "28b81131b9dc6fcd700fef5732bec912b5244345dc5856217f0f30b881570255",
+  "implementation": {
+    "name": "arqtext",
+    "version": "0.1.0",
+    "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "parser_version": "0.1.0",
+    "rule_registry_version": "1.0.0-draft.1",
+    "lexicon_version": "ats_force_lexicon_v1"
+  },
+  "profiles": [
+    "ASSESS"
+  ],
+  "deterministic_summary": {
+    "required_passed": 11,
+    "required_failed": 0,
+    "required_unavailable": 0,
+    "advisory_findings": 1
+  },
+  "semantic_summary": {
+    "proposed": 2,
+    "accepted": 1,
+    "rejected": 1,
+    "waived": 0,
+    "unresolved": 0,
+    "abstained": 0
+  },
+  "finding_refs": [
+    "finding-example-a",
+    "finding-example-b"
+  ],
+  "adjudication_refs": [
+    "adjudication-example-a",
+    "adjudication-example-b"
+  ],
+  "conformance": {
+    "mechanical": "PASS",
+    "profile": "PASS",
+    "semantic_review": "PASS",
+    "preservation": "NOT_APPLICABLE",
+    "forecast_calibration": "INSUFFICIENT_EVIDENCE"
+  },
+  "adjudicator": "human:example-reviewer",
+  "created_at": "2026-08-02T22:10:00Z",
+  "supersedes": []
+}

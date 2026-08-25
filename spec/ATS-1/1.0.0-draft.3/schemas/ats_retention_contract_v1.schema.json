@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_retention_contract_v1.schema.json",
+  "title": "ATS RetentionContractV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "contract_id",
+    "source_artifact_id",
+    "source_sha256",
+    "reader_task",
+    "transformation_class",
+    "mandatory_claims",
+    "mandatory_fields",
+    "mandatory_relations",
+    "allowed_omissions",
+    "required_questions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.retention_contract.v1"
+    },
+    "contract_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "source_artifact_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "source_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "reader_task": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transformation_class": {
+      "enum": [
+        "format_only",
+        "copyedit",
+        "rewrite",
+        "compress",
+        "simplify",
+        "summarize"
+      ]
+    },
+    "target_length": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "mandatory_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "mandatory_fields": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "uniqueItems": true
+      }
+    },
+    "mandatory_relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_id",
+          "type",
+          "target_id"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "target_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "allowed_omissions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "required_caveats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "created_at": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

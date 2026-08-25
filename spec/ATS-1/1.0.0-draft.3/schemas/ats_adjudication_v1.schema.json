@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_adjudication_v1.schema.json",
+  "title": "ATS TextAdjudicationV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "adjudication_id",
+    "finding_id",
+    "disposition",
+    "adjudicator",
+    "rationale",
+    "timestamp",
+    "policy_snapshot_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.adjudication.v1"
+    },
+    "adjudication_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "finding_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "disposition": {
+      "enum": [
+        "accepted",
+        "rejected",
+        "waived",
+        "deferred",
+        "resolved",
+        "unresolved"
+      ]
+    },
+    "adjudicator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "selected_interpretation_id": {
+      "type": "string"
+    },
+    "authorized_repair_id": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "policy_snapshot_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
