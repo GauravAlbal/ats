@@ -27,20 +27,30 @@ jobs:
           python -m pip install --disable-pip-version-check uv==0.11.8
           uv sync --frozen
           echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
-      - name: Gate two-default verifier semantics
+      - name: Gate version-law semantics
         run: |
           python - <<'PY'
           from ats.skill_pack import STANDARD_VERSIONS_SUPPORTED, _stale_draft1_findings
+          print(STANDARD_VERSIONS_SUPPORTED)
           assert STANDARD_VERSIONS_SUPPORTED == {
               'new_authoring': '1.0.0-draft.3',
               'legacy_interpretation': '1.0.0-draft.1',
           }
           ok = 'New durable authoring resolves ATS-1 1.0.0-draft.3; legacy material stays 1.0.0-draft.1.'
           bad = 'New durable authoring uses ATS-1 1.0.0-draft.1.'
-          assert _stale_draft1_findings(ok, 'ok.md') == []
-          assert len(_stale_draft1_findings(bad, 'bad.md')) == 1
+          ok_findings = _stale_draft1_findings(ok, 'ok.md')
+          bad_findings = _stale_draft1_findings(bad, 'bad.md')
+          print('ok_findings', ok_findings)
+          print('bad_findings', bad_findings)
+          assert ok_findings == []
+          assert len(bad_findings) == 1
           PY
-          python -m pytest -q tests/unit/test_cli_spec_defaults.py tests/unit/test_skill_pack.py tests/unit/test_draft3_package.py
+      - name: Gate default-resolution tests
+        run: python -m pytest -q tests/unit/test_cli_spec_defaults.py
+      - name: Gate skill-pack tests
+        run: python -m pytest -q tests/unit/test_skill_pack.py
+      - name: Gate draft3 package tests
+        run: python -m pytest -q tests/unit/test_draft3_package.py
       - name: Commit canonical pack-contract fixes
         run: |
           git add src/ats/skill_pack.py skills/public/ats/SKILL.md
