@@ -44,7 +44,7 @@ jobs:
 
       - name: Verify draft.1 and draft.2 are untouched
         run: |
-          git diff --exit-code master -- spec/ATS-1/1.0.0-draft.1 spec/ATS-1/1.0.0-draft.2
+          git diff --exit-code origin/master -- spec/ATS-1/1.0.0-draft.1 spec/ATS-1/1.0.0-draft.2
 
       - name: Run relevant repository tests
         run: |
