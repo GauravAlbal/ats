@@ -27,14 +27,14 @@ SPEC_ROOT: Final[Path] = REPO_ROOT / "spec" / "ATS-1"
 #: The legacy interpretation default (ADR-0020): corpus reads, the annotation
 #: bench, and unlabeled historical material resolve here when no policy or
 #: explicit --spec-version pins an edition. An old artifact must never acquire
-#: draft.2 semantics merely because the fleet advanced.
+#: newer-edition semantics merely because the fleet advanced.
 DEFAULT_SPEC_VERSION: Final[str] = "1.0.0-draft.1"
 
 #: The new durable authoring default (ADR-0020, F0): new ATS-authored artifacts
 #: resolve here. The fleet policy document pins this edition, so a command run
-#: under the fleet policy (or any policy whose declared spec_version is draft.2)
-#: resolves draft.2 automatically; this constant is the documented anchor.
-AUTHORING_SPEC_VERSION: Final[str] = "1.0.0-draft.2"
+#: under the fleet policy (or any policy whose declared spec_version is draft.3)
+#: resolves draft.3 automatically; this constant is the documented anchor.
+AUTHORING_SPEC_VERSION: Final[str] = "1.0.0-draft.3"
 
 
 def declared_policy_spec_version(path: Path) -> str | None:

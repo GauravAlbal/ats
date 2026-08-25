@@ -121,7 +121,7 @@ def _context(args: argparse.Namespace) -> Context:
     if spec_version is None:
         # Two-default policy (ADR-0020, F0): the policy document pins the
         # standard edition the artifact was authored under. New durable
-        # authoring under the fleet policy resolves draft.2 automatically;
+        # authoring under the fleet policy resolves draft.3 automatically;
         # commands with no policy and no explicit --spec-version keep the
         # legacy interpretation default (draft.1) for unlabeled material.
         policy_path = getattr(args, "policy", None)

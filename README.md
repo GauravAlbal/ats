@@ -36,7 +36,7 @@ Use ATS to write the implementation specification for this change.
 ```
 
 The `ats` front door chooses the right public skill. New durable authoring uses
-ATS-1 `1.0.0-draft.2`, the result stays readable as prose, and the local runtime
+ATS-1 `1.0.0-draft.3`, the result stays readable as prose, and the local runtime
 performs deterministic checks. [Install ATS](#install) or
 [jump straight to the four skills](#the-four-skills).
 
@@ -277,8 +277,8 @@ export PATH="$HOME/.local/bin:$PATH"
 ats spec status
 ```
 
-`ats spec status` should list both `1.0.0-draft.1` and
-`1.0.0-draft.2`. Restart an already-running agent once so it discovers the new
+`ats spec status` should list `1.0.0-draft.1`, `1.0.0-draft.2`, and
+`1.0.0-draft.3`. Restart an already-running agent once so it discovers the new
 skills.
 
 ### 3. Ask for the artifact

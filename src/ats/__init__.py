@@ -15,4 +15,4 @@ IMPLEMENTATION_NAME = "ats"
 #: Version of the public skill surface and its packaging.
 #: Independent of the implementation version above and of the ATS-1 standard
 #: edition (draft.2 new authoring / draft.1 legacy interpretation).
-SKILL_PACK_VERSION = "0.1.3"
+SKILL_PACK_VERSION = "0.1.4"

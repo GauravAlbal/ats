@@ -2,7 +2,7 @@
 
 The fleet policy is the machine-readable contract for deciding when ATS applies
 to an artifact, what enforcement is required, and how failures are treated.
-The checked-in default is a host-neutral public draft.2 authoring policy; a
+The checked-in default is a host-neutral public draft.3 authoring policy; a
 deployment may provide an explicit policy for local fleet conventions. This
 module validates ``ats.fleet_policy.v1`` documents against the repository-local
 schema, binds them by content address (fail-closed: a document whose
@@ -37,7 +37,7 @@ from .spec_package import REPO_ROOT
 #: Repository-local fleet policy schema id (ADR-0003: local extension, new $id).
 FLEET_POLICY_SCHEMA_ID: Final[str] = "ats_fleet_policy_v1.schema.json"
 
-#: Host-neutral public draft.2 policy used when no --policy is given.
+#: Host-neutral public draft.3 policy used when no --policy is given.
 DEFAULT_POLICY_PATH: Final[Path] = REPO_ROOT / "config" / "policies" / "fleet_policy.json"
 
 #: The schema_version discriminator fleet policy documents declare.
