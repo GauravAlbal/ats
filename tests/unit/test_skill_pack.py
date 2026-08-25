@@ -670,6 +670,12 @@ def test_two_default_guard_follows_current_new_authoring_edition() -> None:
         "legacy material stays ATS-1 1.0.0-draft.1."
     )
     stale = "New durable authoring uses ATS-1 1.0.0-draft.1."
+    contradictory = (
+        "New durable authoring uses ATS-1 1.0.0-draft.1; "
+        "1.0.0-draft.3 is unsupported."
+    )
     assert _stale_draft1_findings(legitimate, "legitimate.md") == []
     findings = _stale_draft1_findings(stale, "stale.md")
     assert [finding.code for finding in findings] == ["DRAFT1-DEFAULT"]
+    contradictory_findings = _stale_draft1_findings(contradictory, "contradictory.md")
+    assert [finding.code for finding in contradictory_findings] == ["DRAFT1-DEFAULT"]

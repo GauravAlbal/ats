@@ -1328,21 +1328,22 @@ def _absolute_path_findings(text: str, rel: str, repo_root: Path) -> list[Findin
 
 
 def _stale_draft1_findings(text: str, rel: str) -> list[Finding]:
-    """No instruction telling new authoring to use the legacy draft.1 edition.
+    """No instruction binding new authoring to the legacy draft.1 edition.
 
-    The check is deliberately line-local. Mentioning both defaults on one line is
-    legitimate when that same line also names the currently declared new-authoring
-    edition. This follows STANDARD_VERSIONS_SUPPORTED rather than hardcoding draft.2.
+    Evaluate clause-local bindings rather than treating the mere presence of the
+    current edition elsewhere on a line as exculpatory. This permits the canonical
+    two-default construction (new authoring -> current edition; legacy -> draft.1)
+    while still catching contradictory clauses that bind new authoring to draft.1.
     """
     findings: list[Finding] = []
-    current = STANDARD_VERSIONS_SUPPORTED["new_authoring"]
+    new_authoring = re.compile(r"new(?: durable)? authoring", re.IGNORECASE)
+    clause_break = re.compile(r";|[!?](?=\s|$)|\.(?=\s+[A-Z]|\s*$)")
     for line in text.splitlines():
-        if (
-            re.search(r"new(?: durable)? authoring", line, re.IGNORECASE)
-            and "1.0.0-draft.1" in line
-            and current not in line
-        ):
-            findings.append(Finding("DRAFT1-DEFAULT", "language ties new authoring to draft.1", file=rel))
+        for clause in clause_break.split(line):
+            if new_authoring.search(clause) and "1.0.0-draft.1" in clause:
+                findings.append(
+                    Finding("DRAFT1-DEFAULT", "language ties new authoring to draft.1", file=rel)
+                )
     return findings
 
 
