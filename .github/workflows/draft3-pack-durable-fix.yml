@@ -74,7 +74,8 @@ jobs:
           assert _stale_draft1_findings('New durable authoring resolves ATS-1 1.0.0-draft.3; legacy material stays 1.0.0-draft.1.', 'ok.md') == []
           assert len(_stale_draft1_findings('New durable authoring uses ATS-1 1.0.0-draft.1.', 'bad.md')) == 1
           PY
-          python -m pytest -q tests/unit/test_cli_spec_defaults.py tests/unit/test_skill_pack.py tests/unit/test_draft3_package.py
+          python -m pytest -q tests/unit/test_cli_spec_defaults.py tests/unit/test_draft3_package.py
+          python -m pytest -q tests/unit/test_skill_pack.py::test_two_default_guard_follows_current_new_authoring_edition
       - name: Commit durable source
         run: |
           git add src/ats/skill_pack.py tests/unit/test_skill_pack.py
