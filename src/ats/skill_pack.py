@@ -77,7 +77,7 @@ PLUGIN_NAME: Final[str] = "ats-skill-pack"
 PLUGIN_LICENSE: Final[str] = "Apache-2.0 AND CC-BY-4.0"
 
 STANDARD_VERSIONS_SUPPORTED: Final[dict[str, str]] = {
-    "new_authoring": "1.0.0-draft.2",
+    "new_authoring": "1.0.0-draft.3",
     "legacy_interpretation": "1.0.0-draft.1",
 }
 
@@ -938,7 +938,7 @@ def verify_pack(pack_dir: Path, repo_root: Path) -> list[Finding]:
             Finding(
                 "STANDARD-VERSIONS",
                 f"standard_versions_supported {manifest.get('standard_versions_supported')!r} "
-                f"!= {STANDARD_VERSIONS_SUPPORTED!r} (new authoring must be draft.2)",
+                f"!= {STANDARD_VERSIONS_SUPPORTED!r} (new authoring must be {STANDARD_VERSIONS_SUPPORTED['new_authoring']})",
             )
         )
     generated_at = manifest.get("generated_at")
@@ -1328,24 +1328,20 @@ def _absolute_path_findings(text: str, rel: str, repo_root: Path) -> list[Findin
 
 
 def _stale_draft1_findings(text: str, rel: str) -> list[Finding]:
-    """No instruction telling new authoring to use draft.1.
+    """No instruction telling new authoring to use the legacy draft.1 edition.
 
-    Matched per line. A "new authoring … draft.1" adjacency is legitimate only
-    in the two-default construction, where draft.2 sits between the mentions
-    (new authoring resolves draft.2; legacy stays draft.1); flagging requires
-    the draft.1 mention to be bound to new authoring without an intervening
-    draft.2.
+    The check is deliberately line-local. Mentioning both defaults on one line is
+    legitimate when that same line also names the currently declared new-authoring
+    edition. This follows STANDARD_VERSIONS_SUPPORTED rather than hardcoding draft.2.
     """
     findings: list[Finding] = []
-    for match in re.finditer(r"new(?: durable)? authoring", text, re.IGNORECASE):
-        window = text[match.end() : match.end() + 200].split("\n", 1)[0]
-        draft1 = re.search(r"1\.0\.0-draft\.1", window)
-        if draft1 and not re.search(r"1\.0\.0-draft\.2", window[: draft1.start()]):
-            findings.append(Finding("DRAFT1-DEFAULT", "language ties new authoring to draft.1", file=rel))
-    for match in re.finditer(r"1\.0\.0-draft\.1", text):
-        window = text[match.end() : match.end() + 200].split("\n", 1)[0]
-        new_auth = re.search(r"new(?: durable)? authoring", window, re.IGNORECASE)
-        if new_auth and not re.search(r"1\.0\.0-draft\.2", window[: new_auth.start()]):
+    current = STANDARD_VERSIONS_SUPPORTED["new_authoring"]
+    for line in text.splitlines():
+        if (
+            re.search(r"new(?: durable)? authoring", line, re.IGNORECASE)
+            and "1.0.0-draft.1" in line
+            and current not in line
+        ):
             findings.append(Finding("DRAFT1-DEFAULT", "language ties new authoring to draft.1", file=rel))
     return findings
 
