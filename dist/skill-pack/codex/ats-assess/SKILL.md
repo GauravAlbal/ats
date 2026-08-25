@@ -57,13 +57,13 @@ the CLI, schemas, and checks named below are the complete execution surface.
 
 ## Version behavior
 
-- New durable authoring resolves ATS-1 `1.0.0-draft.2` under the binding
+- New durable authoring resolves ATS-1 `1.0.0-draft.3` under the binding
   policy (which pins the edition; no `--spec-version` override unless the user
   passes one).
 - Legacy/historical material (corpus, annotation bench, unlabeled older
   artifacts) is interpreted under `1.0.0-draft.1` unless migration is explicit.
-- A draft.2 artifact under a draft.1 policy is a **refusal**, never a silent
-  downgrade; a draft.1 artifact must not silently acquire draft.2 semantics.
+- A draft.3 artifact under a draft.1 policy is a **refusal**, never a silent
+  downgrade; a draft.1 artifact must not silently acquire draft.3 semantics.
 
 ## Authoring vs transformation
 

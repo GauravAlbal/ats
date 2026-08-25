@@ -8,6 +8,12 @@ the imported normative package is a separate, receipted import, never an edit in
 
 ## [Unreleased]
 
+### Changed — draft.3 authoring cutover candidate
+
+- New durable authoring and the checked-in fleet policy now resolve ATS-1 `1.0.0-draft.3`; legacy unlabeled interpretation remains draft.1 and explicit version pins still win.
+- Public authoring/review skills carry the draft.3 version law and D-G behavioral acceptance-criterion boundary.
+- Canonical public skill bytes changed, so the generated skill-pack candidate advances to `0.1.4`; the published release remains `0.1.3` until separately tagged/released.
+
 ### Proposed — draft.3 acceptance-criterion hardening
 
 - Added `docs/ATS_1_DRAFT_3_AC_HARDENING.md`, a prospective normative delta that

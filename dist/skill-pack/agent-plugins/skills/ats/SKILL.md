@@ -80,6 +80,11 @@ execution surface.
 9. Acceptance evidence is not the same discourse role as the requirement it verifies.
 10. Ask only when unresolved meaning blocks the requested action.
 
+Draft.3 `SPECIFY` refinement: an acceptance criterion is the canonical falsifiable
+behavioral proposition for its REQ. Tests, probes, proofs, and receipts are evidence
+used to adjudicate that proposition, not substitutes for it; if a materially broken
+implementation can satisfy the AC, strengthen the AC or decompose the REQ.
+
 ## How to route
 
 ### Step 1 — Determine the mode
@@ -126,13 +131,13 @@ which enforcement gates apply.
 
 Two defaults, never collapsed into one:
 
-- **New durable authoring** resolves ATS-1 `1.0.0-draft.2` under the binding
+- **New durable authoring** resolves ATS-1 `1.0.0-draft.3` under the binding
   policy. The policy pins the edition; no `--spec-version` override is needed.
 - **Legacy / historical material** stays `1.0.0-draft.1` unless migration is
   explicit.
 - An explicit `--spec-version` always wins.
-- A draft.2 artifact under a draft.1 policy is a **refusal**, never a silent
-  downgrade. A draft.1 artifact must not silently acquire draft.2 semantics.
+- A draft.3 artifact under a draft.1 policy is a **refusal**, never a silent
+  downgrade. A draft.1 artifact must not silently acquire draft.3 semantics.
 
 ### Step 6 — Route to the right skill
 
@@ -159,10 +164,10 @@ identifies the installed layout.
 ```text
 "Use ATS to write an architecture proposal for this change."
 → new authoring · ASSESS + SPECIFY composition · ats-spec + ats-assess,
-  architecture recipe · 1.0.0-draft.2
+  architecture recipe · 1.0.0-draft.3
 
 "Use ATS to turn these design notes into an implementation specification."
-→ transformation · SPECIFY · ats-spec, implementation program recipe · draft.2,
+→ transformation · SPECIFY · ats-spec, implementation program recipe · draft.3,
   source semantics never strengthened
 
 "Review this existing RFC with ATS."
@@ -170,11 +175,11 @@ identifies the installed layout.
   claim unless the user requested ATS conformance
 
 "Convert this incident analysis into an ATS postmortem."
-→ transformation · ASSESS · ats-assess, postmortem recipe · draft.2,
+→ transformation · ASSESS · ats-assess, postmortem recipe · draft.3,
   what-happened stays separate from why-we-believe-it
 
 "Use ATS for this technical assessment."
-→ new authoring · ASSESS · ats-assess · draft.2, uncertainty preserved
+→ new authoring · ASSESS · ats-assess · draft.3, uncertainty preserved
   (UNAVAILABLE is valid output)
 ```
 
@@ -187,7 +192,7 @@ identifies the installed layout.
    decides applicability when one is present).
 4. Select `ASSESS`, `SPECIFY`, or a declared composition.
 5. Resolve the standard version correctly — the two-default law above.
-6. Use draft.2 for new durable authoring.
+6. Use draft.3 for new durable authoring.
 7. Preserve draft.1 interpretation for historical material unless migration is
    explicit.
 8. Route to the selected public skill (`ats-spec`, `ats-assess`, or
@@ -244,7 +249,7 @@ merely because none exists — record `authority_precedence = UNAVAILABLE`.
 ```text
 User:  "Use ATS to write an architecture proposal for this change."
 Route: new authoring · ASSESS + SPECIFY · ats-spec + ats-assess ·
-       architecture recipe · 1.0.0-draft.2
+       architecture recipe · 1.0.0-draft.3
 Outcome:
   - ASSESS half: current state (observation), constraints, alternatives,
     judgment, unresolved points — each role preserved.
@@ -265,7 +270,7 @@ Outcome:
   - The source's causal claims remain causal *claims* — no observation is
     upgraded, no recommendation becomes a requirement.
   - A causal factor the source does not establish: UNAVAILABLE, not a guess.
-  - Edition reported as draft.1; never silently re-interpreted under draft.2.
+  - Edition reported as draft.1; never silently re-interpreted under draft.3.
 ```
 
 ### 3. Review stays review
@@ -286,7 +291,7 @@ Outcome:
 
 - Never force ATS onto casual prose, scratch notes, marketing, or exploratory chat.
 - Never collapse the two defaults into one global standard version.
-- Never let a draft.2 artifact silently downgrade to draft.1.
+- Never let a draft.3 artifact silently downgrade to draft.1.
 - Never dump TextIR, basis records, rule-registry, or receipt-schema internals into ordinary user output.
 - Never claim conformance the deterministic checks did not establish.
 - Never ask a human for a non-blocking unknown — type it `UNAVAILABLE` and continue.

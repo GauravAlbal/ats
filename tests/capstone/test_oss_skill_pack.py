@@ -1,11 +1,12 @@
 """OSS fresh-install and review capstones for the public ATS skill pack.
 
 The fresh-install scenario checks that a clean-environment user can install
-the pack, invoke the public ``ats`` skill, resolve draft.2 authoring, create
-an artifact, run deterministic checks, and receive a receipt. The pack has
-no private dependency, does not require manual TextIR authoring, avoids
-unnecessary questions, emits human-readable output, and states its standard
-identity.
+the pack, see draft.3 as the advertised new-authoring edition, create an
+artifact, run deterministic checks, and receive a receipt. Explicit draft.2
+policy compatibility is exercised separately without treating draft.2 as the
+pack default. The pack has no private dependency, does not require manual
+TextIR authoring, avoids unnecessary questions, emits human-readable output,
+and states its standard identity.
 
 The review scenario checks that pre-ATS prose with a tempting semantic
 ambiguity surfaces unresolved authority and force, keeps optional conversion
@@ -60,8 +61,8 @@ def _generic_pack_text() -> str:
 
 
 def _draft2_context() -> Context:
-    """The policy-pinned resolution (ADR-0020): new durable authoring resolves
-    draft.2 via the binding policy, exactly as the CLI does — no override."""
+    """Compatibility resolution for an explicitly draft.2-pinned policy,
+    exactly as the CLI resolves policy without a --spec-version override."""
     from ats.cli import _context
 
     return _context(argparse.Namespace(now=FIXED_NOW, policy=DRAFT2_POLICY_PATH))
@@ -188,8 +189,9 @@ def test_pack_is_installable_and_self_contained() -> None:
     ):
         assert required in spec_body, f"ats-spec installed procedure omits {required!r}"
     manifest = json.loads((PACK / "skill-pack-manifest.json").read_text())
-    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"
+    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.3"
     assert manifest["standard_versions_supported"]["legacy_interpretation"] == "1.0.0-draft.1"
+
 
 def test_fresh_install_recipe_targets_resolve_inside_isolated_pack(tmp_path: Path) -> None:
     """Recipe resolution must not depend on canonical files in this checkout."""
@@ -218,8 +220,8 @@ def test_fresh_install_recipe_targets_resolve_inside_isolated_pack(tmp_path: Pat
 
 
 def test_fresh_install_resolves_draft2_without_override() -> None:
-    """New durable authoring resolves draft.2 via the binding policy — no
-    --spec-version, no TextIR literacy required of the user."""
+    """An explicitly draft.2-pinned compatibility policy resolves draft.2
+    without a --spec-version override or TextIR literacy from the user."""
     ctx = _draft2_context()
     assert ctx.spec_version == "1.0.0-draft.2"
     policy = json.loads(DRAFT2_POLICY_PATH.read_text(encoding="utf-8"))
@@ -232,7 +234,8 @@ def test_fresh_install_resolves_draft2_without_override() -> None:
 
 
 def test_fresh_install_receipt_binds_draft2_and_output_is_human_readable() -> None:
-    """The receipt binds draft.2; the artifact surface is prose, not TextIR."""
+    """The explicit compatibility policy receipt binds draft.2; the artifact
+    surface is prose, not TextIR."""
     ctx = _draft2_context()
     policy = json.loads(DRAFT2_POLICY_PATH.read_text(encoding="utf-8"))
     ir = _oss_ir(policy)

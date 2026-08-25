@@ -128,7 +128,7 @@ Regression fixtures demonstrating all three live at `fixtures/skills/review/` (m
 ## Version behavior
 
 - Reviewing arbitrary prose claims nothing about ATS conformance and resolves no standard version.
-- If the user requests an ATS conformance review, resolve the standard version by the two-default law: new durable authoring under the binding policy resolves to `1.0.0-draft.2`; legacy/historical material resolves to `1.0.0-draft.1` unless migration is explicit; an explicit version wins; a draft.2 artifact under a draft.1 policy is a refusal, never a silent downgrade.
+- If the user requests an ATS conformance review, resolve the standard version by the two-default law: new durable authoring under the binding policy resolves to `1.0.0-draft.3`; legacy/historical material resolves to `1.0.0-draft.1` unless migration is explicit; an explicit version wins; a draft.3 artifact under a draft.1 policy is a refusal, never a silent downgrade.
 - If the user's environment has a policy, `ats policy resolve` decides applicability and version; the review follows it.
 
 ## Deterministic machinery
@@ -177,7 +177,7 @@ An ATS artifact under a resolved policy can produce a deterministic BLOCK:
 
 ```text
 BLOCK — deterministic conformance failure
-Artifact: spec.md (ATS-1 1.0.0-draft.2, policy resolved)
+Artifact: spec.md (ATS-1 1.0.0-draft.3, policy resolved)
 Check: ats ir lint — IR-STRUCT-014 (requirement block missing actor)
 Span: REQ-004 "Jobs are retried on failure."
 

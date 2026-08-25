@@ -2,7 +2,7 @@
 
 Legacy interpretation (corpus reads, bench, unlabeled material) defaults to
 draft.1; new durable authoring under a policy resolves the edition the policy
-pins — draft.2 for the fleet policy — without an explicit --spec-version.
+pins — draft.3 for the fleet policy — without an explicit --spec-version.
 An old artifact must never acquire draft.2 semantics merely because the
 fleet advanced, and an explicit --spec-version always wins.
 """
@@ -31,8 +31,8 @@ def test_no_policy_no_flag_resolves_the_legacy_interpretation_default() -> None:
     assert "ATS-COORD-001" not in ctx.registry.ids()
 
 
-def test_the_authoring_default_is_draft2() -> None:
-    assert AUTHORING_SPEC_VERSION == "1.0.0-draft.2"
+def test_the_authoring_default_is_draft3() -> None:
+    assert AUTHORING_SPEC_VERSION == "1.0.0-draft.3"
 
 
 def test_a_draft2_policy_snapshot_pins_the_edition_without_a_flag() -> None:
@@ -42,10 +42,11 @@ def test_a_draft2_policy_snapshot_pins_the_edition_without_a_flag() -> None:
     assert len(ctx.registry.ids()) == 36
 
 
-def test_the_fleet_policy_pins_draft2_for_new_authoring() -> None:
+def test_the_fleet_policy_pins_draft3_for_new_authoring() -> None:
     ctx = _context(_args(policy="config/policies/fleet_policy.json"))
-    assert ctx.spec_version == "1.0.0-draft.2"
-    assert len(ctx.registry.ids()) == 36
+    assert ctx.spec_version == "1.0.0-draft.3"
+    assert len(ctx.registry.ids()) == 37
+    assert "ATS-REQ-004" in ctx.registry.ids()
 
 
 def test_a_draft1_policy_keeps_the_legacy_interpretation() -> None:

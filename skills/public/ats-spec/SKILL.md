@@ -108,7 +108,7 @@ do not pad every unit with every slot, and do not drop a slot that is material.
 - non-goals — what this artifact explicitly does not address;
 - failure behavior — what happens when the behavior fails;
 - proof obligations — what must be demonstrated, and by whom;
-- acceptance criteria — falsifiable evidence obligations;
+- acceptance criteria — canonical falsifiable behavioral propositions; tests, probes, proofs, and receipts are evidence used to adjudicate them, not the criteria themselves;
 - update/reversal conditions — when the artifact or its decisions may change;
 - unresolved state — typed as such, never guessed.
 
@@ -140,8 +140,14 @@ Acceptance:
   after restart, accepted-but-unconsumed mail remains recoverable.
 ```
 
-The requirement declares the desired invariant; the acceptance converts it into a
-falsifiable evidence obligation. Do not "fix" the overlap by deleting either side.
+The requirement declares the desired invariant; the acceptance states the canonical
+falsifiable behavioral proposition. Tests, probes, proofs, or receipts are subordinate
+evidence used to adjudicate that proposition. Do not "fix" the overlap by deleting either side.
+
+For each normative REQ/AC pair, ask one adversarial question: **could a materially broken
+implementation satisfy this AC as written?** If yes, strengthen the AC or decompose the REQ.
+The AC must not compensate by adding an independent obligation, widening scope, or strengthening
+deontic force; normative behavior belongs in the REQ.
 
 ## Local semantic closure
 
@@ -187,11 +193,11 @@ Basis vocabulary at a glance (mechanics live in the internal authoring skill, no
 
 ## Version behavior
 
-- New durable authoring resolves ATS-1 `1.0.0-draft.2` under the binding policy. The
+- New durable authoring resolves ATS-1 `1.0.0-draft.3` under the binding policy. The
   policy pins the edition — no `--spec-version` override is needed.
 - Legacy / historical material stays `1.0.0-draft.1` unless migration is explicit.
-- A draft.2 artifact under a draft.1 policy is a refusal, never a silent downgrade.
-- A draft.1 artifact must not silently acquire draft.2 semantics.
+- A draft.3 artifact under a draft.1 policy is a refusal, never a silent downgrade.
+- A draft.1 artifact must not silently acquire draft.3 semantics.
 - An explicit `--spec-version` always wins.
 
 ## Procedure (standalone)
@@ -273,7 +279,7 @@ Dependency: clock synchronization within 100 ms.
 
 ```text
 AC-1  On a clean install, `ats spec status` prints the imported edition and exits 0.
-AC-2  A draft.2 IR linted under a draft.1 policy exits non-zero with a refusal —
+AC-2  A draft.3 IR linted under a draft.1 policy exits non-zero with a refusal —
       never a silent downgrade.
 ```
 

@@ -193,10 +193,10 @@ def test_manifest_is_schema_valid_and_registered(tmp_path: Path) -> None:
 def test_manifest_identity_fields() -> None:
     manifest = _manifest()
     assert manifest["schema_version"] == MANIFEST_SCHEMA_VERSION
-    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.3"
+    assert manifest["skill_pack_version"] == SKILL_PACK_VERSION == "0.1.4"
     assert manifest["implementation_version"] == __version__
     assert manifest["standard_versions_supported"] == STANDARD_VERSIONS_SUPPORTED
-    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.2"
+    assert manifest["standard_versions_supported"]["new_authoring"] == "1.0.0-draft.3"
     assert re.fullmatch(r"[0-9a-f]{64}", manifest["canonical_source_sha256"])
     assert manifest["source_commit"]
     assert manifest["packager_version"]
@@ -579,7 +579,7 @@ def test_validator_fails_on_a_stale_draft1_new_authoring_default(tmp_path: Path)
     pack = _copy_pack(tmp_path)
     path = pack / "generic" / "ats" / "SKILL.md"
     text = path.read_text(encoding="utf-8").replace(
-        "New durable authoring** resolves ATS-1 `1.0.0-draft.2`",
+        "New durable authoring** resolves ATS-1 `1.0.0-draft.3`",
         "New durable authoring** resolves ATS-1 `1.0.0-draft.1`",
     )
     assert text != path.read_text(encoding="utf-8"), "mutation did not apply"
@@ -656,3 +656,26 @@ def test_validator_fails_on_a_manifest_pinned_to_a_non_reproducing_commit(
 
     findings = verify_pack(out, REPO_ROOT)
     assert "SOURCE-COMMIT" in {finding.code for finding in findings}
+
+
+def test_two_default_guard_follows_current_new_authoring_edition() -> None:
+    from ats.skill_pack import _stale_draft1_findings
+
+    assert STANDARD_VERSIONS_SUPPORTED == {
+        "new_authoring": "1.0.0-draft.3",
+        "legacy_interpretation": "1.0.0-draft.1",
+    }
+    legitimate = (
+        "New durable authoring resolves ATS-1 1.0.0-draft.3; "
+        "legacy material stays ATS-1 1.0.0-draft.1."
+    )
+    stale = "New durable authoring uses ATS-1 1.0.0-draft.1."
+    contradictory = (
+        "New durable authoring uses ATS-1 1.0.0-draft.1; "
+        "1.0.0-draft.3 is unsupported."
+    )
+    assert _stale_draft1_findings(legitimate, "legitimate.md") == []
+    findings = _stale_draft1_findings(stale, "stale.md")
+    assert [finding.code for finding in findings] == ["DRAFT1-DEFAULT"]
+    contradictory_findings = _stale_draft1_findings(contradictory, "contradictory.md")
+    assert [finding.code for finding in contradictory_findings] == ["DRAFT1-DEFAULT"]
