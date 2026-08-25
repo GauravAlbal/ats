@@ -19,7 +19,7 @@ from ._support import Collector, DetectorSpec, SubcheckSpec, detector
 # for behavior. Embedded evidence references inside a behavioral AC are allowed.
 TEST_SHAPED_AC = re.compile(
     r"^\s*(?:(?:test|spec)[A-Za-z0-9_.:/-]+|"
-    r"(?:pytest|go\s+test|cargo\s+test|npm\s+test|make\s+test)(?:\s+[^.;]+)?)"
+    r"(?:pytest|go\s+test|cargo\s+test|npm\s+test|make\s+test)(?:\s+\S+)*?)"
     r"\s+(?:passes?|succeeds?|is\s+green)(?:\.|$)",
     re.IGNORECASE,
 )
@@ -59,7 +59,7 @@ REQ004_HIDDEN_OBLIGATION = SubcheckSpec(
         power=DecisionPower.DETECTS_VIOLATIONS,
         subchecks=(REQ004_TEST_SHAPED, REQ004_HIDDEN_OBLIGATION),
         unavailable_conditions=(
-            "An artifact with no MUST/MUST NOT requirement acceptance criteria presents nothing to inspect.",
+            "An artifact with no MUST/MUST_NOT requirement acceptance criteria presents nothing to inspect.",
         ),
         known_limits=(
             "A clean deterministic run does not establish that an AC is load-bearing; constructing a materially broken implementation that still satisfies the AC is a semantic review task.",
