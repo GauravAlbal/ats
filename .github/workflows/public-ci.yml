@@ -63,6 +63,7 @@ jobs:
           python -m pytest -q
           tests/unit/test_package.py
           tests/unit/test_draft2_package.py
+          tests/unit/test_draft3_package.py
           tests/unit/test_skill_pack.py
           tests/unit/test_publication_gate.py
 
