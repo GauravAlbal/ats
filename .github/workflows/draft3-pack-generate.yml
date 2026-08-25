@@ -1,4 +1,5 @@
 name: Generate draft3 skill pack 0.1.4
+# Registered trigger for P0-bound generation.
 on:
   push:
     branches: [draft3-authoring-default]
