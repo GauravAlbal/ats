@@ -1,0 +1,264 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "example-specify-coordinates",
+  "source": {
+    "content_sha256": "9f8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b",
+    "media_type": "text/plain",
+    "locator": "examples/coordinates_source.txt"
+  },
+  "policy_snapshot_id": "policy-example-specify",
+  "language": "en",
+  "audience": {
+    "audience_id": "arq-implementers",
+    "expertise": "expert",
+    "assumed_glossary_refs": [
+      "arq-core-v1"
+    ]
+  },
+  "stable_coordinates": [
+    {
+      "kind": "requirement_id",
+      "id": "REQ-VERIFY-001",
+      "source_pointer": "sections[0]/claims[0]"
+    },
+    {
+      "kind": "requirement_id",
+      "id": "REQ-VERIFY-002",
+      "source_pointer": "sections[0]/claims[1]"
+    },
+    {
+      "kind": "acceptance_criterion_id",
+      "id": "AC-VERIFY-001",
+      "source_pointer": "sections[0]/claims[2]"
+    },
+    {
+      "kind": "acceptance_criterion_id",
+      "id": "AC-VERIFY-002",
+      "source_pointer": "sections[0]/claims[3]"
+    },
+    {
+      "kind": "decision_id",
+      "id": "DEC-VERIFY-001",
+      "source_pointer": "sections[0]/claims[4]"
+    },
+    {
+      "kind": "authority_reference",
+      "id": "AUTH-VERIFY-001",
+      "source_pointer": "sections[0]/claims[5]"
+    },
+    {
+      "kind": "work_item_id",
+      "id": "WI-VERIFY-001",
+      "source_pointer": "sections[0]/claims[6]"
+    },
+    {
+      "kind": "protocol_id",
+      "id": "PRT-ACQ-1",
+      "source_pointer": "sections[0]/claims[7]"
+    },
+    {
+      "kind": "protocol_version",
+      "id": "PRT-ACQ-1-V3",
+      "source_pointer": "sections[0]/claims[8]"
+    },
+    {
+      "kind": "dependency_target",
+      "id": "DEP-VERIFY-001",
+      "source_pointer": "sections[0]/relations[0]/dependency_target"
+    }
+  ],
+  "sections": [
+    {
+      "section_id": "requirement",
+      "heading": "Receipt re-verification",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-VERIFY-001",
+          "role": "requirement",
+          "proposition": "When the verifier accepts a receipt, it MUST re-verify the receipt against the policy snapshot currently in force.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-VERIFY-001",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "re-verify",
+            "object": "the receipt against the policy snapshot currently in force",
+            "trigger": "when the verifier accepts a receipt",
+            "acceptance_criterion_id": "AC-VERIFY-001",
+            "acceptance_criterion": "A receipt that fails re-verification against the in-force snapshot is refused with no accepted transition.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "Re-verification binds acceptance to the snapshot currently in force, not the snapshot recorded at authoring time."
+          }
+        },
+        {
+          "claim_id": "REQ-VERIFY-002",
+          "role": "requirement",
+          "proposition": "The verifier MUST refuse a receipt whose re-verification depends on a snapshot that no longer resolves.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-VERIFY-002",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "refuse",
+            "object": "a receipt whose re-verification depends on a snapshot that no longer resolves",
+            "acceptance_criterion_id": "AC-VERIFY-002",
+            "acceptance_criterion": "A fixture with an unresolvable snapshot dependency returns refused_unresolvable_snapshot.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "An unresolvable dependency cannot be evaluated, so acceptance would be unsupported.",
+            "semantic_basis": {
+              "basis": "DERIVED",
+              "rationale": "Follows mechanically from REQ-VERIFY-001 plus the dependency structure of the acceptance kernel."
+            }
+          },
+          "semantic_basis": {
+            "basis": "DERIVED",
+            "rationale": "The refusal obligation is entailed by the re-verification obligation once the snapshot dependency is established."
+          }
+        },
+        {
+          "claim_id": "AC-VERIFY-001",
+          "role": "definition",
+          "proposition": "Acceptance criterion AC-VERIFY-001: a receipt that fails re-verification against the in-force snapshot is refused with no accepted transition.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "AC-VERIFY-002",
+          "role": "definition",
+          "proposition": "Acceptance criterion AC-VERIFY-002: a fixture with an unresolvable snapshot dependency returns refused_unresolvable_snapshot.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "DEC-VERIFY-001",
+          "role": "judgment",
+          "decision_id": "DEC-VERIFY-001",
+          "proposition": "The verifier maintains a memoized map from artifact to the snapshot under which it was last verified.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "AUTHOR_JUDGMENT",
+            "rationale": "The memoization design is a new authoring decision; the source text does not specify an implementation strategy."
+          }
+        },
+        {
+          "claim_id": "AUTH-VERIFY-001",
+          "role": "sourced_report",
+          "proposition": "The acceptance-kernel reference states that receipt evaluation is bound to the policy snapshot under which the receipt was authored.",
+          "material": true,
+          "polarity": "positive",
+          "source_refs": [
+            "e1"
+          ],
+          "status": "asserted"
+        },
+        {
+          "claim_id": "WI-VERIFY-001",
+          "role": "definition",
+          "proposition": "Work item WI-VERIFY-001: backfill re-verification for receipts issued before draft.2.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "PRT-ACQ-1",
+          "role": "definition",
+          "proposition": "Protocol PRT-ACQ-1 governs acceptance queries between the verifier and the acceptance kernel.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        },
+        {
+          "claim_id": "PRT-ACQ-1-V3",
+          "role": "definition",
+          "proposition": "Protocol PRT-ACQ-1 version 3 is the protocol version in force for acceptance queries.",
+          "material": true,
+          "polarity": "positive",
+          "status": "asserted"
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e1",
+          "proposition": "The acceptance-kernel reference documents that receipt evaluation binds the policy snapshot under which the receipt was authored.",
+          "source": {
+            "source_id": "acceptance-kernel-reference",
+            "source_type": "external_source",
+            "availability": "present",
+            "locator": "reference:acceptance-kernel-v1"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [
+        {
+          "relation_id": "rel1",
+          "source_id": "REQ-VERIFY-002",
+          "type": "depends_on",
+          "target_id": "REQ-VERIFY-001",
+          "dependency_target": "DEP-VERIFY-001",
+          "material": true,
+          "notes": "The unresolvable-snapshot refusal is meaningful only once re-verification is mandatory."
+        },
+        {
+          "relation_id": "rel2",
+          "source_id": "AUTH-VERIFY-001",
+          "type": "supports",
+          "target_id": "REQ-VERIFY-001",
+          "material": true
+        },
+        {
+          "relation_id": "rel3",
+          "source_id": "PRT-ACQ-1-V3",
+          "type": "updates",
+          "target_id": "PRT-ACQ-1",
+          "material": true
+        }
+      ],
+      "update_indicators": [
+        {
+          "indicator_id": "UI-VERIFY-001",
+          "text": "If the acceptance kernel drops memoized verification, DEC-VERIFY-001 is invalidated.",
+          "target_claim_refs": [
+            "DEC-VERIFY-001"
+          ],
+          "effect": "invalidate_assumption"
+        }
+      ]
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "in-force-snapshot",
+      "canonical_term": "policy snapshot currently in force",
+      "definition": "The resolved policy snapshot the verifier applies at acceptance time, distinct from the snapshot recorded in the receipt.",
+      "scope": "Arq acceptance-policy kernel",
+      "audience": "expert"
+    }
+  ],
+  "extraction_status": "complete"
+}

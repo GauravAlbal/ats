@@ -54,6 +54,7 @@ jobs:
           python tools/validate_repo.py
           (cd spec/ATS-1/1.0.0-draft.1 && python tools/validate_package.py)
           (cd spec/ATS-1/1.0.0-draft.2 && python tools/validate_package.py)
+          (cd spec/ATS-1/1.0.0-draft.3 && python tools/validate_package.py)
           python -m ats.cli skills verify --pack dist/skill-pack
           python tools/smoke_cli.py
 
@@ -62,6 +63,7 @@ jobs:
           python -m pytest -q
           tests/unit/test_package.py
           tests/unit/test_draft2_package.py
+          tests/unit/test_draft3_package.py
           tests/unit/test_skill_pack.py
           tests/unit/test_publication_gate.py
 

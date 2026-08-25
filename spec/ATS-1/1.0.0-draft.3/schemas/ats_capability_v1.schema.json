@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_capability_v1.schema.json",
+  "title": "ATS CapabilityV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "implementation_name",
+    "implementation_version",
+    "ats_versions",
+    "schema_versions",
+    "profiles",
+    "rules",
+    "languages",
+    "formats",
+    "autofix_classes",
+    "preservation_methods",
+    "deterministic_replay",
+    "known_limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.capability.v1"
+    },
+    "implementation_name": {
+      "type": "string"
+    },
+    "implementation_version": {
+      "type": "string"
+    },
+    "ats_versions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "schema_versions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "profiles": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/profile"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule_id",
+          "detector_classes",
+          "authority_by_class"
+        ],
+        "properties": {
+          "rule_id": {
+            "type": "string"
+          },
+          "detector_classes": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "D0",
+                "D1",
+                "D2",
+                "D3",
+                "D4"
+              ]
+            }
+          },
+          "autofix": {
+            "enum": [
+              "safe_p2",
+              "review_required",
+              "forbidden",
+              "none"
+            ]
+          },
+          "authority_by_class": {
+            "type": "object",
+            "minProperties": 1,
+            "patternProperties": {
+              "^D[0-4]$": {
+                "enum": [
+                  "candidate_only",
+                  "proposal_only",
+                  "conformance_evidence"
+                ]
+              }
+            },
+            "additionalProperties": false
+          },
+          "authority_basis_refs": {
+            "type": "object",
+            "patternProperties": {
+              "^D[0-4]$": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "autofix_classes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "safe_p2",
+          "review_required",
+          "forbidden"
+        ]
+      }
+    },
+    "preservation_methods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "semantic_models": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/model_artifact"
+      }
+    },
+    "deterministic_replay": {
+      "type": "boolean"
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,209 @@
+{
+ "schema_version": "ats.package_manifest.v1",
+ "standard": "ATS-1",
+ "spec_version": "1.0.0-draft.3",
+ "generated_at": "2026-08-24T00:00:00Z",
+ "hash_algorithm": "SHA-256",
+ "files": [
+  {
+   "path": "ATS-1_SPEC.md",
+   "bytes": 138202,
+   "sha256": "8f40867eba01a33950adc099748ffa0a09d68ed16e4555c18d872f78494e3a13"
+  },
+  {
+   "path": "CHANGELOG.md",
+   "bytes": 1779,
+   "sha256": "de9ce4911b772c809d7143b056bfd7313db39389032a7011bcc52e29e21c2e67"
+  },
+  {
+   "path": "README.md",
+   "bytes": 2119,
+   "sha256": "63455141b133b23ff9af58cd2b90e211bec95cd828565fe9d91e4a67b8a82274"
+  },
+  {
+   "path": "capability/ats_rule_capability_v1.json",
+   "bytes": 69101,
+   "sha256": "3829be905a7cbc232ce22e355b6f116c29f5aaf16c0fcb3ad1767d01d6b04c35"
+  },
+  {
+   "path": "examples/acceptance_criterion_semantics.md",
+   "bytes": 642,
+   "sha256": "1bdf15bff9751ba1212afc936f7d6070508303b2b3f645e80616138bc7396e3d"
+  },
+  {
+   "path": "examples/acceptance_receipt_example.json",
+   "bytes": 1530,
+   "sha256": "e4dcd0cfecf77cc858cda0ef57391778ab0d50e20abe3d6965e1e80cae3f988b"
+  },
+  {
+   "path": "examples/adjudication_example.json",
+   "bytes": 547,
+   "sha256": "923e618222b02b07747a4802d744bf480c857ae09b1f89c56e40191f1291aff0"
+  },
+  {
+   "path": "examples/assess_text_ir_example.json",
+   "bytes": 6789,
+   "sha256": "40f6c89deae43babef9367ebe84485d0fccb55d6029d57e6c51e7b1267660d7b"
+  },
+  {
+   "path": "examples/capability_example.json",
+   "bytes": 12199,
+   "sha256": "8b023af6f389715890e5dda1a9394b9189572a81efc6bad89036406f4dae711f"
+  },
+  {
+   "path": "examples/closure_example.json",
+   "bytes": 6031,
+   "sha256": "0f52af67d0d4e499f72a8f9259fe6eaf75a6d2bb2652e60bc12781fc9c5af5b9"
+  },
+  {
+   "path": "examples/coordinates_example.json",
+   "bytes": 9394,
+   "sha256": "e684ce9092404d6582a4f1af7b8eef3d1cd7a6ed562fdc773452fc0560d94a6c"
+  },
+  {
+   "path": "examples/corpus_seed_examples.jsonl",
+   "bytes": 2347,
+   "sha256": "baaf75d51743d002755ef91b839eae9b38db4b5d88d18cb85285e8e46d9a7830"
+  },
+  {
+   "path": "examples/finding_example.json",
+   "bytes": 2668,
+   "sha256": "2b443be0321e5e8eda0d1764ad2a8b74e8038846f21b67ad5c881379ea09c5fc"
+  },
+  {
+   "path": "examples/fleet_policy_example.json",
+   "bytes": 1877,
+   "sha256": "d48d3244406d7c920ff53319781f0c4604bf277c5f66a4dce0149dfdb8ba30fc"
+  },
+  {
+   "path": "examples/policy_exception_example.json",
+   "bytes": 717,
+   "sha256": "34ededc6f4ef3be16a80eeec4837953b4688a4c4bd77b824f2a3532b77cdae98"
+  },
+  {
+   "path": "examples/policy_snapshot_example.json",
+   "bytes": 1111,
+   "sha256": "9adb85f8d3255ca1213d52d556f7d9de2ba2877357860b80016526e7cf91c837"
+  },
+  {
+   "path": "examples/preservation_report_example.json",
+   "bytes": 2090,
+   "sha256": "24f7a00e2154f54aef0beb2c7b19f3661f448bb44ce49eefc410d77ff04d9ba5"
+  },
+  {
+   "path": "examples/retention_contract_example.json",
+   "bytes": 933,
+   "sha256": "b1f311dde211fa585e936a91934f174e4b8184d8275cc4fe6a6b6daed588ed84"
+  },
+  {
+   "path": "examples/specify_basis_example.json",
+   "bytes": 7957,
+   "sha256": "e5c74607f91f1a2b71df1fc6e6eb5c2d933a3e1b468902335e7dc8b663bafec1"
+  },
+  {
+   "path": "examples/specify_text_ir_example.json",
+   "bytes": 2454,
+   "sha256": "5feaeff388fda5d9434a4e2f2a7a8a7374e5e5bde01d8aa73398b6cd181b3289"
+  },
+  {
+   "path": "examples/strengthen_prohibition_example.json",
+   "bytes": 4152,
+   "sha256": "325558fad9baeeb4066951eba5f99b30186360aad6a376b812cff8ce039c004f"
+  },
+  {
+   "path": "lexicons/ats_force_lexicon_v1.yaml",
+   "bytes": 6007,
+   "sha256": "66207c0e3cb81c424271f69c1233639a6c8b5041a7a397bfc743003b00b44e42"
+  },
+  {
+   "path": "requirements-validation.txt",
+   "bytes": 33,
+   "sha256": "690fa118aea56dbe98f14d55e337745992cdf8f3a95b7324396ae0048c94246b"
+  },
+  {
+   "path": "rules/ats_rules_v2.yaml",
+   "bytes": 30464,
+   "sha256": "eeb2bb3a3703676db77d387484cb6cb41434ac102358b65aad640ec296a8029a"
+  },
+  {
+   "path": "schemas/ats_acceptance_receipt_v1.schema.json",
+   "bytes": 4142,
+   "sha256": "aef30d3c5bb6c999b55ab676b570d470eb3884afce1de2de4b9a5f3802e7b17b"
+  },
+  {
+   "path": "schemas/ats_adjudication_v1.schema.json",
+   "bytes": 1422,
+   "sha256": "c46bae74dac5f0cb7f104d59356e875277ddb02e840c28ce372c23512915c830"
+  },
+  {
+   "path": "schemas/ats_capability_v1.schema.json",
+   "bytes": 3404,
+   "sha256": "884f89af7af607f79bd050fcef17d0e4b430116a849a2b055ffb2cce90136730"
+  },
+  {
+   "path": "schemas/ats_common_v1.schema.json",
+   "bytes": 36696,
+   "sha256": "43961d2dceae0a37eb7badc9cd92e10ca1e09a3f4b15114c573ea6eb2ca0772c"
+  },
+  {
+   "path": "schemas/ats_finding_v1.schema.json",
+   "bytes": 2858,
+   "sha256": "ad43f352dfe72d9ccef6d36cce671845ad2010e61d502dcd4f5511bbf84ed642"
+  },
+  {
+   "path": "schemas/ats_fleet_policy_v1.schema.json",
+   "bytes": 5953,
+   "sha256": "289182360f96d3126c77aceb5ba7aa61924f7c961a20635b08236b4ed83645e9"
+  },
+  {
+   "path": "schemas/ats_force_lexicon_v1.schema.json",
+   "bytes": 966,
+   "sha256": "2717cf05ae30ec876a0e8ba360f8f4e34292bcd69d19ce005264db4edd99947b"
+  },
+  {
+   "path": "schemas/ats_package_manifest_v1.schema.json",
+   "bytes": 1311,
+   "sha256": "287caf85ad69f0580587ba277e331fb5d112b2b694ea37faf7438b627f356675"
+  },
+  {
+   "path": "schemas/ats_policy_exception_v1.schema.json",
+   "bytes": 215,
+   "sha256": "a211fdabccae6594fab2b757b0b052603c7a4e6ea156a8e8ff0e0049f386e15e"
+  },
+  {
+   "path": "schemas/ats_policy_snapshot_v1.schema.json",
+   "bytes": 2899,
+   "sha256": "ac6e6b8c4c8c01374191f12c364a3e3ee8d517424e18af97ecb74db673983017"
+  },
+  {
+   "path": "schemas/ats_preservation_report_v1.schema.json",
+   "bytes": 3863,
+   "sha256": "1b15209a8bfea70fd96fedc727e7d189befd9735780f1ff07d9a46f54ee094cc"
+  },
+  {
+   "path": "schemas/ats_retention_contract_v1.schema.json",
+   "bytes": 2556,
+   "sha256": "c743a532d4506361572be6eb3eecd41e017786fea7c71992d78a3e29dfad328f"
+  },
+  {
+   "path": "schemas/ats_ruleset_v1.schema.json",
+   "bytes": 4839,
+   "sha256": "7388ae937e8b0dcc55b4d0a50dc3b5bbceea54b02e2963eae2a36fdbe152be01"
+  },
+  {
+   "path": "schemas/ats_text_example_v1.schema.json",
+   "bytes": 2123,
+   "sha256": "dd16a1ed42658616868a5e546e125b40bc140704ae6299186ea5252fce9b8df4"
+  },
+  {
+   "path": "schemas/ats_text_ir_v1.schema.json",
+   "bytes": 6207,
+   "sha256": "34c7997f507eea90738a6ab43f8b3c722824af0d138d78e8fc5ead9b996824b3"
+  },
+  {
+   "path": "tools/validate_package.py",
+   "bytes": 21472,
+   "sha256": "7d3e508f54084bb6f6c4560dc68250a07acebf7476cfc2f6b48c14010400817a"
+  }
+ ]
+}

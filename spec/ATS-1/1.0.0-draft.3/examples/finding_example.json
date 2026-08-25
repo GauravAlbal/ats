@@ -1,0 +1,95 @@
+{
+  "schema_version": "ats.finding.v1",
+  "finding_id": "finding-modal-001",
+  "artifact_id": "example-ambiguous-modal",
+  "policy_snapshot_id": "policy-example-specify",
+  "rule_id": "ATS-DEON-002",
+  "rule_version": "1.0.0-draft.1",
+  "profile": "SPECIFY",
+  "spans": [
+    {
+      "kind": "character",
+      "start": 11,
+      "end": 14,
+      "source_sha256": "b13669b673607056a9233948542c917cf6307f028ade892dab1e31bc79229755"
+    }
+  ],
+  "issue_code": "modal_force_ambiguous",
+  "summary": "The word “may” does not establish whether the intended force is permission, capability, probability, or obligation.",
+  "evidence_spans": [
+    {
+      "kind": "character",
+      "start": 0,
+      "end": 37,
+      "source_sha256": "b13669b673607056a9233948542c917cf6307f028ade892dab1e31bc79229755"
+    }
+  ],
+  "severity": "critical",
+  "detector": {
+    "name": "arqtext-critic",
+    "version": "0.1.0",
+    "class": "D3",
+    "detector_status": "probabilistic",
+    "detector_confidence": 0.93,
+    "run_id": "run-example-1",
+    "authority": "proposal_only"
+  },
+  "applicability": "applies",
+  "protected_impact": [
+    "P0"
+  ],
+  "interpretations": [
+    {
+      "interpretation_id": "permission",
+      "reading": "The system is permitted to reject stale receipts.",
+      "force": {
+        "deontic": "MAY"
+      },
+      "material_difference": "Rejection is optional."
+    },
+    {
+      "interpretation_id": "capability",
+      "reading": "The system can reject stale receipts.",
+      "force": {
+        "deontic": "CAN"
+      },
+      "material_difference": "Capability is described; no behavior is required."
+    },
+    {
+      "interpretation_id": "probability",
+      "reading": "The system is likely to reject stale receipts.",
+      "force": {
+        "likelihood": {
+          "kind": "wep",
+          "term": "likely",
+          "display": "likely (55–80%)",
+          "lower": 0.55,
+          "upper": 0.8,
+          "range_shown_inline": true
+        }
+      },
+      "material_difference": "A forecast is made."
+    },
+    {
+      "interpretation_id": "obligation",
+      "reading": "The system is required to reject stale receipts.",
+      "force": {
+        "deontic": "MUST"
+      },
+      "material_difference": "Rejection is mandatory."
+    }
+  ],
+  "proposed_repairs": [
+    {
+      "repair_id": "repair-obligation",
+      "replacement": "The verifier MUST reject stale receipts.",
+      "rationale": "Selects mandatory behavior and names the actor.",
+      "autofix_class": "review_required",
+      "protected_impact": [
+        "P0"
+      ],
+      "expected_delta": "Select intended deontic force."
+    }
+  ],
+  "state": "proposed"
+}

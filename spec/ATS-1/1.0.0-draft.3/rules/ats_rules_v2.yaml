@@ -1,0 +1,1093 @@
+schema_version: ats.ruleset.v2
+standard: ATS-1
+spec_version: 1.0.0-draft.3
+rules:
+- schema_version: ats.rule.v1
+  rule_id: ATS-TERM-001
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Canonical term per concept
+  category: terminology
+  normative_statement: Within one scope, a concept MUST use one canonical term unless an explicit contrast,
+    quotation, or alias mapping justifies another term.
+  rationale: Synonym drift increases referential ambiguity and makes readers reconstruct whether two labels
+    denote the same object.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: advisory
+  severity: major
+  detector_classes:
+  - D1
+  - D3
+  required_inputs:
+  - text
+  - profile
+  - glossary
+  protected_impact:
+  - P1
+  - P2
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: &id001
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-TERM-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Preserve exact domain terms
+  category: terminology
+  normative_statement: A precise approved domain term MUST NOT be replaced solely to use more common vocabulary
+    when the substitute changes or broadens meaning.
+  rationale: Lexical simplicity is harmful when it removes a canonical technical distinction.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - glossary
+  - source_text
+  protected_impact:
+  - P0
+  - P1
+  autofix: forbidden
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-TERM-003
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Expand acronyms on first material use
+  category: terminology
+  normative_statement: An acronym or abbreviation MUST be expanded on first material use unless the audience
+    policy or glossary explicitly permits it.
+  rationale: Acronym expansion lowers lookup cost without banning domain terminology.
+  default_states:
+    ASSESS: required
+    SPECIFY: required
+    TRANSFORM: required
+  severity: minor
+  detector_classes:
+  - D0
+  - D1
+  required_inputs:
+  - text
+  - profile
+  - audience
+  - glossary
+  protected_impact:
+  - P2
+  autofix: safe_p2
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-REF-001
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Unambiguous material references
+  category: reference
+  normative_statement: A material pronoun, demonstrative, or elliptical reference MUST have one plausible
+    antecedent.
+  rationale: Ambiguous reference can transfer a condition, action, or judgment to the wrong object.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D1
+  - D3
+  required_inputs:
+  - text
+  - syntax
+  - profile
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-SCOPE-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Explicit action-relevant scope
+  category: scope
+  normative_statement: Material quantifier, negation, condition, exclusion, and scope relationships MUST
+    be explicit enough to admit one action-relevant interpretation.
+  rationale: Scope ambiguity is a common path from readable prose to wrong action.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - syntax
+  - meaning_ledger
+  - profile
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-NUM-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Units and dimensions for material numbers
+  category: quantity
+  normative_statement: A material number MUST include its unit, dimension, denominator, or explicit dimensionless
+    status.
+  rationale: A bare number cannot be interpreted or verified reliably.
+  default_states:
+    ASSESS: required
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D1
+  - D4
+  required_inputs:
+  - text
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-NUM-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Explicit range and threshold boundaries
+  category: quantity
+  normative_statement: A material range or threshold MUST define comparator and boundary semantics when
+    ordinary language is ambiguous.
+  rationale: Boundary errors directly change acceptance and behavior.
+  default_states:
+    ASSESS: required
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D1
+  - D4
+  required_inputs:
+  - text
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-TIME-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Time horizon for forecasts
+  category: time
+  normative_statement: A material forecast or temporally bounded judgment MUST state a resolution date,
+    event, or time horizon.
+  rationale: Probability without a horizon is not a stable proposition.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-TIME-002
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Anchor material relative time
+  category: time
+  normative_statement: A material relative-time expression MUST resolve to an absolute date, event, version,
+    or policy snapshot.
+  rationale: Long-lived artifacts otherwise change meaning as time passes.
+  default_states:
+    ASSESS: required
+    SPECIFY: required
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D0
+  - D1
+  - D4
+  required_inputs:
+  - text
+  - metadata
+  - policy
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-PRES-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Preserve retained P0 fields exactly
+  category: preservation
+  normative_statement: A transformation MUST preserve all retained P0 fields exactly unless an authorized
+    semantic change records the delta.
+  rationale: Exact fields such as probability, modality, numbers, and source attribution cannot be traded
+    for surface fluency.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: disabled
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D4
+  required_inputs:
+  - source_ir
+  - output_ir
+  - retention_contract
+  - authorizations
+  protected_impact:
+  - P0
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Canonical likelihood expression
+  category: epistemics
+  normative_statement: A material probabilistic judgment MUST use the canonical ATS-1 WEP vocabulary or
+    a justified numeric point probability.
+  rationale: Calibrated terms reduce reader-specific interpretation drift.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - force_lexicon
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-002
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Show WEP range on first material use
+  category: epistemics
+  normative_statement: The first material WEP use in a section MUST include its numeric display range
+    inline.
+  rationale: Inline ranges make the intended probability scale available at the point of interpretation.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D0
+  - D1
+  - D4
+  required_inputs:
+  - text
+  - document_ast
+  - force_lexicon
+  protected_impact:
+  - P0
+  - P2
+  autofix: safe_p2
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-003
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Do not mix probability vocabularies
+  category: epistemics
+  normative_statement: A section MUST NOT mix noncanonical WEP synonyms with canonical ATS-1 output unless
+    the alternate term is quoted or policy-required.
+  rationale: Mixed scales invite readers to assign unintended differences or equivalences.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D0
+  required_inputs:
+  - text
+  - force_lexicon
+  - policy
+  protected_impact:
+  - P0
+  - P2
+  autofix: safe_p2
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-004
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Separate likelihood and assessment confidence
+  category: epistemics
+  normative_statement: Likelihood and assessment confidence MUST be represented as distinct fields or
+    labeled sentences.
+  rationale: Event probability and robustness of the analytic basis answer different questions.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-005
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: State confidence basis
+  category: epistemics
+  normative_statement: A material assessment-confidence label MUST include an inspectable basis and rationale.
+  rationale: A confidence label without basis creates unsupported authority.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - meaning_ledger
+  - evidence
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-006
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: State update or reversal indicators
+  category: epistemics
+  normative_statement: A material assessment MUST identify an observable update or reversal indicator,
+    or state why none is available.
+  rationale: Indicators make judgments operationally revisable rather than rhetorically final.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EPI-007
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Do not use possibility terms as the only probability
+  category: epistemics
+  normative_statement: “Possible,” “plausible,” “might,” and “could” MUST NOT serve as the only likelihood
+    expression for a material probabilistic judgment.
+  rationale: These words do not map to one calibrated probability range.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D0
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DEON-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Use defined deontic force
+  category: deontics
+  normative_statement: Normative statements MUST use ATS-1 deontic terms with their defined force; lowercase
+    or alternate modals MUST NOT carry hidden normative meaning.
+  rationale: Requirements become unverifiable when obligation strength is encoded through conversational
+    wording.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - force_lexicon
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DEON-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: MAY means permission
+  category: deontics
+  normative_statement: '`MAY` MUST express permission, not probability or capability.'
+  rationale: Permission, capability, and probability lead to different system behavior and authority.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DEON-003
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: SHOULD means defeasible recommendation
+  category: deontics
+  normative_statement: '`SHOULD` and `SHOULD NOT` MUST express defeasible recommendation, not an unstated
+    forecast or uncertainty about importance.'
+  rationale: Using SHOULD as vague uncertainty obscures both analytic and normative force.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D0
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-REQ-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Explicit responsible actor
+  category: requirements
+  normative_statement: Every material requirement MUST identify the responsible actor explicitly or through
+    a mechanically unambiguous inherited block.
+  rationale: Responsibility and authority cannot be verified when the actor is hidden.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - requirement_ir
+  protected_impact:
+  - P0
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-REQ-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: One obligation per requirement
+  category: requirements
+  normative_statement: Every material requirement MUST contain one obligation unless multiple actions
+    are proven indivisible under one acceptance criterion.
+  rationale: Atomic obligations support independent implementation, testing, supersession, and failure
+    diagnosis.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - syntax
+  - requirement_ir
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-REQ-003
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Resolve applicable requirement slots
+  category: requirements
+  normative_statement: Every applicable requirement slot—scope, trigger, condition, timing, constraint,
+    exception, and acceptance criterion—MUST be explicit or referenced.
+  rationale: Missing slots force implementers to invent behavior or acceptance criteria.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - requirement_ir
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EVID-001
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Distinguish epistemic and normative roles
+  category: evidence
+  normative_statement: Observation, sourced report, assumption, inference, judgment, forecast, recommendation,
+    and requirement MUST be distinguishable when their difference is material.
+  rationale: Fluent prose often conceals unsupported transitions among these roles.
+  default_states:
+    ASSESS: required
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EVID-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Match evidence and causal wording to the basis
+  category: evidence
+  normative_statement: Evidential and causal wording MUST NOT exceed the basis described or referenced
+    by the artifact.
+  rationale: Overclaim converts compatible evidence into unjustified support or causality.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - meaning_ledger
+  - evidence
+  protected_impact:
+  - P0
+  - P1
+  autofix: forbidden
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-EVID-003
+  operational_class: review_required
+  rule_version: 1.0.0-draft.1
+  title: Address contrary evidence and live alternatives
+  category: evidence
+  normative_statement: A material assessment MUST identify contrary evidence and live alternatives, or
+    state the exact search and applicability status.
+  rationale: An assessment is difficult to calibrate when only supporting evidence is visible.
+  default_states:
+    ASSESS: required
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D3
+  - D4
+  required_inputs:
+  - text
+  - profile
+  - meaning_ledger
+  - evidence
+  protected_impact:
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DISC-001
+  operational_class: advisory
+  rule_version: 1.0.0-draft.1
+  title: Lead with the load-bearing statement
+  category: discourse
+  normative_statement: The load-bearing judgment, requirement, or answer SHOULD precede background that
+    cannot change its interpretation.
+  rationale: Readers should not traverse irrelevant setup to discover the operative claim.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: advisory
+  severity: minor
+  detector_classes:
+  - D1
+  - D3
+  required_inputs:
+  - text
+  - document_ast
+  - profile
+  protected_impact:
+  - P2
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DISC-002
+  operational_class: advisory
+  rule_version: 1.0.0-draft.1
+  title: One conceptual move per paragraph
+  category: discourse
+  normative_statement: A paragraph SHOULD perform one primary conceptual move.
+  rationale: Conceptual moves provide better structure than arbitrary sentence or topic limits.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: advisory
+  severity: minor
+  detector_classes:
+  - D1
+  - D3
+  required_inputs:
+  - text
+  - document_ast
+  - meaning_ledger
+  protected_impact:
+  - P1
+  - P2
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-DISC-003
+  operational_class: advisory
+  rule_version: 1.0.0-draft.2
+  title: Restatements must add function
+  category: discourse
+  normative_statement: Restatements MUST add function. Zero-information repetition — the same
+    proposition restated without adding a semantic role, locality, or extraction
+    benefit — is a defect. Locality-preserving redundancy is not
+    zero-information repetition and is permitted.
+  rationale: Repeated paraphrase increases orientation cost and can create pseudo-evidence.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: advisory
+  severity: minor
+  detector_classes:
+  - D3
+  required_inputs:
+  - text
+  - document_context
+  - meaning_ledger
+  protected_impact:
+  - P2
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-PRES-002
+  operational_class: block
+  rule_version: 1.0.0-draft.1
+  title: Preserve retained P1 relations
+  category: preservation
+  normative_statement: A transformation MUST preserve all retained material P1 relations with the same
+    type, direction, scope, and force.
+  rationale: Conditions, qualifications, evidence links, and causal direction carry the conceptual model
+    even when sentence wording changes.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: disabled
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D4
+  required_inputs:
+  - source_ir
+  - output_ir
+  - retention_contract
+  - authorizations
+  protected_impact:
+  - P1
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements: *id001
+- schema_version: ats.rule.v1
+  rule_id: ATS-COORD-001
+  operational_class: block
+  rule_version: 1.0.0-draft.2
+  title: Stable coordinate preservation
+  category: coordinates
+  normative_statement: A stable semantic coordinate declared in a source artifact MUST survive a
+    transformation exactly, including when the associated proposition remains
+    recoverable through another coordinate.
+  rationale: A coordinate is a join key across specification, planning, task
+    decomposition, acceptance criteria, implementation, tests, review, receipts,
+    postmortems, and later amendments; semantic equivalence of the proposition
+    does not recover authority, lifecycle, dependency, execution, verification,
+    or evidence roles, so losing the coordinate breaks the model even when the
+    wording survives.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  required_inputs:
+  - ir_document
+  - stable_coordinates
+  - profile
+  protected_impact:
+  - P0
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-COORD-002
+  operational_class: block
+  rule_version: 1.0.0-draft.2
+  title: Stable coordinate integrity
+  category: coordinates
+  normative_statement: Stable semantic coordinates MUST be unique within an artifact, and every
+    reference to a coordinate (dependency target, acceptance-criterion
+    reference, cross-document authority reference) MUST resolve to a declared
+    coordinate.
+  rationale: Duplicate coordinates make reference resolution ambiguous, and dangling
+    references silently decouple acceptance criteria, dependency targets, and
+    cross-document authority links from their declared targets, corrupting joins
+    without any explicit signal.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  required_inputs:
+  - ir_document
+  - stable_coordinates
+  - profile
+  protected_impact:
+  - P0
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-BASIS-001
+  operational_class: review_required
+  rule_version: 1.0.0-draft.2
+  title: Declare semantic basis where material
+  category: basis
+  normative_statement: Material semantic values SHOULD declare their basis, and a declared basis
+    MUST be one of EXPLICIT, DERIVED, INFERRED, UNAVAILABLE, or AUTHOR_JUDGMENT.
+  rationale: A declared basis distinguishes source truth from author judgment; without it
+    a reader or transformer cannot tell whether a value is extractable fact or
+    constructed semantics, so verification and safe transformation are
+    impossible.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: major
+  detector_classes:
+  - D3
+  required_inputs:
+  - ir_document
+  - basis_policy
+  - profile
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-BASIS-002
+  operational_class: block
+  rule_version: 1.0.0-draft.2
+  title: No silent promotion of inferred or unavailable semantics
+  category: basis
+  normative_statement: A transformation MUST NOT silently convert INFERRED or UNAVAILABLE source
+    material into an explicit source-authoritative semantic fact.
+  rationale: Silently promoting inferred or unavailable material into an explicit
+    source-authoritative fact falsifies the semantic record; downstream
+    consumers rely on authority, confidence, deontic force, and settlement state
+    that the source never granted, and no reviewer gets a chance to object.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  required_inputs:
+  - source_ir
+  - output_ir
+  - profile
+  protected_impact:
+  - P0
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-PRES-003
+  operational_class: block
+  rule_version: 1.0.0-draft.2
+  title: Preserve protected relations under compression
+  category: preservation
+  normative_statement: A transformation MUST NOT remove, weaken, strengthen, reverse, or make
+    materially implicit a protected relation solely to reduce surface length,
+    syntactic complexity, or repetition; surface compression remains permitted,
+    semantic-relational compression does not.
+  rationale: Compression must cut surface, never meaning; removing or weakening a
+    protected relation trades reader cost for semantic loss, and the mission's
+    primary objective of faithful low-cost recovery forbids that trade.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: advisory
+    TRANSFORM: required
+  severity: critical
+  detector_classes:
+  - D1
+  required_inputs:
+  - source_ir
+  - output_ir
+  - trace
+  - profile
+  protected_impact:
+  - P1
+  autofix: forbidden
+  waivable: false
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+- schema_version: ats.rule.v1
+  rule_id: ATS-CLOSE-001
+  operational_class: review_required
+  rule_version: 1.0.0-draft.2
+  title: Local semantic closure for extractable units
+  category: closure
+  normative_statement: 'An extractable normative unit MUST be locally closed: its operative meaning
+    is recoverable from the unit plus explicitly declared dependencies, without
+    undeclared document-wide inference.'
+  rationale: Extractable units must stand alone so that sharding, retrieval, task and
+    acceptance-criterion generation, and action selection recover operative
+    meaning from the unit plus declared dependencies rather than from undeclared
+    document-wide inference.
+  default_states:
+    ASSESS: advisory
+    SPECIFY: required
+    TRANSFORM: advisory
+  severity: major
+  detector_classes:
+  - D1
+  required_inputs:
+  - ir_document
+  - profile
+  - requirement_ir
+  protected_impact:
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements:
+  - conforming
+  - violation
+  - hard_negative
+  - exception
+
+- schema_version: ats.rule.v1
+  rule_id: ATS-REQ-004
+  operational_class: review_required
+  rule_version: 1.0.0-draft.3
+  title: Canonical behavioral acceptance criterion
+  category: requirements
+  normative_statement: >-
+    Every material MUST or MUST NOT requirement MUST map to exactly one canonical, falsifiable behavioral acceptance criterion. A canonical acceptance criterion MUST NOT be shared across normative requirements, MUST NOT consist solely of an evidence instrument or its result, and MUST NOT add an independently meaningful obligation or strengthen the requirement it adjudicates. If a materially broken implementation can plausibly satisfy the criterion while violating its requirement, the criterion MUST be strengthened or the requirement decomposed.
+  rationale: >-
+    Test-shaped or scope-widening acceptance criteria can respectively pass while the protected behavior remains broken or create hidden requirements. Keeping the normative falsification proposition distinct from its evidence instrument preserves requirement meaning across implementations, test suites, and verification providers.
+  default_states:
+    ASSESS: disabled
+    SPECIFY: advisory
+    TRANSFORM: advisory
+  severity: critical
+  detector_classes:
+  - D1
+  - D3
+  required_inputs:
+  - text
+  - profile
+  - requirement_ir
+  protected_impact:
+  - P0
+  - P1
+  autofix: review_required
+  waivable: true
+  exceptions: []
+  fixture_requirements: *id001

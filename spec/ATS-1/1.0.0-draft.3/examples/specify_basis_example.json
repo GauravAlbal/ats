@@ -1,0 +1,210 @@
+{
+  "schema_version": "ats.text_ir.v1",
+  "artifact_id": "example-specify-basis",
+  "source": {
+    "content_sha256": "d14a028c2a3a2bc9476102bb288234c415a2b01f828ea62ac5b3e42f9b0b3a1a",
+    "media_type": "text/plain",
+    "locator": "examples/specify_basis_source.txt"
+  },
+  "policy_snapshot_id": "policy-example-specify",
+  "language": "en",
+  "audience": {
+    "audience_id": "arq-implementers",
+    "expertise": "expert",
+    "assumed_glossary_refs": [
+      "arq-core-v1"
+    ]
+  },
+  "basis_policy": {
+    "default_basis": "EXPLICIT",
+    "declared": true
+  },
+  "sections": [
+    {
+      "section_id": "requirement",
+      "heading": "Policy-shard verification",
+      "profiles": [
+        "SPECIFY"
+      ],
+      "claims": [
+        {
+          "claim_id": "REQ-SHARD-001",
+          "role": "requirement",
+          "proposition": "The verifier MUST recompute the resolved policy snapshot hash before each acceptance transition.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "source_refs": [
+            "e1"
+          ],
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-SHARD-001",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "recompute",
+            "object": "the resolved policy snapshot hash",
+            "trigger": "before each acceptance transition",
+            "acceptance_criterion": "A transition fixture that skips recomputation is refused.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "Recomputation prevents acceptance under a snapshot that no longer resolves.",
+            "semantic_basis": {
+              "basis": "EXPLICIT",
+              "rationale": "The source proposal states the recomputation requirement verbatim."
+            }
+          },
+          "semantic_basis": {
+            "basis": "EXPLICIT",
+            "rationale": "The authoritative source directly states the recomputation obligation."
+          }
+        },
+        {
+          "claim_id": "REQ-SHARD-002",
+          "role": "requirement",
+          "proposition": "The verifier MUST record the policy snapshot hash under which the receipt was evaluated.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "source_refs": [
+            "e1"
+          ],
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-SHARD-002",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "record",
+            "object": "the policy snapshot hash under which the receipt was evaluated",
+            "acceptance_criterion": "Every emitted receipt carries the evaluated-under snapshot hash.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "A receipt binds only to the policy that evaluated it.",
+            "semantic_basis": {
+              "basis": "DERIVED",
+              "rationale": "Follows mechanically from REQ-SHARD-001 plus the receipt schema, which already carries a policy_snapshot_id field."
+            }
+          },
+          "semantic_basis": {
+            "basis": "DERIVED",
+            "rationale": "The value follows mechanically from the recomputation requirement and the existing receipt structure."
+          }
+        },
+        {
+          "claim_id": "INF-SHARD-001",
+          "role": "inference",
+          "proposition": "The verifier caches resolved snapshots across acceptance transitions within a single session.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier"
+          },
+          "status": "asserted",
+          "semantic_basis": {
+            "basis": "INFERRED",
+            "rationale": "Reasonable reading of the source's performance language, but the source does not establish caching uniquely or normatively."
+          }
+        },
+        {
+          "claim_id": "UNV-SHARD-001",
+          "role": "open_question",
+          "proposition": "The intended latency budget for snapshot recomputation cannot be established from the source or from author intent.",
+          "material": true,
+          "polarity": "positive",
+          "status": "unresolved",
+          "semantic_basis": {
+            "basis": "UNAVAILABLE",
+            "rationale": "The source states no budget and the authoring process recorded no intent; the value is left unresolved rather than invented."
+          }
+        },
+        {
+          "claim_id": "REQ-SHARD-003",
+          "role": "requirement",
+          "proposition": "The verifier MUST treat shard-boundary drift as a policy change that requires a new snapshot resolution.",
+          "material": true,
+          "polarity": "positive",
+          "scope": {
+            "system": "Arq verifier",
+            "authority_domain": "Arq acceptance-policy kernel"
+          },
+          "force": {
+            "deontic": "MUST"
+          },
+          "status": "asserted",
+          "requirement": {
+            "requirement_id": "REQ-SHARD-003",
+            "actor": "verifier",
+            "deontic": "MUST",
+            "action": "treat",
+            "object": "shard-boundary drift as a policy change requiring a new snapshot resolution",
+            "acceptance_criterion": "A drift fixture triggers a fresh resolution before the next acceptance transition.",
+            "source_authority": "Arq acceptance-policy kernel",
+            "rationale": "Boundary drift changes which rules apply; the source is silent, so this is a new authoring decision.",
+            "semantic_basis": {
+              "basis": "AUTHOR_JUDGMENT",
+              "rationale": "Introduced under the ATS authoring authority as a new design choice; the source does not address drift."
+            }
+          },
+          "semantic_basis": {
+            "basis": "AUTHOR_JUDGMENT",
+            "rationale": "New judgment added by the authoring process, distinct from extracting source truth."
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "evidence_id": "e1",
+          "proposition": "The policy-shard verification proposal states recomputation and recording obligations for acceptance transitions.",
+          "source": {
+            "source_id": "policy-shard-proposal",
+            "source_type": "repository_artifact",
+            "availability": "present",
+            "locator": "proposals/policy-shard-verification.md"
+          },
+          "availability": "present"
+        }
+      ],
+      "relations": [
+        {
+          "relation_id": "rel1",
+          "source_id": "REQ-SHARD-002",
+          "type": "derived_from",
+          "target_id": "REQ-SHARD-001",
+          "material": true,
+          "semantic_basis": {
+            "basis": "DERIVED",
+            "rationale": "The recording obligation follows mechanically from the recomputation obligation and the receipt schema."
+          }
+        },
+        {
+          "relation_id": "rel2",
+          "source_id": "e1",
+          "type": "supports",
+          "target_id": "REQ-SHARD-001",
+          "material": true
+        }
+      ],
+      "update_indicators": []
+    }
+  ],
+  "glossary": [
+    {
+      "concept_id": "policy-snapshot-hash",
+      "canonical_term": "resolved policy snapshot hash",
+      "definition": "The SHA-256 digest of the currently resolved policy snapshot used to evaluate an acceptance transition.",
+      "scope": "Arq acceptance-policy kernel",
+      "audience": "expert"
+    }
+  ],
+  "extraction_status": "complete"
+}

@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ats_policy_snapshot_v1.schema.json",
+  "title": "ATS TextPolicySnapshotV1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "snapshot_sha256",
+    "standard",
+    "spec_version",
+    "created_at",
+    "profiles",
+    "audience",
+    "lexicon_refs",
+    "rule_overrides",
+    "exceptions",
+    "finding_budget",
+    "model_artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "ats.policy_snapshot.v1"
+    },
+    "snapshot_id": {
+      "$ref": "ats_common_v1.schema.json#/$defs/identifier"
+    },
+    "snapshot_sha256": {
+      "$ref": "ats_common_v1.schema.json#/$defs/sha256"
+    },
+    "standard": {
+      "const": "ATS-1"
+    },
+    "spec_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "$ref": "ats_common_v1.schema.json#/$defs/timestamp"
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/profile"
+      }
+    },
+    "audience": {
+      "type": "object",
+      "required": [
+        "expertise"
+      ],
+      "properties": {
+        "expertise": {
+          "enum": [
+            "novice",
+            "practitioner",
+            "expert",
+            "mixed"
+          ]
+        },
+        "audience_id": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "glossary_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "lexicon_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "rule_overrides": {
+      "type": "object",
+      "patternProperties": {
+        "^ATS-[A-Z]+-[0-9]{3}$": {
+          "$ref": "ats_common_v1.schema.json#/$defs/rule_state"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/policy_exception"
+      }
+    },
+    "finding_budget": {
+      "type": "object",
+      "required": [
+        "guardrail",
+        "coach"
+      ],
+      "properties": {
+        "guardrail": {
+          "const": "all_critical"
+        },
+        "coach": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        }
+      },
+      "additionalProperties": false
+    },
+    "model_artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "ats_common_v1.schema.json#/$defs/model_artifact"
+      }
+    },
+    "fallback_policy": {
+      "enum": [
+        "fail_closed",
+        "explicit_only"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}
