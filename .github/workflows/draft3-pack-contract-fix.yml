@@ -1,5 +1,5 @@
 name: Fix draft3 pack contract
-# Rerun after simplifying the legacy-default heuristic to same-line semantics.
+# Apply source changes before uv sync so the gate imports the patched project.
 on:
   push:
     branches: [draft3-authoring-default]
@@ -20,13 +20,13 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.12"
+      - name: Apply pack-contract fixes
+        run: python tools/fix_draft3_pack_contract.py
       - name: Synchronize locked environment
         run: |
           python -m pip install --disable-pip-version-check uv==0.11.8
           uv sync --frozen
           echo "$GITHUB_WORKSPACE/.venv/bin" >> "$GITHUB_PATH"
-      - name: Apply pack-contract fixes
-        run: python tools/fix_draft3_pack_contract.py
       - name: Gate two-default verifier semantics
         run: |
           python - <<'PY'
