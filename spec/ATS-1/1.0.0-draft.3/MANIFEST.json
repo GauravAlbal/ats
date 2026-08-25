@@ -22,8 +22,8 @@
   },
   {
    "path": "capability/ats_rule_capability_v1.json",
-   "bytes": 67988,
-   "sha256": "7e5f5fcdb2e98f13833eb05d131a6fa4d0e95d0f66efef7241103adf07ec8c2c"
+   "bytes": 68087,
+   "sha256": "3d36f041a8612febd7c1bb34f83970d37b517a0907042db0b84fff5178f73a22"
   },
   {
    "path": "examples/acceptance_criterion_semantics.md",

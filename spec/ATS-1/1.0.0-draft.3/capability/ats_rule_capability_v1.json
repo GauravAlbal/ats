@@ -1429,16 +1429,20 @@
       "authority": "proposal_only",
       "available_inputs": [],
       "blocking_inputs": [
-        "semantic_review"
+        "text",
+        "profile",
+        "requirement_ir"
       ],
       "decision_power": "undecidable",
       "detector_class": "D3",
       "implemented": false,
       "known_limits": [
-        "No complete D3 decision procedure is implemented for the load-bearing or scope-fidelity judgment; structural D1 checks may surface candidate defects but cannot certify absence."
+        "The package defines ATS-REQ-004 semantics, but ats 0.5.0 does not adjudicate load-bearing or scope-fidelity conformance. Advisory semantic review remains external."
       ],
       "missing_inputs": [
-        "semantic_review"
+        "text",
+        "profile",
+        "requirement_ir"
       ],
       "produces_conformance_evidence": false,
       "required_inputs": [
@@ -1450,7 +1454,7 @@
       "subchecks": [],
       "surfaces": [],
       "unavailable_conditions": [
-        "A qualified semantic review path is not configured."
+        "No ATS-REQ-004 D1/D3 detector or qualified semantic-review surface is implemented in ats 0.5.0."
       ]
     },
     {
