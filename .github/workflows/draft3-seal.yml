@@ -1,5 +1,7 @@
 name: Seal ATS-1 draft.3
 
+# Re-running this workflow with draft.3 already present is an idempotency check:
+# regeneration must produce zero package diff.
 on:
   push:
     branches: [draft3-seal]
